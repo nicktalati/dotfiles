@@ -1,0 +1,5 @@
+[user]
+	email = nicktalati@gmail.com
+	name = Nick Talati
+[merge]
+	tool = nvimdiff

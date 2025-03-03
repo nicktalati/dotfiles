@@ -1,0 +1,9 @@
+undo
+.zsh_history
+.zsh_sessions
+.zcompdump*
+.oh-my-zsh
+pgcli/history
+pgcli/log
+zsh/aliases_private.zsh
+zsh/secrets.zsh

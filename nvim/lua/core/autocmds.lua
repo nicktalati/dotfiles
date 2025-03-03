@@ -1,0 +1,32 @@
+-- run python
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python',
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!python %<CR>', {noremap = true})
+  end,
+})
+
+-- run lean
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = "*.lean",
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!lean %<CR>', {noremap = true})
+  end,
+})
+
+-- run mojo as python?
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.mojo",
+  command = "set filetype=python",
+})
+
+-- detect sql
+vim.api.nvim_create_autocmd({"BufEnter"}, {
+  pattern = "*",
+  callback = function()
+    local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+    if first_line and first_line:match("^-%[ RECORD 1 %]-------------------------") then
+      vim.bo.filetype = 'sql_records'
+    end
+  end,
+})
