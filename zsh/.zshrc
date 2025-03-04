@@ -19,6 +19,7 @@ source $ZDOTDIR/vi-mode.zsh
 # functions
 source $ZDOTDIR/functions/python.zsh
 source $ZDOTDIR/functions/search.zsh
+source $ZDOTDIR/functions/git.zsh
 
 # api keys
 [[ -f $ZDOTDIR/secrets.zsh ]] && source $ZDOTDIR/secrets.zsh

@@ -52,7 +52,7 @@ auto_expand = False
 
 # Auto-retry queries on connection failures and other operational errors. If
 # False, will prompt to rerun the failed query instead of auto-retrying.
-auto_retry_closed_connection = True
+auto_retry_closed_connection = False
 
 # If set to True, table suggestions will include a table alias
 generate_aliases = False
