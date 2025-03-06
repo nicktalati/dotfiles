@@ -5,10 +5,10 @@ alias ae="$EDITOR $HOME/.aws/credentials"
 alias ne="$EDITOR $HOME/.config/nvim/init.lua"
 
 # utils
-alias tree="tree --gitignore"
-alias ls="ls --color=tty"
+alias tree="tree --gitignore --dirsfirst"
+alias ls="ls --color=tty --group-directories-first"
 alias lsa="ls -a --color=tty"
-alias l="ls -lah"
+alias l="ls -lAh"
 alias history="history 0"
 
 # Git aliases
