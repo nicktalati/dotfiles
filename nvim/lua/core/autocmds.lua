@@ -2,7 +2,11 @@
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'python',
   callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!python %<CR>', {noremap = true})
+    if vim.env.VIRTUAL_ENV then
+      vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!' .. vim.env.VIRTUAL_ENV .. '/bin/python %<CR>', {noremap = true})
+    else
+      vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!python %<CR>', {noremap = true})
+    end
   end,
 })
 
