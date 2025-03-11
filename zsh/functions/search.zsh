@@ -60,7 +60,7 @@ zle -N dlbs
 
 # bindings
 bindkey -M viins -s '^f' "commandsearch\n"
-bindkey -M viins -s '^h' "historysearch\n"
+bindkey -M viins -s '^n' "historysearch\n"
 
 bindkey -M vicmd -s '^f' "icommandsearch\n"
 bindkey -M vicmd -s '^h' "ihistorysearch\n"
