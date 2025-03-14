@@ -3,9 +3,9 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = 'python',
   callback = function()
     if vim.env.VIRTUAL_ENV then
-      vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!' .. vim.env.VIRTUAL_ENV .. '/bin/python %<CR>', {noremap = true})
+      vim.api.nvim_buf_set_keymap(0, 'n', '<C-M>', ':w<CR>:!' .. vim.env.VIRTUAL_ENV .. '/bin/python %<CR>', {noremap = true})
     else
-      vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!python %<CR>', {noremap = true})
+      vim.api.nvim_buf_set_keymap(0, 'n', '<C-M>', ':w<CR>:!python %<CR>', {noremap = true})
     end
   end,
 })
@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
   pattern = "*.lean",
   callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<C-j>', ':w<CR>:!lean %<CR>', {noremap = true})
+    vim.api.nvim_buf_set_keymap(0, 'n', '<C-M>', ':w<CR>:!lean %<CR>', {noremap = true})
   end,
 })
 
