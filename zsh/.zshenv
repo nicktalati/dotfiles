@@ -11,6 +11,7 @@ export VISUAL="nvim"
 export XDG_SESSION_TYPE=wayland
 export MOZ_ENABLE_WAYLAND=1
 export XDG_CURRENT_DESKTOP=sway
+export WLR_DRM_NO_ATOMIC=1
 
 export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
 mkdir -p "$(dirname $ZSH_COMPDUMP)"

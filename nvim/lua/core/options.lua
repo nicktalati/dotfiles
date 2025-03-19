@@ -4,8 +4,20 @@ if vim.fn.isdirectory(undodir) == 0 then
   vim.fn.mkdir(undodir, 'p')
 end
 
--- general
-vim.o.clipboard = 'unnamedplus'
+-- osc 52
+vim.opt.clipboard = "unnamedplus"
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
+
 vim.o.undofile = true
 vim.o.undodir = vim.fn.expand('~/.config/nvim/undo')
 vim.o.undolevels = 10000

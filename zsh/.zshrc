@@ -20,6 +20,7 @@ source $ZDOTDIR/vi-mode.zsh
 source $ZDOTDIR/functions/python.zsh
 source $ZDOTDIR/functions/search.zsh
 source $ZDOTDIR/functions/git.zsh
+source $ZDOTDIR/functions/tmux.zsh
 
 # api keys
 [[ -f $ZDOTDIR/secrets.zsh ]] && source $ZDOTDIR/secrets.zsh
