@@ -51,7 +51,7 @@ lspconfig.sqlls.setup{
 }
 
 -- TypeScript LSP
-lspconfig.tsserver.setup{
+lspconfig.ts_ls.setup{
   on_attach = on_lsp_attach,
   filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
   init_options = {
