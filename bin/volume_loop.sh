@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
-
 # Define icon paths for Papirus-Dark icons
-ICON_LOW="/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-low-symbolic.svg"
-ICON_MEDIUM="/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-medium-symbolic.svg"
-ICON_HIGH="/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-high-symbolic.svg"
-ICON_MUTED="/usr/share/icons/Papirus-Dark/symbolic/status/audio-volume-muted-symbolic.svg"
+ICON_LOW="audio-volume-low-symbolic"
+ICON_MEDIUM="audio-volume-medium-symbolic"
+ICON_HIGH="audio-volume-high-symbolic"
+ICON_MUTED="audio-volume-muted-symbolic"
+
 
 DIRECTION="$1"
 DELAY=0.3

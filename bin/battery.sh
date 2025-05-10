@@ -29,15 +29,12 @@ fi
 
 if [ "$STATUS" = "Charging" ]; then
     if [ "$level" = "100" ]; then
-        ICON="/usr/share/icons/Papirus-Dark/symbolic/status/battery-level-100-charged-symbolic.svg"
+        ICON="battery-level-100-charged-symbolic"
     else
-        ICON="/usr/share/icons/Papirus-Dark/symbolic/status/battery-level-${level}-charging-symbolic.svg"
-        if [ ! -f "$ICON" ]; then
-            ICON="/usr/share/icons/Papirus-Dark/symbolic/status/battery-level-${level}-symbolic.svg"
-        fi
+        ICON="battery-level-${level}-charging-symbolic"
     fi
 else
-    ICON="/usr/share/icons/Papirus-Dark/symbolic/status/battery-level-${level}-symbolic.svg"
+    ICON="battery-level-${level}-symbolic"
 fi
 
 # Send the notification with the chosen icon.

@@ -1,10 +1,8 @@
 #! /usr/bin/env bash
 
-ICON_OFF="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-off-symbolic.svg"
-ICON_LOW="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-low-symbolic.svg"
-ICON_MEDIUM="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-medium-symbolic.svg"
-ICON_HIGH="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-high-symbolic.svg"
-DEFAULT_ICON="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-symbolic.svg"
+ICON_LOW="display-brightness-low-symbolic"
+ICON_MEDIUM="display-brightness-medium-symbolic"
+ICON_HIGH="display-brightness-high-symbolic"
 
 DIRECTION="$1"
 DELAY=0.3
@@ -25,16 +23,12 @@ send_brightness_notification() {
     MAX=$(brightnessctl m)
     PERCENT=$((CURRENT * 100 / MAX))
 
-    if [ "$PERCENT" -eq 0 ]; then
-        ICON="$ICON_OFF"
-    elif [ "$PERCENT" -le 33 ]; then
+    if [ "$PERCENT" -le 33 ]; then
         ICON="$ICON_LOW"
     elif [ "$PERCENT" -le 66 ]; then
         ICON="$ICON_MEDIUM"
-    elif [ "$PERCENT" -le 100 ]; then
-        ICON="$ICON_HIGH"
     else
-        ICON="$DEFAULT_ICON"
+        ICON="$ICON_HIGH"
     fi
 
     notify-send -r 999 -u normal -t 500 -i "$ICON" "${PERCENT}%"
