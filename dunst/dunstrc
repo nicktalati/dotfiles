@@ -21,7 +21,7 @@
     history_length = 20
     format = "%s"
 
-    icon_theme = Papirus
+    icon_theme = Papirus-Dark
     enable_recursive_icon_lookup = true
 
 [urgency_normal]

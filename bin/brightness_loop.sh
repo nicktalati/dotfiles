@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
-ICON_LOW="display-brightness-low-symbolic"
-ICON_MEDIUM="display-brightness-medium-symbolic"
-ICON_HIGH="display-brightness-high-symbolic"
+ICON_LOW="brightness-low-symbolic"
+ICON_MEDIUM="brightness-medium-symbolic"
+ICON_HIGH="brightness-high-symbolic"
 
 DIRECTION="$1"
 DELAY=0.3

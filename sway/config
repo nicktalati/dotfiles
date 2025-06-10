@@ -168,15 +168,17 @@ workspace 3 output eDP-1
 workspace 4 output eDP-1
 workspace 5 output eDP-1
 
-workspace 6 output DP-1 DP-3 eDP-1
-workspace 7 output DP-1 DP-3 eDP-1
-workspace 8 output DP-1 DP-3 eDP-1
-workspace 9 output DP-1 DP-3 eDP-1
-workspace 10 output DP-1 DP-3 eDP-1
+workspace 6 output DP-1 DP-3 HDMI-A-1 eDP-1
+workspace 7 output DP-1 DP-3 HDMI-A-1 eDP-1
+workspace 8 output DP-1 DP-3 HDMI-A-1 eDP-1
+workspace 9 output DP-1 DP-3 HDMI-A-1 eDP-1
+workspace 10 output DP-1 DP-3 HDMI-A-1 eDP-1
 
 output DP-1 scale 1.85
 output DP-3 scale 1.85
+output HDMI-A-1 scale 1.85
 
 output eDP-1 position 0 0
 output DP-1 position 1440 0
 output DP-3 position 1440 0
+output HDMI-A-1 position 1440 0
