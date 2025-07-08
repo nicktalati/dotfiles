@@ -8,10 +8,19 @@ set $right l
 
 set $term kitty
 set $browser firefox
+set $locker swaylock -f
 
 output * bg $HOME/wallpaper/ocean.png stretch
 
-bindsym $win+l exec swaylock
+exec_always {
+    swayidle -w \
+        timeout 900 '$locker' \
+        timeout 930 'swaymsg "output * power off"' \
+        resume 'swaymsg "output * power on"' \
+        before-sleep '$locker'
+}
+
+bindsym $win+l exec $locker
 
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+b exec $browser

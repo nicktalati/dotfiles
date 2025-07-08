@@ -9,7 +9,7 @@ alias tree="tree --gitignore --dirsfirst"
 alias ls="ls --color=tty --group-directories-first"
 alias lsa="ls -a --color=tty"
 alias l="ls -lAh"
-alias history="history 0"
+alias history="history 1"
 
 # Git aliases
 alias g='git'
