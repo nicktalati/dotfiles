@@ -12,6 +12,9 @@ set $locker swaylock -f
 
 output * bg $HOME/wallpaper/ocean.png stretch
 
+for_window [app_id=".*"] inhibit_idle fullscreen
+for_window [class=".*"] inhibit_idle fullscreen
+
 exec_always {
     swayidle -w \
         timeout 900 '$locker' \
