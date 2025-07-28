@@ -37,18 +37,18 @@ bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --oz
 bindsym $mod+p exec grim ~/Downloads/screenshot-$(date +%Y%m%d-%H%M%S).png
 bindsym $mod+Shift+p exec grim -g "$(slurp)" ~/Downloads/screenshot-$(date +%Y%m%d-%H%M%S).png
 
-bindsym f1 exec "~/bin/volume_loop.sh mute &"
-bindsym f2 exec "~/bin/volume_loop.sh down &"
-bindsym --release f2 exec "pkill -f 'volume_loop.sh down'"
-bindsym f3 exec "~/bin/volume_loop.sh up &"
-bindsym --release f3 exec "pkill -f 'volume_loop.sh up'"
+bindsym f1 exec "volume_loop mute &"
+bindsym f2 exec "volume_loop down &"
+bindsym --release f2 exec "pkill -f 'volume_loop down'"
+bindsym f3 exec "volume_loop up &"
+bindsym --release f3 exec "pkill -f 'volume_loop up'"
 
-bindsym f4 exec "~/bin/brightness_loop.sh down &"
-bindsym --release f4 exec "pkill -f 'brightness_loop.sh down'"
-bindsym f5 exec "~/bin/brightness_loop.sh up &"
-bindsym --release f5 exec "pkill -f 'brightness_loop.sh up'"
+bindsym f4 exec "brightness_loop down &"
+bindsym --release f4 exec "pkill -f 'brightness_loop down'"
+bindsym f5 exec "brightness_loop up &"
+bindsym --release f5 exec "pkill -f 'brightness_loop up'"
 
-bindsym f12 exec "~/bin/battery.sh &"
+bindsym f12 exec "battery &"
 
 
 bindsym $mod+q kill

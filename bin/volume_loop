@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /bin/bash
 # Define icon paths for Papirus-Dark icons
 ICON_LOW="audio-volume-low-symbolic"
 ICON_MEDIUM="audio-volume-medium-symbolic"

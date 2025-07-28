@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /bin/bash
 
 ICON_LOW="brightness-low-symbolic"
 ICON_MEDIUM="brightness-medium-symbolic"
