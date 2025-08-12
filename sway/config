@@ -6,11 +6,6 @@ set $down j
 set $up k
 set $right l
 
-set $term kitty
-set $browser firefox
-set $locker swaylock -f
-set $email thunderbird
-
 output * bg $HOME/wallpaper/ocean.png stretch
 
 for_window [app_id=".*"] inhibit_idle fullscreen
@@ -18,21 +13,19 @@ for_window [class=".*"] inhibit_idle fullscreen
 
 exec_always {
     swayidle -w \
-        timeout 900 '$locker' \
+        timeout 900 'swaylock -f' \
         timeout 930 'swaymsg "output * power off"' \
         resume 'swaymsg "output * power on"' \
-        before-sleep '$locker'
+        before-sleep 'swaylock -f'
 }
 
-bindsym $win+l exec $locker
-
-bindsym $mod+Return exec $term
-bindsym $mod+Shift+b exec $browser
+bindsym $mod+Return exec kitty
+bindsym $mod+b exec firefox
+bindsym $mod+w exec firefox -P work
+bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+m exec thunderbird
 bindsym $mod+z exec zathura
-bindsym $mod+m exec $email
 
-bindsym $mod+i exec flatpak run app.bluebubbles.BlueBubbles
-bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --ozone-platform=wayland 2&>/dev/null
 
 bindsym $mod+p exec grim ~/Downloads/screenshot-$(date +%Y%m%d-%H%M%S).png
 bindsym $mod+Shift+p exec grim -g "$(slurp)" ~/Downloads/screenshot-$(date +%Y%m%d-%H%M%S).png
@@ -57,7 +50,6 @@ bindsym $mod+Shift+c reload
 
 bindsym $mod+Shift+e exit
 
-# Move your focus around
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down
 bindsym $mod+$up focus up
@@ -67,7 +59,7 @@ bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
-# Switch to workspace
+
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
@@ -78,7 +70,7 @@ bindsym $mod+7 workspace number 7
 bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
 bindsym $mod+0 workspace number 10
-# Move focused container to workspace
+
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
 bindsym $mod+Shift+3 move container to workspace number 3
@@ -95,29 +87,15 @@ bindsym $mod+bracketright focus output right
 bindsym $mod+Shift+bracketleft move container to output left
 bindsym $mod+Shift+bracketright move container to output right
 
-# Layout stuff:
-#
-# You can "split" the current object of your focus with
-# $mod+b or $mod+v, for horizontal and vertical splits
-# respectively.
-bindsym $mod+b splith
-bindsym $mod+v splitv
+bindsym $mod+Shift+b splith
+bindsym $mod+Shift+v splitv
 
-# Switch the current container between different layout styles
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
-
-# Make the current focus fullscreen
 bindsym $mod+f fullscreen
 
-# Toggle the current focus between tiling and floating mode
 bindsym $mod+Shift+space floating toggle
 
-# Swap focus between the tiling area and the floating area
 bindsym $mod+space focus mode_toggle
 
-# Move focus to the parent container
 bindsym $mod+a focus parent
 #
 # Scratchpad:
@@ -135,22 +113,11 @@ bindsym $mod+minus scratchpad show
 # Resizing containers:
 #
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
     bindsym $left resize shrink width 10px
     bindsym $down resize grow height 10px
     bindsym $up resize shrink height 10px
     bindsym $right resize grow width 10px
 
-    # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
-
-    # Return to default mode
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
