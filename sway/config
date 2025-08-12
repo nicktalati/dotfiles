@@ -20,8 +20,10 @@ exec_always {
 }
 
 bindsym $mod+Return exec kitty
-bindsym $mod+b exec firefox
+bindsym $mod+b exec firefox -P personal
+bindsym $mod+Shift+b exec firefox -P personalfs
 bindsym $mod+w exec firefox -P work
+bindsym $mod+Shift+w exec firefox -P workfs
 bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --ozone-platform=wayland
 bindsym $mod+m exec thunderbird
 bindsym $mod+z exec zathura
@@ -86,8 +88,9 @@ bindsym $mod+bracketright focus output right
 bindsym $mod+Shift+bracketleft move container to output left
 bindsym $mod+Shift+bracketright move container to output right
 
-bindsym $mod+Shift+b splith
-bindsym $mod+Shift+v splitv
+bindsym $win+h splith
+bindsym $win+v splitv
+bindsym $mod+e layout toggle split
 
 bindsym $mod+f fullscreen
 
