@@ -1,4 +1,6 @@
 [global]
+    show_indicators = false
+
     follow = mouse
     offset = (20, 20)
 
@@ -19,7 +21,7 @@
     corner_radius = 15
    
     history_length = 20
-    format = "%s"
+    format = "%s\n\n%b"
 
     icon_theme = Papirus-Dark
     enable_recursive_icon_lookup = true

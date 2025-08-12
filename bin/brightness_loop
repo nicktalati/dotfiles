@@ -31,7 +31,7 @@ send_brightness_notification() {
         ICON="$ICON_HIGH"
     fi
 
-    notify-send -r 999 -u normal -t 500 -i "$ICON" "${PERCENT}%"
+    notify-send -r 999 -t 500 -i "$ICON" "${PERCENT}%"
 }
 
 send_brightness_notification

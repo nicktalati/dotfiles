@@ -38,4 +38,4 @@ else
 fi
 
 # Send the notification with the chosen icon.
-notify-send -r 999 -u normal -t 1000 -i "$ICON" "${BATTERY}%"
+notify-send -r 999 -t 1000 -i "$ICON" "${BATTERY}%"
