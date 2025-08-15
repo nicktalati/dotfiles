@@ -20,13 +20,14 @@ exec_always {
 }
 
 bindsym $mod+Return exec kitty
-bindsym $mod+b exec firefox -P personal
-bindsym $mod+Shift+b exec firefox -P personalfs
+bindsym $mod+p exec firefox -P personal
+bindsym $mod+Shift+p exec firefox -P personalfs
 bindsym $mod+w exec firefox -P work
 bindsym $mod+Shift+w exec firefox -P workfs
 bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --ozone-platform=wayland
-bindsym $mod+m exec thunderbird
+bindsym $mod+t exec thunderbird
 bindsym $mod+z exec zathura
+bindsym $mod+m exec launcher_menu
 
 bindsym Print exec grim ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
 bindsym Shift+Print exec grim -g "$(slurp)" ~/Downloads/ss-$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
@@ -88,7 +89,7 @@ bindsym $mod+bracketright focus output right
 bindsym $mod+Shift+bracketleft move container to output left
 bindsym $mod+Shift+bracketright move container to output right
 
-bindsym $win+h splith
+bindsym $mod+b splith
 bindsym $win+v splitv
 bindsym $mod+e layout toggle split
 
