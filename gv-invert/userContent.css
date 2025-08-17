@@ -1,0 +1,41 @@
+@-moz-document domain("voice.google.com") {
+  html {
+    filter: invert(1) contrast(0.9) !important;
+    background: #fff !important;
+  }
+  :root, body { background: #fff !important; }
+  img, video, picture, canvas, svg {
+    filter: invert(1) contrast(1.11) !important;
+  }
+}
+
+@-moz-document domain("reuters.com") {
+  html { background: #000 !important; }
+
+  body {
+    filter: invert(1) hue-rotate(180deg) contrast(0.9) !important;
+    background: #fff !important; /* becomes black post-invert */
+  }
+
+  body img, body video, body picture, body canvas {
+    filter: invert(1) hue-rotate(180deg) contrast(1.11) !important;
+  }
+
+  [class^="refinitiv-promo-bar-module__"],
+  [class*=" refinitiv-promo-bar-module__"] {
+    background: #fff !important;
+    color: #000 !important;
+    border: 0 !important;
+  }
+  
+  [class^="refinitiv-promo-bar-module__"] a,
+  [class*=" refinitiv-promo-bar-module__"] a {
+    color: #000 !important;
+  }
+  
+  [class^="refinitiv-promo-bar-module__"] svg,
+  [class*=" refinitiv-promo-bar-module__"] svg {
+    fill: #000 !important;
+  }
+  
+}
