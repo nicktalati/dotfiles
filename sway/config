@@ -1,3 +1,5 @@
+xwayland enable
+
 set $mod Mod1
 set $win Mod4
 
@@ -28,9 +30,10 @@ bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --oz
 bindsym $mod+t exec thunderbird
 bindsym $mod+z exec zathura
 bindsym $mod+m exec launcher_menu
+bindsym $mod+c exec flatpak run org.cryptomator.Cryptomator
 
 bindsym Print exec grim ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
-bindsym Shift+Print exec grim -g "$(slurp)" ~/Downloads/ss-$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
+bindsym Shift+Print exec grim -g "$(slurp)" ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
 
 bindsym XF86AudioMute exec "volume_loop mute &"
 bindsym XF86AudioLowerVolume exec "volume_loop down &"
