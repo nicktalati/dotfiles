@@ -2,6 +2,5 @@
 
 tmux new-session -d -s talati -c ~
 tmux new-session -d -s backend -c ~/work/ds/be
-tmux new-session -d -s frontend -c ~/work/ds/fe
 
 tmux attach-session -t talati
