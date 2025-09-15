@@ -19,6 +19,8 @@ export PYENV_ROOT="$HOME/.pyenv"
 export AWS_CONFIG_FILE="$HOME/.config/aws/config"
 export AWS_SHARED_CREDENTIALS_FILE="$HOME/.config/aws/credentials"
 
+export GNUPGHOME="$HOME/.config/gnupg"
+
 typeset -U path PATH
 path=(
     $PYENV_ROOT/bin
