@@ -1,4 +1,12 @@
 ###############################################################################
+# xdg
+###############################################################################
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+###############################################################################
 # pyenv
 ###############################################################################
 command -v pyenv >/dev/null && eval "$(pyenv init - zsh)"
@@ -8,7 +16,7 @@ command -v pyenv >/dev/null && eval "$(pyenv init - zsh)"
 ###############################################################################
 if [ -z "${NVM_DIR:-}" ]; then
   NVM_DIR="$HOME/.nvm"
-  [ -n "${XDG_CONFIG_HOME:-}" ] && NVM_DIR="$XDG_CONFIG_HOME/nvm"
+  [ -n "${XDG_DATA_HOME:-}" ] && NVM_DIR="$XDG_DATA_HOME/nvm"
 fi
 export NVM_DIR
 
@@ -24,7 +32,7 @@ export NVM_DIR
 ###############################################################################
 # history
 ###############################################################################
-HISTFILE=$HOME/.local/state/zsh/history
+HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=1000000
 SAVEHIST=1000000
 setopt SHARE_HISTORY
@@ -42,12 +50,11 @@ eval "$(dircolors -b)"
 ###############################################################################
 # completions
 ###############################################################################
-ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump"
+ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
 autoload -U compinit
-compinit -d $ZSH_COMPDUMP
+compinit -d "$ZSH_COMPDUMP"
 
 [[ -n "$LS_COLORS" ]] && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
@@ -63,7 +70,7 @@ ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
 
-function git_prompt_info() {
+git_prompt_info() {
   git rev-parse --is-inside-work-tree &>/dev/null || return
   local ref
   ref="$(git symbolic-ref HEAD 2>/dev/null || git describe --exact-match HEAD 2>/dev/null)" || return
@@ -78,12 +85,12 @@ function git_prompt_info() {
 PROMPT='%(?.%{$fg_bold[green]%}➜ .%{$fg_bold[red]%}➜ ) %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 
 ###############################################################################
-# aliases
+# aliases (use XDG paths)
 ###############################################################################
 alias ze="$EDITOR $ZDOTDIR/.zshrc"
 alias zs="source $ZDOTDIR/.zshrc"
-alias ae="$EDITOR $HOME/.config/aws/credentials"
-alias ne="$EDITOR $HOME/.config/nvim/init.lua"
+alias ae="$EDITOR $XDG_CONFIG_HOME/aws/credentials"
+alias ne="$EDITOR $XDG_CONFIG_HOME/nvim/init.lua"
 
 alias tree="tree --gitignore --dirsfirst"
 alias ls="ls --color=tty --group-directories-first"
@@ -105,18 +112,14 @@ bindkey -M viins 'kj' vi-cmd-mode
 bindkey -v '^?' backward-delete-char
 
 # cursor
-function zle-keymap-select {
+zle-keymap-select() {
   if [[ ${KEYMAP} == vicmd ]]; then
     echo -ne '\e[2 q'
   elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]]; then
     echo -ne '\e[6 q'
   fi
 }
-
-function zle-line-init {
-  echo -ne '\e[6 q'
-}
-
+zle-line-init() { echo -ne '\e[6 q' }
 zle -N zle-keymap-select
 zle -N zle-line-init
 echo -ne '\e[6 q'
@@ -124,10 +127,10 @@ echo -ne '\e[6 q'
 ###############################################################################
 # functions
 ###############################################################################
-source $ZDOTDIR/functions/python.zsh
-source $ZDOTDIR/functions/search.zsh
+source "$ZDOTDIR/functions/python.zsh"
+source "$ZDOTDIR/functions/search.zsh"
 
 ###############################################################################
 # api keys
 ###############################################################################
-[[ -f $ZDOTDIR/secrets.zsh ]] && source $ZDOTDIR/secrets.zsh
+[[ -f "$ZDOTDIR/secrets.zsh" ]] && source "$ZDOTDIR/secrets.zsh"
