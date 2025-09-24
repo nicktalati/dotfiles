@@ -24,7 +24,7 @@ export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
 export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
 
 export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
-
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NVM_DIR="$XDG_DATA_HOME/nvm"
 
 typeset -U path PATH
