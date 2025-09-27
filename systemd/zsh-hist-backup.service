@@ -1,0 +1,6 @@
+[Unit]
+Description=Zsh History Backup
+
+[Service]
+Type=oneshot
+ExecStart=/home/talati/.local/bin/zsh_hist_backup
