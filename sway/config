@@ -31,6 +31,7 @@ bindsym $mod+t exec thunderbird
 bindsym $mod+z exec zathura
 bindsym $mod+m exec launcher_menu
 bindsym $mod+c exec flatpak run org.cryptomator.Cryptomator
+bindsym $mod+a exec flatpak run net.ankiweb.Anki
 
 bindsym Print exec grim ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
 bindsym Shift+Print exec grim -g "$(slurp)" ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
@@ -101,8 +102,6 @@ bindsym $mod+f fullscreen
 bindsym $mod+Shift+space floating toggle
 
 bindsym $mod+space focus mode_toggle
-
-bindsym $mod+a focus parent
 #
 # Scratchpad:
 #
