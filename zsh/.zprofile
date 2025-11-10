@@ -28,6 +28,9 @@ export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NVM_DIR="$XDG_DATA_HOME/nvm"
 
+export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
+export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
+
 typeset -U path PATH
 path=(
     "$PYENV_ROOT/bin"

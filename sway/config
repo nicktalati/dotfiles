@@ -1,4 +1,5 @@
 xwayland enable
+exec /usr/lib/geoclue-2.0/demos/agent
 
 set $mod Mod1
 set $win Mod4
@@ -135,6 +136,10 @@ default_border none
 input type:keyboard {
 	repeat_delay 200
 	repeat_rate 50
+}
+
+input type:touch {
+    events disabled
 }
 
 input "type:touchpad" {
