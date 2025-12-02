@@ -9,7 +9,7 @@ set $down j
 set $up k
 set $right l
 
-output * bg $HOME/wallpaper/ocean.png stretch
+output * bg $HOME/.local/share/wallpapers/ocean.png stretch
 
 for_window [app_id=".*"] inhibit_idle fullscreen
 for_window [class=".*"] inhibit_idle fullscreen
