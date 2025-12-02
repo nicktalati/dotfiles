@@ -40,7 +40,7 @@ else
 fi
 
 echo "Installing packages from $PKGLIST..."
-paru -S --needed --skipreview - < "$PKGLIST"
+paru -S --needed --skipreview --noconfirm - < "$PKGLIST"
 
 mkdir -p "$HOME/.local/state/nvim/undo"
 mkdir -p "$HOME/.local/state/python"
