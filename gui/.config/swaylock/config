@@ -1,5 +1,5 @@
 show-failed-attempts
-image="$HOME/wallpaper/ocean.png"
+image="$HOME/.local/share/wallpapers/ocean.png"
 scaling=stretch
 font=0xProtoNerdFont
 font-size=15
