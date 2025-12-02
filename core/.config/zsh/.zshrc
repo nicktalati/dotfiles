@@ -7,6 +7,18 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
 ###############################################################################
+# completions
+###############################################################################
+ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
+autoload -U compinit
+mkdir -p "${ZSH_COMPDUMP:h}"
+compinit -d "$ZSH_COMPDUMP"
+
+[[ -n "$LS_COLORS" ]] && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+###############################################################################
 # pyenv
 ###############################################################################
 command -v pyenv >/dev/null && eval "$(pyenv init - zsh)"
@@ -46,17 +58,6 @@ setopt HIST_VERIFY
 # colors
 ###############################################################################
 eval "$(dircolors -b)"
-
-###############################################################################
-# completions
-###############################################################################
-ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
-autoload -U compinit
-compinit -d "$ZSH_COMPDUMP"
-
-[[ -n "$LS_COLORS" ]] && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 ###############################################################################
 # prompt like oh-my-zsh
