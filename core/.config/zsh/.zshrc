@@ -105,6 +105,9 @@ alias gco='git checkout'
 alias connect-beats="bluetoothctl connect 28:2D:7F:04:C7:7D"
 alias disconnect-beats="bluetoothctl disconnect 28:2D:7F:04:C7:7D"
 
+alias pkgup="pacman -Qqe > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
+alias pkgup="pacman -Qqe | grep -vE '^(paru|paru-debug)$' > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
+
 ###############################################################################
 # vi mode
 ###############################################################################
