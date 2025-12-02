@@ -1,0 +1,19 @@
+#!/bin/bash
+
+MOUNTPOINT="/mnt/backup"
+
+if ! mountpoint -q "$MOUNTPOINT"; then
+    echo "Nothing mounted at $MOUNTPOINT"
+    exit 0
+fi
+
+echo "Syncing buffers..."
+sync
+
+echo "Unmounting..."
+if sudo umount "$MOUNTPOINT"; then
+    echo "Drive safe to remove."
+else
+    echo "Unmount failed. Do not remove drive."
+    exit 1
+fi

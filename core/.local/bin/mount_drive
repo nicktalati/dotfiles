@@ -1,0 +1,28 @@
+#!/bin/bash
+
+LABEL="backup"
+MOUNTPOINT="/mnt/backup"
+
+if mountpoint -q "$MOUNTPOINT"; then
+    echo "$LABEL is already mounted at $MOUNTPOINT"
+    exit 0
+fi
+
+if [ ! -d "$MOUNTPOINT" ]; then
+    echo "Creating mount point directory..."
+    sudo mkdir -p "$MOUNTPOINT"
+fi
+
+DEV=$(blkid -L "$LABEL")
+
+if [ -z "$DEV" ]; then
+    echo "Drive '$LABEL' not found. Is it plugged in?"
+    exit 1
+fi
+
+echo "Mounting $DEV to $MOUNTPOINT..."
+sudo mount "$DEV" "$MOUNTPOINT"
+
+sudo chown "$USER":"$USER" "$MOUNTPOINT"
+
+echo "Done."

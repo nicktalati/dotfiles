@@ -86,6 +86,7 @@ qt5-wayland
 qt6-wayland
 quarto-cli-bin
 ripgrep
+rsync
 slurp
 smassh-bin
 sof-firmware

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+SOURCE_VAULT="$HOME/Dropbox/vault"
+DEST="/mnt/backup/snapshots"
+DATE=$(date +%Y-%m-%d)
+
+if ! mountpoint -q "/mnt/backup"; then
+    echo "Drive not mounted. Run 'mount_drive' first"
+    exit 1
+fi
+
+echo "Starting backup..."
+
+mkdir -p "$DEST"
+
+echo "Syncing vault..."
+rsync -av --delete "$SOURCE_VAULT" "$DEST/vault_mirror/"
+
+echo "Snapshotting secrets..."
+SECRETS_DEST="$DEST/secrets/$DATE"
+mkdir -p "$SECRETS_DEST"
+sudo cp -r "$HOME/.ssh" "$SECRETS_DEST/"
+
+echo "Backup complete."
+sync
