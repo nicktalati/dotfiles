@@ -1,5 +1,6 @@
 alsa-plugins
 alsa-utils
+anki
 aria2
 base
 base-devel
@@ -25,7 +26,6 @@ edk2-ovmf
 efibootmgr
 evtest
 firefox
-flatpak
 fzf
 gdb
 git
