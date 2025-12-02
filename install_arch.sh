@@ -1,5 +1,21 @@
 #! /bin/bash
 
+if ! command -v paru &> /dev/null; then
+    echo "Installing paru..."
+    sudo pacman -S --needed base-devel
+
+    mkdir -p /tmp/paru-install
+    git clone https://aur.archlinux.org/paru.git /tmp/paru-install
+
+    pushd /tmp/paru-install || exit 1
+    makepkg -si --noconfirm
+    popd
+
+    rm -rf /tmp/paru-install
+else
+    echo "Paru is already installed"
+fi
+
 mkdir -p "$HOME/.local/state/nvim/undo"
 mkdir -p "$HOME/.local/state/python"
 mkdir -p "$HOME/.local/state/node"
