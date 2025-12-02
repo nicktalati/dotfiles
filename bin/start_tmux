@@ -1,6 +1,0 @@
-#! /bin/bash
-
-tmux new-session -d -s talati -c ~
-tmux new-session -d -s backend -c ~/work/ds/be
-
-tmux attach-session -t talati

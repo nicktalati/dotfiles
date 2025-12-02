@@ -1,0 +1,7 @@
+[user]
+	email = nicktalati@gmail.com
+	name = Nick Talati
+[merge]
+	tool = nvimdiff
+[difftool "idiff"]
+	cmd = diff -i $LOCAL $REMOTE

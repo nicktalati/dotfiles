@@ -1,0 +1,6 @@
+show-failed-attempts
+image="$HOME/wallpaper/ocean.png"
+scaling=stretch
+font=0xProtoNerdFont
+font-size=15
+indicator-radius=32

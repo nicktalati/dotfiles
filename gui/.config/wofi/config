@@ -1,0 +1,5 @@
+mode=dmenu
+hide_search=true
+
+key_up=k
+key_down=j
