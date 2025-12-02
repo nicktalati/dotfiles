@@ -92,7 +92,7 @@ alias zs="source $ZDOTDIR/.zshrc"
 alias ae="$EDITOR $XDG_CONFIG_HOME/aws/credentials"
 alias ne="$EDITOR $XDG_CONFIG_HOME/nvim/init.lua"
 
-alias tree="tree --dirsfirst"
+alias tree="tree --dirsfirst -a -I .git"
 alias gtree="tree --gitignore --dirsfirst"
 alias ls="ls --color=tty --group-directories-first"
 alias lsa="ls -a --color=tty"
