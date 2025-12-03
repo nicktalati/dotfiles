@@ -38,7 +38,7 @@ grim
 grub
 htop-vim
 imagemagick
-iptables
+iptables-nft
 iw
 iwd
 jq

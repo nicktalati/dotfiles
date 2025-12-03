@@ -46,13 +46,30 @@ mkdir -p "$HOME/.local/state/nvim/undo"
 mkdir -p "$HOME/.local/state/python"
 mkdir -p "$HOME/.local/state/node"
 mkdir -p "$HOME/.local/state/psql"
+mkdir -p "$HOME/.local/state/zsh"
 mkdir -p "$HOME/.local/share/pyenv"
+mkdir -p "$HOME/.config/systemd/user"
 
 stow -v -R -t "$HOME" core gui
+
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo "Changing shell to zsh..."
+    chsh -s "$(which zsh)"
+fi
 
 echo "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
 systemctl --user enable --now zsh-hist-backup.timer
-systemctl --user enable --now cryptomator.service
+systemctl --user enable cryptomator.service
 systemctl --user reset-failed
+
+echo ""
+echo "============================================="
+echo "            INSTALLATION COMPLETE            "
+echo "============================================="
+echo "  1. Log out and log back in                 "
+echo "  2. Run /usr/bin/dropbox and sign in        "
+echo "  3. Ctl+C to stop after sync                "
+echo "  4. Run systemctl --user start cryptomator  "
+echo "============================================="
