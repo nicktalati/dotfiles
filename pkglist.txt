@@ -1,6 +1,5 @@
 alsa-plugins
 alsa-utils
-anki
 aria2
 base
 base-devel

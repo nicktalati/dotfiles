@@ -39,6 +39,11 @@ else
     echo "Paru is already installed."
 fi
 
+if pacman -Qi iptables &>/dev/null && ! pacman -Qi iptables-nft &>/dev/null; then
+    echo "Swapping legacy iptables for iptables-nft..."
+    yes | sudo pacman -S iptables-nft
+fi
+
 echo "Installing packages from $PKGLIST..."
 paru -S --needed --skipreview --noconfirm - < "$PKGLIST"
 
