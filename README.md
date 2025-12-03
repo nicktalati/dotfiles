@@ -5,9 +5,13 @@ This more or less contains my entire Arch Linux config.
 ## Stack
 
 **OS:** Arch
+
 **WM:** Sway
+
 **Shell:** Zsh
+
 **Secrets:** Cryptomator
+
 **Management:** GNU Stow
 
 ## Bootstrapping a fresh Arch install
