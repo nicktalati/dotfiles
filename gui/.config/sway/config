@@ -24,10 +24,7 @@ exec_always {
 
 bindsym $mod+Return exec kitty
 bindsym $mod+p exec firefox -P personal
-bindsym $mod+Shift+p exec firefox -P personalfs
 bindsym $mod+w exec firefox -P work
-bindsym $mod+Shift+w exec firefox -P workfs
-bindsym $mod+g exec google-chrome-stable --enable-features=UseOzonePlatform --ozone-platform=wayland
 bindsym $mod+t exec thunderbird
 bindsym $mod+z exec zathura
 bindsym $mod+m exec launcher_menu

@@ -10,14 +10,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- run lean
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = "*.lean",
-  callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<C-M>', ':w<CR>:!lean %<CR>', {noremap = true})
-  end,
-})
-
 -- run mojo as python?
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   pattern = "*.mojo",
