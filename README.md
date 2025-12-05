@@ -10,7 +10,9 @@ This more or less contains my entire Arch Linux config.
 
 **Shell:** Zsh
 
-**Secrets:** Cryptomator
+**Secrets:** Gocryptfs
+
+**Cloud:** Dropbox :(
 
 **Management:** GNU Stow
 

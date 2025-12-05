@@ -7,7 +7,6 @@ bluez
 bluez-utils
 brightnessctl
 clang
-cryptomator-cli
 cyme
 dhcpcd
 dnsmasq
@@ -27,6 +26,7 @@ git
 git-filter-repo
 glow
 go
+gocryptfs
 gptfdisk
 grim
 grub
@@ -63,6 +63,7 @@ perf
 pipewire
 pipewire-alsa
 pipewire-pulse
+postgresql
 pyenv
 python-gobject
 python-matplotlib

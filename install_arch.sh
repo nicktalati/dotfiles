@@ -2,8 +2,8 @@
 
 ZSH_SECRETS_FILE="$HOME/dotfiles/core/.config/zsh/secrets.zsh"
 ZSH_TEMPLATE_FILE="$HOME/dotfiles/core/.config/zsh/secrets.zsh.template"
-CRYPT_SECRETS_FILE="$HOME/dotfiles/core/.config/cryptomator/secrets"
-CRYPT_TEMPLATE_FILE="$HOME/dotfiles/core/.config/cryptomator/secrets.template"
+CRYPT_SECRETS_FILE="$HOME/dotfiles/core/.config/gocryptfs/secrets"
+CRYPT_TEMPLATE_FILE="$HOME/dotfiles/core/.config/gocryptfs/secrets.template"
 PKGLIST="$HOME/dotfiles/pkglist.txt"
 
 if [ ! -f "$ZSH_SECRETS_FILE" ]; then
@@ -15,7 +15,7 @@ if [ ! -f "$ZSH_SECRETS_FILE" ]; then
 fi
 
 if [ ! -f "$CRYPT_SECRETS_FILE" ]; then
-    echo "WARNING: Cryptomator secrets file not found."
+    echo "WARNING: Gocryptfs secrets file not found."
     echo "Creating empty secrets file from template..."
     cp "$CRYPT_TEMPLATE_FILE" "$CRYPT_SECRETS_FILE"
     chmod 600 "$CRYPT_SECRETS_FILE"
@@ -24,11 +24,11 @@ if [ ! -f "$CRYPT_SECRETS_FILE" ]; then
 fi
 
 if ! command -v paru &> /dev/null; then
-    echo "Installing paru..."
+    echo "Installing paru-bin..."
     sudo pacman -S --needed base-devel
 
     mkdir -p /tmp/paru-install
-    git clone https://aur.archlinux.org/paru.git /tmp/paru-install
+    git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-install
 
     pushd /tmp/paru-install || exit 1
     makepkg -si --noconfirm
@@ -66,15 +66,16 @@ echo "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
 systemctl --user enable --now zsh-hist-backup.timer
-systemctl --user enable cryptomator.service
+systemctl --user enable vault-mount.service
 systemctl --user reset-failed
 
 echo ""
-echo "============================================="
-echo "            INSTALLATION COMPLETE            "
-echo "============================================="
-echo "  1. Log out and log back in                 "
-echo "  2. Run /usr/bin/dropbox and sign in        "
-echo "  3. Ctl+C to stop after sync                "
-echo "  4. Run systemctl --user start cryptomator  "
-echo "============================================="
+echo "======================================================="
+echo "                 INSTALLATION COMPLETE                 "
+echo "======================================================="
+echo "  1. Log out and log back in                           "
+echo "  2. Run '/usr/bin/dropbox' and sign in                "
+echo "  3. Ctl+C to stop after sync                          "
+echo "  3. Run 'gocryptfs -init ~/Dropbox/crypt'             "
+echo "  4. Run 'systemctl --user start vault-mount.service'  "
+echo "======================================================="

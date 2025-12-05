@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SOURCE_VAULT="$HOME/Dropbox/vault"
+SOURCE_VAULT="$HOME/Dropbox/crypt"
 DEST="/mnt/backup/snapshots"
 DATE=$(date +%Y-%m-%d)
 
@@ -14,7 +14,7 @@ echo "Starting backup..."
 mkdir -p "$DEST"
 
 echo "Syncing vault..."
-rsync -av --delete "$SOURCE_VAULT" "$DEST/vault_mirror/"
+rsync -av --delete "$SOURCE_VAULT/" "$DEST/crypt_mirror/"
 
 echo "Snapshotting secrets..."
 SECRETS_DEST="$DEST/secrets/$DATE"

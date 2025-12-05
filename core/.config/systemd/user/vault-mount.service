@@ -1,0 +1,14 @@
+[Unit]
+Description=Gocryptfs Vault Mount
+After=dropbox.service
+
+[Service]
+Type=forking
+ExecStartPre=/usr/bin/mkdir -p %h/crypt
+ExecStart=/usr/bin/gocryptfs -quiet -passfile %h/.config/gocryptfs/secrets %h/Dropbox/crypt %h/crypt
+ExecStop=/usr/bin/fusermount3 -u -z %h/crypt
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
