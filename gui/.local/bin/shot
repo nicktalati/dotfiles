@@ -1,0 +1,10 @@
+#!/bin/sh
+
+FILE="$HOME/Downloads/ss_$(date +%s).png"
+
+if [ "$1" = "region" ]; then
+    grim -g "$(slurp)" - | tee "$FILE" | wl-copy
+else
+    echo 100 > /tmp/wobpipe
+    grim - | tee "$FILE" | wl-copy
+fi

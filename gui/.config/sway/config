@@ -1,5 +1,4 @@
 xwayland enable
-exec /usr/lib/geoclue-2.0/demos/agent
 
 set $mod Mod1
 set $win Mod4
@@ -22,6 +21,10 @@ exec_always {
         before-sleep 'swaylock -f'
 }
 
+exec_always {
+    rm -f /tmp/wobpipe && mkfifo /tmp/wobpipe && tail -f /tmp/wobpipe | wob
+}
+
 bindsym $mod+Return exec kitty
 bindsym $mod+p exec firefox -P personal
 bindsym $mod+w exec firefox -P work
@@ -30,22 +33,17 @@ bindsym $mod+z exec zathura
 bindsym $mod+m exec launcher_menu
 bindsym $mod+a exec anki
 
-bindsym Print exec grim ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
-bindsym Shift+Print exec grim -g "$(slurp)" ~/Downloads/ss_$(date +%Y_%m_%d_%H_%M_%S).png && notify-send -r 999 -t 2000 -i folder-camera "Screenshot saved to Downloads"
+bindsym Print exec shot full
+bindsym Shift+Print exec shot region
 
-bindsym XF86AudioMute exec "volume_loop mute &"
-bindsym XF86AudioLowerVolume exec "volume_loop down &"
-bindsym --release XF86AudioLowerVolume exec "pkill -f 'volume_loop down'"
-bindsym XF86AudioRaiseVolume exec "volume_loop up &"
-bindsym --release XF86AudioRaiseVolume exec "pkill -f 'volume_loop up'"
+bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && (wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo 0 || wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2 * 100}') > /tmp/wobpipe
+bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2 * 100}' > /tmp/wobpipe
+bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1.8 @DEFAULT_AUDIO_SINK@ 5%+ && wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2 * 100}' > /tmp/wobpipe
 
-bindsym XF86MonBrightnessDown exec "brightness_loop down &"
-bindsym --release XF86MonBrightnessDown exec "pkill -f 'brightness_loop down'"
-bindsym XF86MonBrightnessUp exec "brightness_loop up &"
-bindsym --release XF86MonBrightnessUp exec "pkill -f 'brightness_loop up'"
+bindsym XF86MonBrightnessUp exec brightnessctl set +5% && brightnessctl info | grep -oP '\(\d+%\)' | tr -d '(%)' > /tmp/wobpipe
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%- && brightnessctl info | grep -oP '\(\d+%\)' | tr -d '(%)' > /tmp/wobpipe
 
-bindsym XF86Launch1 exec "battery &"
-
+bindsym XF86Launch1 exec cat /sys/class/power_supply/BAT*/capacity > /tmp/wobpipe
 
 bindsym $mod+q kill
 
@@ -145,7 +143,7 @@ input "type:touchpad" {
     natural_scroll enabled
 }
 
-input "1133:45108:Logitech_MX_Master_3S" {
+input type:pointer {
     natural_scroll enable
 }
 
