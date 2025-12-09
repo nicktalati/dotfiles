@@ -57,7 +57,7 @@ mkdir -p "$HOME/.local/state/zsh"
 mkdir -p "$HOME/.local/share/pyenv"
 mkdir -p "$HOME/.config/systemd/user"
 
-stow -v -R -t "$HOME" core gui
+stow -v -R --no-folding -t "$HOME" core gui
 
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "Changing shell to zsh..."
