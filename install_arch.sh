@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 ZSH_SECRETS_FILE="$HOME/dotfiles/core/.config/zsh/secrets.zsh"
 ZSH_TEMPLATE_FILE="$HOME/dotfiles/core/.config/zsh/secrets.zsh.template"
 CRYPT_SECRETS_FILE="$HOME/dotfiles/core/.config/gocryptfs/secrets"
