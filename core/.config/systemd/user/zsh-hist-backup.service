@@ -3,4 +3,4 @@ Description=Zsh History Backup
 
 [Service]
 Type=oneshot
-ExecStart=/home/talati/.local/bin/zsh_hist_backup
+ExecStart=%h/.local/bin/zsh_hist_backup

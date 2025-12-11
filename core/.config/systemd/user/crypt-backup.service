@@ -1,0 +1,6 @@
+[Unit]
+Description=Crypt Backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rclone sync %h/crypt crypt:talati-crypt/crypt

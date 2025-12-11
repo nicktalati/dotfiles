@@ -31,7 +31,6 @@ bindsym $mod+w exec firefox -P work
 bindsym $mod+t exec thunderbird
 bindsym $mod+z exec zathura
 bindsym $mod+m exec launcher_menu
-bindsym $mod+a exec anki
 
 bindsym Print exec shot full
 bindsym Shift+Print exec shot region

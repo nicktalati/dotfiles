@@ -34,6 +34,7 @@ export PSQL_HISTORY="$XDG_STATE_HOME/psql/history"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 
 export CODEX_HOME="$XDG_CONFIG_HOME/codex"
+export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/claude"
 
 typeset -U path PATH
 path=(

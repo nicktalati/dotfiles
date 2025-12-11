@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SOURCE_VAULT="$HOME/Dropbox/crypt"
+SOURCE_VAULT="$HOME/crypt"
 DEST="/mnt/backup/snapshots"
 DATE=$(date +%Y-%m-%d)
 

@@ -2,28 +2,23 @@
 
 set -eu
 
-ZSH_SECRETS_FILE="$HOME/dotfiles/core/.config/zsh/secrets.zsh"
-ZSH_TEMPLATE_FILE="$HOME/dotfiles/core/.config/zsh/secrets.zsh.template"
-CRYPT_SECRETS_FILE="$HOME/dotfiles/core/.config/gocryptfs/secrets"
-CRYPT_TEMPLATE_FILE="$HOME/dotfiles/core/.config/gocryptfs/secrets.template"
-PKGLIST="$HOME/dotfiles/pkglist.txt"
+df_conf="$HOME/dotfiles/core/.config"
 
-if [ ! -f "$ZSH_SECRETS_FILE" ]; then
-    echo "WARNING: zsh secrets file not found."
-    echo "Creating empty secrets file from template..."
-    cp "$ZSH_TEMPLATE_FILE" "$ZSH_SECRETS_FILE"
-    chmod 600 "$ZSH_SECRETS_FILE"
-    echo "Please edit $ZSH_SECRETS_FILE."
-fi
+declare -A secrets_templates=(
+    ["$df_conf/zsh/secrets.zsh"]="$df_conf/zsh/secrets.zsh.template"
+    ["$df_conf/gocryptfs/secrets"]="$df_conf/gocryptfs/secrets.template"
+    ["$df_conf/rclone/rclone.conf"]="$df_conf/rclone/rclone.conf.template"
+)
 
-if [ ! -f "$CRYPT_SECRETS_FILE" ]; then
-    echo "WARNING: Gocryptfs secrets file not found."
-    echo "Creating empty secrets file from template..."
-    cp "$CRYPT_TEMPLATE_FILE" "$CRYPT_SECRETS_FILE"
-    chmod 600 "$CRYPT_SECRETS_FILE"
-    echo "Please edit $CRYPT_SECRETS_FILE and then retry installation."
-    exit 1
-fi
+for secret_file in "${!secrets_templates[@]}"; do
+    template_file="${secrets_templates[$secret_file]}"
+    if [ ! -f "$secret_file" ]; then
+        echo "Creating $secret_file..."
+        cp "$template_file" "$secret_file"
+    fi
+done
+
+pkglist="$HOME/dotfiles/pkglist.txt"
 
 if ! command -v paru &> /dev/null; then
     echo "Installing paru-bin..."
@@ -46,16 +41,14 @@ if pacman -Qi iptables &>/dev/null && ! pacman -Qi iptables-nft &>/dev/null; the
     yes | sudo pacman -S iptables-nft
 fi
 
-echo "Installing packages from $PKGLIST..."
-paru -S --needed --skipreview --noconfirm - < "$PKGLIST"
+echo "Installing packages from $pkglist..."
+paru -S --needed --skipreview --noconfirm - < "$pkglist"
 
 mkdir -p "$HOME/.local/state/nvim/undo"
 mkdir -p "$HOME/.local/state/python"
 mkdir -p "$HOME/.local/state/node"
 mkdir -p "$HOME/.local/state/psql"
 mkdir -p "$HOME/.local/state/zsh"
-mkdir -p "$HOME/.local/share/pyenv"
-mkdir -p "$HOME/.config/systemd/user"
 
 stow -v -R --no-folding -t "$HOME" core gui
 
@@ -67,16 +60,19 @@ fi
 echo "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
-systemctl --user enable --now zsh-hist-backup.timer
-systemctl --user enable vault-mount.service
+systemctl --user enable zsh-hist-backup.timer
+systemctl --user enable crypt-backup.timer
+systemctl --user enable crypt-mount.service
 systemctl --user reset-failed
 
 echo ""
-echo "======================================================="
-echo "                 INSTALLATION COMPLETE                 "
-echo "======================================================="
-echo "  1. Log out and log back in                           "
-echo "  2. Run '/usr/bin/dropbox' and sign in                "
-echo "  3. Ctl+C to stop after sync                          "
-echo "  4. Run 'systemctl --user start vault-mount.service'  "
-echo "======================================================="
+echo "========================================================="
+echo "                  INSTALLATION COMPLETE                  "
+echo "========================================================="
+echo "  1. Update secrets files:                               "
+echo "    - ~/.config/zsh/secrets.zsh                          "
+echo "    - ~/.config/gocryptfs/secrets                        "
+echo "    - ~/.config/rclone/rclone.conf                       "
+echo "  2. Run 'rclone sync crypt:talati-crypt/crypt ~/crypt'  "
+echo "  3. Reboot                                              "
+echo "========================================================="
