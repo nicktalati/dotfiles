@@ -37,7 +37,7 @@ else
 fi
 
 if pacman -Qi iptables &>/dev/null && ! pacman -Qi iptables-nft &>/dev/null; then
-    echo "Swapping legacy iptables for iptables-nft..."
+    echo "Swapping iptables for iptables-nft..."
     yes | sudo pacman -S iptables-nft
 fi
 
@@ -51,6 +51,10 @@ mkdir -p "$HOME/.local/state/psql"
 mkdir -p "$HOME/.local/state/zsh"
 
 stow -v -R --no-folding -t "$HOME" core gui
+
+echo "Creating firefox profiles..."
+firefox -CreateProfile "personal"
+firefox -CreateProfile "work"
 
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "Changing shell to zsh..."

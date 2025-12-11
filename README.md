@@ -41,3 +41,5 @@ rclone sync crypt:talati-crypt/crypt ~/crypt
 ```
 
 And reboot.
+
+Firefox is finicky. After launching each profile once and signing in, copy `firefox/userContent.css` to `~/.mozilla/firefox/<profile>/chrome/userContent.css`.
