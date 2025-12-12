@@ -1,3 +1,4 @@
+alsa-utils
 aria2
 base
 base-devel
