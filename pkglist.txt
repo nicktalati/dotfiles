@@ -1,5 +1,3 @@
-alsa-plugins
-alsa-utils
 aria2
 base
 base-devel
@@ -10,7 +8,6 @@ cyme
 docker
 docker-buildx
 efibootmgr
-evtest
 expac
 firefox
 fzf
@@ -41,6 +38,7 @@ noto-fonts
 noto-fonts-emoji
 nvm
 openssh
+os-prober
 pacman-contrib
 parted
 pipewire
@@ -69,7 +67,6 @@ tree
 ttf-0xproto-nerd
 ttf-dejavu
 unzip
-wev
 wireguard-tools
 wl-clipboard
 wob
