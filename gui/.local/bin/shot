@@ -3,8 +3,9 @@
 FILE="$HOME/Downloads/ss_$(date +%s).png"
 
 if [ "$1" = "region" ]; then
-    grim -g "$(slurp)" - | tee "$FILE" | wl-copy
+    grim -g "$(slurp)" - > "$FILE"
 else
-    echo 100 > /tmp/wobpipe
-    grim - | tee "$FILE" | wl-copy
+    grim - > "$FILE"
 fi
+
+notify-send -a '' "Screenshot saved to $FILE" -t 5000

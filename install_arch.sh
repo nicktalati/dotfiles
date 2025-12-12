@@ -50,7 +50,13 @@ mkdir -p "$HOME/.local/state/node"
 mkdir -p "$HOME/.local/state/psql"
 mkdir -p "$HOME/.local/state/zsh"
 
-stow -v -R --no-folding -t "$HOME" core gui
+echo "Stowing dotfiles..."
+stow -v -R --no-folding -d "$HOME/dotfiles" -t "$HOME" core gui
+
+echo "Copying /etc files..."
+sudo mkdir -p /etc/iwd /etc/keyd
+sudo cp -r "$HOME/dotfiles/etc/iwd/main.conf" /etc/iwd/
+sudo cp -r "$HOME/dotfiles/etc/keyd/default.conf" /etc/keyd/
 
 echo "Creating firefox profiles..."
 firefox -CreateProfile "personal"

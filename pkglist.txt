@@ -30,6 +30,7 @@ libnotify
 linux
 linux-firmware
 lsof
+mako
 man-db
 man-pages
 mpv
