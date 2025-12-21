@@ -8,6 +8,7 @@ brightnessctl
 cyme
 docker
 docker-buildx
+edk2-ovmf
 efibootmgr
 expac
 firefox
@@ -18,6 +19,7 @@ gocryptfs
 grim
 grub
 htop-vim
+intel-ucode
 iptables-nft
 iw
 iwd
@@ -47,6 +49,7 @@ pipewire-alsa
 pipewire-pulse
 postgresql
 pyenv
+qemu-desktop
 rclone
 ripgrep
 rsync

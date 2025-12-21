@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 df_conf="$HOME/dotfiles/core/.config"
 
@@ -21,17 +21,17 @@ done
 pkglist="$HOME/dotfiles/pkglist.txt"
 
 if ! command -v paru &> /dev/null; then
-    echo "Installing paru-bin..."
+    echo "Installing paru..."
     sudo pacman -S --needed base-devel
 
-    mkdir -p /tmp/paru-install
-    git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-install
+    paru_install_dir="$(mktemp -d)"
+    git clone https://aur.archlinux.org/paru.git "$paru_install_dir"
 
-    pushd /tmp/paru-install || exit 1
+    pushd "$paru_install_dir" || exit 1
     makepkg -si --noconfirm
     popd
 
-    rm -rf /tmp/paru-install
+    rm -rf "$paru_install_dir"
 else
     echo "Paru is already installed."
 fi
@@ -62,9 +62,9 @@ echo "Creating firefox profiles..."
 firefox -CreateProfile "personal"
 firefox -CreateProfile "work"
 
-if [ "$SHELL" != "$(which zsh)" ]; then
+if [ "$SHELL" != "$(command -v zsh)" ]; then
     echo "Changing shell to zsh..."
-    chsh -s "$(which zsh)"
+    chsh -s "$(command -v zsh)"
 fi
 
 echo "Enabling Systemd Units..."
@@ -74,6 +74,12 @@ systemctl --user enable zsh-hist-backup.timer
 systemctl --user enable crypt-backup.timer
 systemctl --user enable crypt-mount.service
 systemctl --user reset-failed
+sudo systemctl enable iwd
+sudo systemctl enable keyd
+
+echo "Adding user to docker group..."
+
+sudo usermod -aG docker "$USER"
 
 echo ""
 echo "========================================================="

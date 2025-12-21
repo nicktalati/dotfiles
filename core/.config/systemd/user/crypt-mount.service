@@ -2,10 +2,10 @@
 Description=Gocryptfs Crypt Mount
 
 [Service]
-Type=forking
+Type=simple
 ExecStartPre=/usr/bin/mkdir -p %h/crypt
 ExecStartPre=/usr/bin/mkdir -p %h/decrypt
-ExecStart=/usr/bin/gocryptfs -quiet -passfile %h/.config/gocryptfs/secrets %h/crypt %h/decrypt
+ExecStart=/usr/bin/gocryptfs -fg -passfile %h/.config/gocryptfs/secrets %h/crypt %h/decrypt
 ExecStop=/usr/bin/fusermount3 -u -z %h/decrypt
 Restart=on-failure
 RestartSec=5
