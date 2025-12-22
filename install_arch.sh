@@ -45,7 +45,11 @@ fi
 echo "Installing packages from $pkglist..."
 paru -S --needed - < "$pkglist"
 
-mkdir -p "$HOME/.local/state/{nvim/undo,python,node,psql,zsh}"
+mkdir -p "$HOME/.local/state/nvim/undo"
+mkdir -p "$HOME/.local/state/python"
+mkdir -p "$HOME/.local/state/node"
+mkdir -p "$HOME/.local/state/psql"
+mkdir -p "$HOME/.local/state/zsh"
 
 echo "Stowing dotfiles..."
 stow -v -R --no-folding -d "$HOME/dotfiles" -t "$HOME" core gui
