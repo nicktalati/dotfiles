@@ -96,11 +96,11 @@ else
     info "Paru is already installed."
 fi
 
-# need to check if necessary on fresh install
-if pacman -Qi iptables &>/dev/null && ! pacman -Qi iptables-nft &>/dev/null; then
-    info "Swapping iptables for iptables-nft..."
-    yes | sudo pacman -S iptables-nft
-fi
+# # need to check if necessary on fresh install
+# if pacman -Qi iptables &>/dev/null && ! pacman -Qi iptables-nft &>/dev/null; then
+#     info "Swapping iptables for iptables-nft..."
+#     yes | sudo pacman -S iptables-nft
+# fi
 
 info "Installing packages from $pkglist..."
 paru -S --needed - < "$pkglist"
