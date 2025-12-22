@@ -70,7 +70,7 @@ else
 fi
 
 info "Installing packages from $pkglist..."
-paru -S --needed --noconfirm -- $(< "$pkglist")
+paru -S --needed -- $(< "$pkglist")
 
 ensure_commands stow
 
