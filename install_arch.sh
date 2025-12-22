@@ -8,6 +8,17 @@ exec > >(tee -i "$(date +%Y%m%d.%H-%M-%S).log") 2>&1
 
 trap 'unxp_fail "$LINENO" "$BASH_COMMAND" "$?"' ERR
 
+readonly df_dir="$HOME/dotfiles"
+readonly df_conf="$df_dir/core/.config"
+readonly xdg_state="$HOME/.local/state"
+readonly pkglist="$HOME/dotfiles/pkglist.txt"
+
+declare -A secrets_templates=(
+    ["$df_conf/zsh/secrets.zsh"]="$df_conf/zsh/secrets.zsh.template"
+    ["$df_conf/gocryptfs/secrets"]="$df_conf/gocryptfs/secrets.template"
+    ["$df_conf/rclone/rclone.conf"]="$df_conf/rclone/rclone.conf.template"
+)
+
 red="\033[31m"
 yellow="\033[33m"
 reset="\033[0m"
@@ -45,17 +56,12 @@ cp_template() {
     install -m 600 "$src" "$dest" && info "Created $dest"
 }
 
-
-df_dir="$HOME/dotfiles"
-df_conf="$df_dir/core/.config"
-xdg_state="$HOME/.local/state"
-pkglist="$HOME/dotfiles/pkglist.txt"
-
-declare -A secrets_templates=(
-    ["$df_conf/zsh/secrets.zsh"]="$df_conf/zsh/secrets.zsh.template"
-    ["$df_conf/gocryptfs/secrets"]="$df_conf/gocryptfs/secrets.template"
-    ["$df_conf/rclone/rclone.conf"]="$df_conf/rclone/rclone.conf.template"
-)
+# hardcoded -- fix (array?)
+mkdir -p "$xdg_state/nvim/undo"
+mkdir -p "$xdg_state/python"
+mkdir -p "$xdg_state/node"
+mkdir -p "$xdg_state/psql"
+mkdir -p "$xdg_state/zsh"
 
 ensure_arch
 ensure_commands pacman sudo git
@@ -64,13 +70,6 @@ ensure_dir "$df_dir"
 ensure_dir "$df_conf"
 ensure_dir "$xdg_state"
 ensure_file "$pkglist"
-
-# hardcoded -- fix (array?)
-mkdir -p "$xdg_state/nvim/undo"
-mkdir -p "$xdg_state/python"
-mkdir -p "$xdg_state/node"
-mkdir -p "$xdg_state/psql"
-mkdir -p "$xdg_state/zsh"
 
 for secret in "${!secrets_templates[@]}"; do
     template="${secrets_templates[$secret]}"
