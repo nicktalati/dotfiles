@@ -15,6 +15,7 @@ for secret_file in "${!secrets_templates[@]}"; do
     if [ ! -f "$secret_file" ]; then
         echo "Creating $secret_file..."
         cp "$template_file" "$secret_file"
+        chmod 600 "$secret_file"
     fi
 done
 
@@ -42,21 +43,17 @@ if pacman -Qi iptables &>/dev/null && ! pacman -Qi iptables-nft &>/dev/null; the
 fi
 
 echo "Installing packages from $pkglist..."
-paru -S --needed --skipreview --noconfirm - < "$pkglist"
+paru -S --needed - < "$pkglist"
 
-mkdir -p "$HOME/.local/state/nvim/undo"
-mkdir -p "$HOME/.local/state/python"
-mkdir -p "$HOME/.local/state/node"
-mkdir -p "$HOME/.local/state/psql"
-mkdir -p "$HOME/.local/state/zsh"
+mkdir -p "$HOME/.local/state/{nvim/undo,python,node,psql,zsh}"
 
 echo "Stowing dotfiles..."
 stow -v -R --no-folding -d "$HOME/dotfiles" -t "$HOME" core gui
 
 echo "Copying /etc files..."
 sudo mkdir -p /etc/iwd /etc/keyd
-sudo cp -r "$HOME/dotfiles/etc/iwd/main.conf" /etc/iwd/
-sudo cp -r "$HOME/dotfiles/etc/keyd/default.conf" /etc/keyd/
+sudo cp "$HOME/dotfiles/etc/iwd/main.conf" "/etc/iwd/main.conf"
+sudo cp "$HOME/dotfiles/etc/keyd/default.conf" "/etc/keyd/default.conf"
 
 echo "Creating firefox profiles..."
 firefox -CreateProfile "personal"
@@ -74,8 +71,12 @@ systemctl --user enable zsh-hist-backup.timer
 systemctl --user enable crypt-backup.timer
 systemctl --user enable crypt-mount.service
 systemctl --user reset-failed
+
+sudo systemctl daemon-reload
 sudo systemctl enable iwd
-sudo systemctl enable keyd
+sudo systemctl enable keyd.service
+sudo systemctl enable bluetooth.service
+sudo systemctl enable systemd-timesyncd.service
 
 echo "Adding user to docker group..."
 

@@ -2,15 +2,19 @@ alsa-utils
 aria2
 base
 base-devel
+bat
+bluetui
 bluez
 bluez-utils
 brightnessctl
+btop
 cyme
 docker
 docker-buildx
 edk2-ovmf
 efibootmgr
 expac
+fd
 firefox
 fzf
 git
@@ -18,7 +22,6 @@ glow
 gocryptfs
 grim
 grub
-htop-vim
 intel-ucode
 iptables-nft
 iw
@@ -65,6 +68,7 @@ swayidle
 swaylock
 tcpdump
 thunderbird
+tldr
 tmux
 traceroute
 tree
