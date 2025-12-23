@@ -1,6 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
-exec > >(tee -i "$(date +%Y%m%d.%H-%M-%S).log") 2>&1
+exec > >(tee -i "/tmp/install-$(date +%Y%m%d.%H-%M-%S).log") 2>&1
 
 readonly df_dir="$HOME/dotfiles"
 readonly df_conf="$df_dir/core/.config"
@@ -22,51 +22,45 @@ info() { log "INFO: $1"; }
 warn() { log "${yellow}WARNING:${reset} $1"; }
 error() { log "${red}FATAL:${reset} $1"; exit 1; }
 
-ensure_dir() { [[ -d "$1" ]] || error "Directory does not exist: $1"; }
-ensure_file() { [[ -f "$1" ]] || error "File does not exist: $1"; }
 ensure_commands() {
     for cmd in "$@"; do
         command -v "$cmd" &> /dev/null || error "Command is not available: $cmd"
     done
 }
 
-cp_template() {
-    local src="$1" dest="$2"
-    [[ -f "$src" ]] || error "Template missing: $src"
-    [[ -f "$dest" ]] && { warn "Secret exists: $dest Skipping..."; return 0; }
-    install -m 600 "$src" "$dest" && info "Created $dest"
-}
-
-grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
-sudo -v || error "This script required sudo privileges"
+[[ "$EUID" -ne 0 ]] || error "Script must not be run as root."
 ensure_commands pacman sudo git
-ensure_dir "$df_dir"
-ensure_dir "$df_conf"
-ensure_file "$pkglist"
+grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
+
+[[ -d "$df_dir" ]] || error "Directory does not exist: $df_dir"
+[[ -d "$df_conf" ]] || error "Directory does not exist: $df_conf"
+[[ -f "$pkglist" ]] || error "File does not exist: $pkglist"
+
+sudo -v || error "This script required sudo privileges."
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
 mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh}
 
 for secret in "${!secrets_templates[@]}"; do
     template="${secrets_templates[$secret]}"
-    cp_template "$template" "$secret"
+    [[ -f "$template" ]] || error "Template missing: $template"
+    if [[ -f "$secret" ]]; then
+        warn "Secret exists: $secret. Skipping..."
+    else
+        install -m 600 "$template" "$secret" && info "Created $secret"
+    fi
 done
 
 if ! command -v paru &> /dev/null; then
     info "Installing paru..."
     sudo pacman -S --needed --noconfirm base-devel
 
-    temp_dir=""
-    trap '[ -n "$temp_dir" ] && rm -rf "$temp_dir"' EXIT
     temp_dir="$(mktemp -d)"
+    trap '[ -n "$temp_dir" ] && rm -rf "$temp_dir"' EXIT
+
     git clone https://aur.archlinux.org/paru.git "$temp_dir"
-
-    pushd "$temp_dir"
-    makepkg -si --noconfirm
-    popd
-
+    (cd "$temp_dir" && makepkg -si --noconfirm)
     ensure_commands paru
-else
-    info "Paru is already installed."
 fi
 
 info "Installing packages from $pkglist..."
@@ -97,7 +91,7 @@ systemctl --user enable crypt-backup.timer
 systemctl --user enable crypt-mount.service
 
 sudo systemctl daemon-reload
-sudo systemctl enable iwd
+sudo systemctl enable iwd.service
 sudo systemctl enable keyd.service
 sudo systemctl enable bluetooth.service
 sudo systemctl enable systemd-timesyncd.service
