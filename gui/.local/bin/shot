@@ -3,9 +3,9 @@
 FILE="$HOME/Downloads/ss_$(date +%s).png"
 
 if [ "$1" = "region" ]; then
-    grim -g "$(slurp)" - > "$FILE"
+    grim -g "$(slurp)" "$FILE"
 else
-    grim - > "$FILE"
+    grim "$FILE"
 fi
 
 notify-send -a '' "Screenshot saved to $FILE" -t 5000
