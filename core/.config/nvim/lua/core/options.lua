@@ -1,34 +1,20 @@
--- osc 52
 vim.opt.clipboard = "unnamedplus"
-vim.g.clipboard = {
-  name = 'OSC 52',
-  copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-  },
-  paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
-  },
-}
 
-vim.o.undofile = true
-vim.o.undolevels = 10000
-vim.o.hlsearch = false
-vim.o.ignorecase = true
-vim.o.smartcase = true
-vim.o.completeopt = 'menu'
+vim.opt.undofile = true
+vim.opt.undolevels = 10000
 
--- window
-vim.wo.number = true
-vim.wo.relativenumber = true
-vim.wo.scrolloff = 8
-vim.wo.wrap = false
+vim.opt.hlsearch = false
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
--- tab
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
-vim.o.expandtab = true
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.scrolloff = 8
+vim.opt.wrap = false
 
--- python sux
-vim.g.python_recommended_style = 0
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+
+vim.opt.completeopt = "menu,menuone,noselect"
