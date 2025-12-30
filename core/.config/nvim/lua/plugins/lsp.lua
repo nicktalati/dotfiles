@@ -9,7 +9,7 @@ return {
       },
     },
   },
-  config = function() 
+  config = function()
     vim.lsp.config["pylsp"] = {
       settings = {
         pylsp = {
@@ -25,9 +25,7 @@ return {
     vim.lsp.enable("lua_ls")
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(ev)
-        local client = vim.lsp.get_client_by_id(ev.data.client_id)
         local opts = { buffer = ev.buf }
-
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
         vim.keymap.set("n", "grw", vim.diagnostic.open_float, opts)
       end
