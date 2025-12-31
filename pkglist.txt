@@ -71,6 +71,7 @@ swaylock
 tcpdump
 thunderbird
 tldr
+tlp
 tmux
 traceroute
 tree

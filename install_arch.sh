@@ -83,6 +83,7 @@ sudo systemctl enable iwd.service
 sudo systemctl enable keyd.service
 sudo systemctl enable bluetooth.service
 sudo systemctl enable systemd-timesyncd.service
+sudo systemctl enable tlp.service
 
 info "Adding user to docker group..."
 sudo usermod -aG docker "$USER"
