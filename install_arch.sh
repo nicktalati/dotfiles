@@ -52,7 +52,7 @@ for secret in "${!secrets_templates[@]}"; do
 done
 
 info "Installing packages from $pkglist..."
-sudo pacman -S --needed --noconfirm -- $(< "$pkglist")
+sudo pacman -S --needed -- $(< "$pkglist")
 
 ensure_commands stow
 
