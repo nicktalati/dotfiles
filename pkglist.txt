@@ -8,6 +8,7 @@ bluez
 bluez-utils
 brightnessctl
 btop
+cmake
 cyme
 docker
 docker-buildx
@@ -33,6 +34,8 @@ libnotify
 linux
 linux-firmware
 lsof
+ltrace
+lua-language-server
 mako
 man-db
 man-pages
@@ -43,6 +46,7 @@ nethogs
 noto-fonts
 noto-fonts-emoji
 nvm
+openbsd-netcat
 openssh
 os-prober
 pacman-contrib
