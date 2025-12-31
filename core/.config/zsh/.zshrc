@@ -8,7 +8,8 @@ compinit -d "$ZSH_COMPDUMP"
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# removed nvm, if you want it switch to fnm
+# fast nvm
+command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
 
 # history
 HISTFILE="$XDG_STATE_HOME/zsh/history"
@@ -68,7 +69,7 @@ alias gco='git checkout'
 alias connect-beats="bluetoothctl connect 28:2D:7F:04:C7:7D"
 alias disconnect-beats="bluetoothctl disconnect 28:2D:7F:04:C7:7D"
 
-alias pkgup="pacman -Qqe > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
+alias pkgup="pacman -Qqen > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
 
 # vi mode
 set -o vi
