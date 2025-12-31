@@ -45,7 +45,6 @@ neovim
 nethogs
 noto-fonts
 noto-fonts-emoji
-nvm
 openbsd-netcat
 openssh
 os-prober
@@ -79,6 +78,7 @@ tree
 ttf-0xproto-nerd
 ttf-dejavu
 unzip
+uv
 wireguard-tools
 wl-clipboard
 wob
