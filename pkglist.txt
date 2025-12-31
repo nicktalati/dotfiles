@@ -54,7 +54,6 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 postgresql
-pyenv
 qemu-desktop
 rclone
 ripgrep

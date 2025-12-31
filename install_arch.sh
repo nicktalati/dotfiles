@@ -29,7 +29,7 @@ ensure_commands() {
 }
 
 [[ "$EUID" -ne 0 ]] || error "Script must not be run as root."
-ensure_commands pacman sudo git
+ensure_commands pacman sudo
 grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
 
 [[ -d "$df_dir" ]] || error "Directory does not exist: $df_dir"
@@ -51,20 +51,8 @@ for secret in "${!secrets_templates[@]}"; do
     fi
 done
 
-if ! command -v paru &> /dev/null; then
-    info "Installing paru..."
-    sudo pacman -S --needed --noconfirm base-devel
-
-    temp_dir="$(mktemp -d)"
-    trap '[ -n "$temp_dir" ] && rm -rf "$temp_dir"' EXIT
-
-    git clone https://aur.archlinux.org/paru.git "$temp_dir"
-    (cd "$temp_dir" && makepkg -si --noconfirm)
-    ensure_commands paru
-fi
-
 info "Installing packages from $pkglist..."
-paru -S --needed -- $(< "$pkglist")
+sudo pacman -S --needed --noconfirm -- $(< "$pkglist")
 
 ensure_commands stow
 
