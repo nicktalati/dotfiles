@@ -17,6 +17,7 @@ efibootmgr
 expac
 fd
 firefox
+foot
 fzf
 git
 glow
@@ -29,7 +30,6 @@ iw
 iwd
 jq
 keyd
-kitty
 libnotify
 linux
 linux-firmware

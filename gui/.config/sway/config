@@ -3,6 +3,8 @@ xwayland enable
 set $mod Mod1
 set $win Mod4
 
+set $term foot
+
 set $left h
 set $down j
 set $up k
@@ -23,7 +25,7 @@ exec rm -f /tmp/wobpipe && \
     mkfifo /tmp/wobpipe && \
     tail -f /tmp/wobpipe | wob
 
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec $term
 bindsym $mod+p exec firefox -P personal
 bindsym $mod+w exec firefox -P work
 bindsym $mod+t exec thunderbird
