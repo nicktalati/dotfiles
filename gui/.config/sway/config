@@ -1,7 +1,6 @@
 xwayland enable
 
-set $mod Mod1
-set $win Mod4
+set $mod Mod4
 
 set $term foot
 
@@ -88,7 +87,7 @@ bindsym $mod+Shift+bracketleft move container to output left
 bindsym $mod+Shift+bracketright move container to output right
 
 bindsym $mod+b splith
-bindsym $win+v splitv
+bindsym $mod+v splitv
 bindsym $mod+e layout toggle split
 
 bindsym $mod+f fullscreen

@@ -1,3 +1,15 @@
+# history
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+HISTSIZE=1000000
+SAVEHIST=1000000
+unsetopt list_beep
+setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+
 # completions
 ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
 autoload -U compinit
@@ -7,20 +19,6 @@ compinit -d "$ZSH_COMPDUMP"
 [[ -n "$LS_COLORS" ]] && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-# fast nvm
-command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
-
-# history
-HISTFILE="$XDG_STATE_HOME/zsh/history"
-HISTSIZE=1000000
-SAVEHIST=1000000
-setopt SHARE_HISTORY
-setopt INC_APPEND_HISTORY
-setopt EXTENDED_HISTORY
-setopt HIST_IGNORE_DUPS
-setopt HIST_REDUCE_BLANKS
-setopt HIST_VERIFY
 
 # colors
 eval "$(dircolors -b)"
@@ -48,8 +46,32 @@ git_prompt_info() {
 
 PROMPT='%(?.%{$fg_bold[green]%}➜ .%{$fg_bold[red]%}➜ ) %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 
+# gimme vim
+bindkey -M viins 'kj' vi-cmd-mode
+bindkey -v '^?' backward-delete-char
+
+zle-keymap-select() {
+  if [[ ${KEYMAP} == vicmd ]]; then
+    echo -ne '\e[2 q'
+  elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]]; then
+    echo -ne '\e[6 q'
+  fi
+}
+zle-line-init() { echo -ne '\e[6 q' }
+zle -N zle-keymap-select
+zle -N zle-line-init
+echo -ne '\e[6 q'
+
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+bindkey -M vicmd 'k' up-line-or-beginning-search
+bindkey -M vicmd 'j' down-line-or-beginning-search
+
 # aliases
 
+alias sv="uv sync && uv pip install python-lsp-server pylsp-mypy mypy"
 alias t="nvim -c 'normal Go' -c 'startinsert' $HOME/decrypt/todo.txt"
 
 alias ze="$EDITOR $ZDOTDIR/.zshrc"
@@ -71,70 +93,15 @@ alias disconnect-beats="bluetoothctl disconnect 28:2D:7F:04:C7:7D"
 
 alias pkgup="pacman -Qqen > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
 
-# vi mode
-set -o vi
-bindkey -M viins 'kj' vi-cmd-mode
-bindkey -v '^?' backward-delete-char
+# fast nvm
+command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
 
-# cursor
-zle-keymap-select() {
-  if [[ ${KEYMAP} == vicmd ]]; then
-    echo -ne '\e[2 q'
-  elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]]; then
-    echo -ne '\e[6 q'
-  fi
-}
-zle-line-init() { echo -ne '\e[6 q' }
-zle -N zle-keymap-select
-zle -N zle-line-init
-echo -ne '\e[6 q'
-
-# python venv
-function sv() {
-    if [[ $(dirname "$VIRTUAL_ENV") = "$PWD" ]]; then
-        echo "Virtual environment already activated."
-    else
-        if [[ -n "$VIRTUAL_ENV" ]]; then
-            echo "Deactivating virtual environment..."
-            deactivate
-        fi
-        if [[ ! -d venv ]]; then
-            echo "Creating new virtual environment..."
-            python -m venv venv
-        fi
-        echo "Activating virtual environment..."
-        source venv/bin/activate
-    fi
-
-    if ! pip freeze | grep -q python-lsp-server; then
-        echo "Installing python-lsp-server..."
-        pip install python-lsp-server
-    fi
-
-
-    if ! pip freeze | grep -q pylsp-mypy; then
-        echo "Installing pylsp-mypy..."
-        pip install pylsp-mypy
-    fi
-
-    if ! pip freeze | grep -q mypy; then
-        echo "Installing mypy..."
-        pip install mypy
-    fi
-}
-
+# fzf
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 
-# search funcs
 function commandsearch() { print -rz "$(print -l ${(k)commands} | fzf)" }
 
-autoload -U up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-
-bindkey -M vicmd 'k' up-line-or-beginning-search
-bindkey -M vicmd 'j' down-line-or-beginning-search
 bindkey -M viins -s '^f' "commandsearch\n"
 bindkey -M vicmd -s '^f' "icommandsearch\n"
 

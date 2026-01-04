@@ -11,6 +11,7 @@ return {
   },
   config = function()
     vim.lsp.config["pylsp"] = {
+      cmd = { ".venv/bin/pylsp" },
       settings = {
         pylsp = {
           plugins = {
