@@ -1,8 +1,7 @@
 #!/bin/bash
 
-SOURCE_VAULT="$HOME/crypt"
-DEST="/mnt/backup/snapshots"
-DATE=$(date +%Y-%m-%d)
+readonly source_vault="$HOME/crypt"
+readonly dest="/mnt/backup"
 
 if ! mountpoint -q "/mnt/backup"; then
     echo "Drive not mounted. Run 'mount_drive' first"
@@ -11,15 +10,10 @@ fi
 
 echo "Starting backup..."
 
-mkdir -p "$DEST"
+mkdir -p "$dest"
 
 echo "Syncing vault..."
-rsync -av --delete "$SOURCE_VAULT/" "$DEST/crypt_mirror/"
-
-echo "Snapshotting secrets..."
-SECRETS_DEST="$DEST/secrets/$DATE"
-mkdir -p "$SECRETS_DEST"
-sudo cp -r "$HOME/.ssh" "$SECRETS_DEST/"
+rsync -av --delete "$source_vault/" "$dest/crypt/"
 
 echo "Backup complete."
 sync

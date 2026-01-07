@@ -67,13 +67,8 @@ git clone https://github.com/nicktalati/dotfiles $HOME/dotfiles && cd $HOME/dotf
 ./install_arch.sh
 ```
 
-Then update the following secrets files:
+Then update `~/.config/rclone/rclone.conf` and run:
 
-- `~/.config/zsh/secrets.zsh`
-- `~/.config/gocryptfs/secrets`
-- `~/.config/rclone/rclone.conf`
-
-Run:
 ```bash
 rclone sync crypt:talati-crypt/crypt ~/crypt
 ```

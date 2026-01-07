@@ -5,13 +5,16 @@ exec > >(tee -i "/tmp/install-$(date +%Y%m%d.%H-%M-%S).log") 2>&1
 readonly df_dir="$HOME/dotfiles"
 readonly df_conf="$df_dir/core/.config"
 readonly pkglist="$df_dir/pkglist.txt"
-readonly xdg_state="$HOME/.local/state"
 
-declare -A secrets_templates=(
-    ["$df_conf/zsh/secrets.zsh"]="$df_conf/zsh/secrets.zsh.template"
-    ["$df_conf/gocryptfs/secrets"]="$df_conf/gocryptfs/secrets.template"
-    ["$df_conf/rclone/rclone.conf"]="$df_conf/rclone/rclone.conf.template"
-)
+readonly decrypt_dir="$HOME/decrypt"
+readonly decrypt_secrets="$decrypt_dir/secrets"
+
+readonly xdg_state="$HOME/.local/state"
+readonly xdg_conf="$HOME/.config"
+
+readonly rclone_tmpl="$df_conf/rclone/rclone.conf.template"
+readonly rclone_conf="$xdg_conf/rclone/rclone.conf"
+readonly gcfs_conf="$xdg_conf/gocryptfs/secrets"
 
 red="\033[31m"
 yellow="\033[33m"
@@ -41,16 +44,6 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
 mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh}
 
-for secret in "${!secrets_templates[@]}"; do
-    template="${secrets_templates[$secret]}"
-    [[ -f "$template" ]] || error "Template missing: $template"
-    if [[ -f "$secret" ]]; then
-        warn "Secret exists: $secret. Skipping..."
-    else
-        install -m 600 "$template" "$secret" && info "Created $secret"
-    fi
-done
-
 info "Installing packages from $pkglist..."
 sudo pacman -S --needed -- $(< "$pkglist")
 
@@ -58,6 +51,38 @@ ensure_commands stow
 
 info "Stowing dotfiles..."
 stow -v -R --no-folding -d "$df_dir" -t "$HOME" core gui
+
+info "Setting up secrets..."
+mkdir -p "$xdg_conf"/{rclone,gocryptfs}
+mkdir -p "$HOME/.ssh/config.d"
+if [[ ! -f "$gcfs_conf" ]]; then
+    echo -n "Gocryptfs password: "
+    read -s gcfs_pass
+    echo
+    echo "$gcfs_pass" > "$gcfs_conf"
+    chmod 600 "$gcfs_conf"
+fi
+
+[[ -f "$rclone_tmpl" ]] || error "Template missing: $rclone_tmpl"
+[[ -f "$rclone_conf" ]] || install -m 600 "$rclone_tmpl" "$rclone_conf"
+
+ln -sf "$decrypt_secrets/secrets.zsh" "$xdg_conf/zsh/secrets.zsh"
+ln -sf "$decrypt_secrets/zsh_history" "$xdg_state/zsh/history"
+
+ssh_keys=(
+    "config.d/work"
+    "greenville.pem"
+    "id_rsa_personal"
+    "id_rsa_personal.pub"
+    "id_rsa_work_github"
+    "id_rsa_work_github.pub"
+    "id_rsa_work_gitlab"
+    "id_rsa_work_gitlab.pub"
+)
+
+for key in "${ssh_keys[@]}"; do
+    ln -sf "$decrypt_secrets/ssh/$key" "$HOME/.ssh/$key"
+done
 
 info "Copying /etc files..."
 sudo mkdir -p /etc/{iwd,keyd}
@@ -92,10 +117,7 @@ cat <<'EOF'
 =========================================================
                   INSTALLATION COMPLETE
 =========================================================
-  1. Update secrets files:
-    - ~/.config/zsh/secrets.zsh
-    - ~/.config/gocryptfs/secrets
-    - ~/.config/rclone/rclone.conf
+  1. Update ~/.config/rclone/rclone.conf
   2. Run 'rclone sync crypt:talati-crypt/crypt ~/crypt'
   3. Reboot
 =========================================================
