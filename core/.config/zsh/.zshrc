@@ -1,3 +1,6 @@
+# exports
+export GPG_TTY=$(tty)
+
 # history
 HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=1000000

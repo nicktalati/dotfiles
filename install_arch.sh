@@ -43,6 +43,7 @@ sudo -v || error "This script required sudo privileges."
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
 mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh}
+mkdir -p "$HOME"/{Downloads,Mail/{nicktalati,nicktalatipaypal}}
 
 info "Installing packages from $pkglist..."
 sudo pacman -S --needed -- $(< "$pkglist")
@@ -50,7 +51,7 @@ sudo pacman -S --needed -- $(< "$pkglist")
 ensure_commands stow
 
 info "Stowing dotfiles..."
-stow -v -R --no-folding -d "$df_dir" -t "$HOME" core gui
+stow -v -R --no-folding -d "$df_dir" -t "$HOME" core email gui
 
 info "Setting up secrets..."
 mkdir -p "$xdg_conf"/{rclone,gocryptfs}

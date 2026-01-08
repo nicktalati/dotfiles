@@ -49,7 +49,7 @@ Mount the Linux partition to `/mnt` and the EFI partition to `/mnt/boot`.
 Connect to internet with `iwctl` and run:
 
 ```bash
-pacstrap -K /mnt base linux linux-firmware grub neovim sudo iwd git # install essentials
+pacstrap -K /mnt base linux linux-firmware grub efibootmgr neovim sudo iwd git # install essentials
 genfstab -U /mnt >> /mnt/etc/fstab # so partitions mount automatically
 arch-chroot /mnt # chroot
 passwd # create password

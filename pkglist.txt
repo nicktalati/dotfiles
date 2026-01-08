@@ -26,6 +26,7 @@ grim
 grub
 intel-ucode
 iptables-nft
+isync
 iw
 iwd
 jq
@@ -41,6 +42,7 @@ man-db
 man-pages
 mpv
 ncdu
+neomutt
 neovim
 nethogs
 noto-fonts

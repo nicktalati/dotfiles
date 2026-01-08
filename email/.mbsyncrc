@@ -1,0 +1,21 @@
+IMAPAccount nicktalati
+Host imap.gmail.com
+User nicktalati@gmail.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py ~/decrypt/email/gmail.oauth2"
+TLSType IMAPS
+
+IMAPStore nicktalati-remote
+Account nicktalati
+
+MaildirStore nicktalati-local
+Path ~/Mail/nicktalati/
+Inbox ~/Mail/nicktalati/Inbox
+Subfolders Verbatim
+
+Channel nicktalati
+Far :nicktalati-remote:
+Near :nicktalati-local:
+Patterns *
+Create Both
+SyncState *
