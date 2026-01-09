@@ -24,6 +24,7 @@ glow
 gocryptfs
 grim
 grub
+imv
 intel-ucode
 iptables-nft
 isync
@@ -41,6 +42,7 @@ mako
 man-db
 man-pages
 mpv
+msmtp
 ncdu
 neomutt
 neovim
@@ -81,6 +83,7 @@ ttf-0xproto-nerd
 ttf-dejavu
 unzip
 uv
+w3m
 wireguard-tools
 wl-clipboard
 wob
