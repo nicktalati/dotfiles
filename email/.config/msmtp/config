@@ -1,0 +1,22 @@
+defaults
+
+tls on
+logfile ~/.local/state/msmtp/msmtp.log
+
+account nicktalati
+host smtp.gmail.com
+port 587
+auth oauthbearer
+from nicktalati@gmail.com
+user nicktalati@gmail.com
+passwordeval "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' ~/decrypt/email/nicktalati.oauth2"
+
+account nicktalatipaypal
+host smtp.gmail.com
+port 587
+auth oauthbearer
+from nicktalatipaypal@gmail.com
+user nicktalatipaypal@gmail.com
+passwordeval "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' ~/decrypt/email/nicktalatipaypal.oauth2"
+
+account default : nicktalati

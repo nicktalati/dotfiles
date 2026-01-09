@@ -1,0 +1,49 @@
+set folder = "~/mail"
+set spoolfile = "+nicktalati/Inbox"
+
+# nicktalati
+named-mailboxes "nicktalati@gmail.com" "+nicktalati/Inbox"
+named-mailboxes "  Travel" "+nicktalati/Travel"
+named-mailboxes "    Flights" "+nicktalati/Travel/Flights"
+named-mailboxes "  Receipts" "+nicktalati/Receipts"
+named-mailboxes "  Health Receipts" "+nicktalati/Health Receipts"
+named-mailboxes "  Sent Mail" "+nicktalati/[Gmail]/Sent Mail"
+named-mailboxes "  Drafts" "+nicktalati/[Gmail]/Drafts"
+named-mailboxes "  Spam" "+nicktalati/[Gmail]/Spam"
+named-mailboxes "  Trash" "+nicktalati/[Gmail]/Trash"
+
+# nicktalatipaypal
+named-mailboxes "nicktalatipaypal@gmail.com" "+nicktalatipaypal/Inbox"
+named-mailboxes "  Sent Mail" "+nicktalatipaypal/[Gmail]/Sent Mail"
+named-mailboxes "  Drafts" "+nicktalatipaypal/[Gmail]/Drafts"
+named-mailboxes "  Spam" "+nicktalatipaypal/[Gmail]/Spam"
+named-mailboxes "  Trash" "+nicktalatipaypal/[Gmail]/Trash"
+
+set sendmail = "msmtp -a nicktalati"
+set from = "nicktalati@gmail.com"
+set realname = "Nick Talati"
+
+folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"; set sendmail="msmtp -a nicktalati"'
+folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"; set sendmail="msmtp -a nicktalatipaypal"'
+
+set sidebar_visible = yes
+set sidebar_width = 30
+set sidebar_format = "%D%* %N"
+set sidebar_short_path = yes
+
+set index_format = "%4C %Z %{%b %d} %-20.20L %s"
+set sort = reverse-date
+set markers = no
+
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cj sidebar-next
+bind index,pager \Co sidebar-open
+
+bind pager j next-line
+bind pager k previous-line
+
+set mail_check_stats = yes
+
+set mailcap_path = ~/.config/neomutt/mailcap
+auto_view text/html
+alternative_order text/plain text/html

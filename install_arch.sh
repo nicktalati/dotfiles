@@ -42,8 +42,8 @@ grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
 sudo -v || error "This script required sudo privileges."
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
-mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh}
-mkdir -p "$HOME"/{Downloads,Mail/{nicktalati,nicktalatipaypal}}
+mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh,msmtp}
+mkdir -p "$HOME"/{Downloads,mail/{nicktalati,nicktalatipaypal}}
 
 info "Installing packages from $pkglist..."
 sudo pacman -S --needed -- $(< "$pkglist")
@@ -68,7 +68,6 @@ fi
 [[ -f "$rclone_conf" ]] || install -m 600 "$rclone_tmpl" "$rclone_conf"
 
 ln -sf "$decrypt_secrets/secrets.zsh" "$xdg_conf/zsh/secrets.zsh"
-ln -sf "$decrypt_secrets/zsh_history" "$xdg_state/zsh/history"
 
 ssh_keys=(
     "config.d/work"

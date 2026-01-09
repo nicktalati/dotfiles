@@ -1,0 +1,43 @@
+IMAPAccount nicktalati
+Host imap.gmail.com
+User nicktalati@gmail.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/email/nicktalati.oauth2"
+TLSType IMAPS
+
+IMAPStore nicktalati-remote
+Account nicktalati
+
+MaildirStore nicktalati-local
+Path ~/mail/nicktalati/
+Inbox ~/mail/nicktalati/Inbox
+Subfolders Verbatim
+
+Channel nicktalati
+Far :nicktalati-remote:
+Near :nicktalati-local:
+Patterns *
+Create Both
+SyncState *
+
+IMAPAccount nicktalatipaypal
+Host imap.gmail.com
+User nicktalatipaypal@gmail.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/email/nicktalatipaypal.oauth2"
+TLSType IMAPS
+
+IMAPStore nicktalatipaypal-remote
+Account nicktalatipaypal
+
+MaildirStore nicktalatipaypal-local
+Path ~/mail/nicktalatipaypal/
+Inbox ~/mail/nicktalatipaypal/Inbox
+Subfolders Verbatim
+
+Channel nicktalatipaypal
+Far :nicktalatipaypal-remote:
+Near :nicktalatipaypal-local:
+Patterns *
+Create Both
+SyncState *
