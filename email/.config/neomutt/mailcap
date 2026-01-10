@@ -1,2 +1,5 @@
-text/html; w3m -I %{charset} -T text/html -dump %s; copiousoutput
-image/*; imv %s
+text/html; lynx -dump -stdin; copiousoutput
+text/html; xdg-open %s
+image/*; xdg-open %s
+text/calendar; xdg-open %s
+application/pdf; xdg-open %s

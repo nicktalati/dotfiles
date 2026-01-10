@@ -35,6 +35,12 @@ set index_format = "%4C %Z %{%b %d} %-20.20L %s"
 set sort = reverse-date
 set markers = no
 
+set mail_check_stats = yes
+
+set mailcap_path = ~/.config/neomutt/mailcap
+auto_view text/html
+alternative_order text/plain text/html
+
 bind index,pager \Ck sidebar-prev
 bind index,pager \Cj sidebar-next
 bind index,pager \Co sidebar-open
@@ -42,8 +48,5 @@ bind index,pager \Co sidebar-open
 bind pager j next-line
 bind pager k previous-line
 
-set mail_check_stats = yes
-
-set mailcap_path = ~/.config/neomutt/mailcap
-auto_view text/html
-alternative_order text/plain text/html
+macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
+macro index,pager U "<pipe-message>urlscan<enter>"

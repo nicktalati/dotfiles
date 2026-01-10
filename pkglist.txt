@@ -38,6 +38,7 @@ linux-firmware
 lsof
 ltrace
 lua-language-server
+lynx
 mako
 man-db
 man-pages
@@ -82,8 +83,8 @@ tree
 ttf-0xproto-nerd
 ttf-dejavu
 unzip
+urlscan
 uv
-w3m
 wireguard-tools
 wl-clipboard
 wob
@@ -91,6 +92,7 @@ wofi
 wqy-microhei
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
+xdg-utils
 yq
 zathura
 zathura-pdf-poppler

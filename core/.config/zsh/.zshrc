@@ -75,7 +75,10 @@ bindkey -M vicmd 'j' down-line-or-beginning-search
 # aliases
 
 alias sv="uv sync && uv pip install python-lsp-server pylsp-mypy mypy"
+
 alias t="nvim -c 'normal Go' -c 'startinsert' $HOME/decrypt/todo.txt"
+alias n="nvim"
+alias m="neomutt"
 
 alias ze="$EDITOR $ZDOTDIR/.zshrc"
 alias zs="source $ZDOTDIR/.zshrc"
