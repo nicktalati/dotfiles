@@ -1,7 +1,10 @@
 #!/bin/bash
+# TODO: define vars in .zprofile and source here?
+
 set -Eeuo pipefail
 exec > >(tee -i "/tmp/install-$(date +%Y%m%d.%H-%M-%S).log") 2>&1
 
+# TODO: some of the vars in question...
 readonly df_dir="$HOME/dotfiles"
 readonly df_conf="$df_dir/core/.config"
 readonly pkglist="$df_dir/pkglist.txt"
@@ -31,6 +34,7 @@ ensure_commands() {
     done
 }
 
+# checks
 [[ "$EUID" -ne 0 ]] || error "Script must not be run as root."
 ensure_commands pacman sudo
 grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
@@ -40,19 +44,37 @@ grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
 [[ -f "$pkglist" ]] || error "File does not exist: $pkglist"
 
 sudo -v || error "This script required sudo privileges."
+
+# sudo loop so no reauth TODO: chsh still asks
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
+# general dirs TODO: is this the right place
 mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh,msmtp}
-mkdir -p "$HOME"/{Downloads,mail/{nicktalati,nicktalatipaypal}}
+mkdir -p "$HOME/Downloads"
 
+# email dir setup for neomutt
+readonly email_accounts=(
+    "nicktalati"
+    "nicktalatipaypal"
+    "quantworks"
+)
+
+for account in "${email_accounts[@]}"; do
+    mkdir -p "$HOME/mail/$account"
+    mkdir -p "$HOME/mail/.header-$account"/{cur,new,tmp}
+done
+
+# pkg install
 info "Installing packages from $pkglist..."
 sudo pacman -S --needed -- $(< "$pkglist")
 
+# stow
 ensure_commands stow
 
 info "Stowing dotfiles..."
 stow -v -R --no-folding -d "$df_dir" -t "$HOME" core email gui
 
+# secrets
 info "Setting up secrets..."
 mkdir -p "$xdg_conf"/{rclone,gocryptfs}
 mkdir -p "$HOME/.ssh/config.d"
@@ -67,6 +89,7 @@ fi
 [[ -f "$rclone_tmpl" ]] || error "Template missing: $rclone_tmpl"
 [[ -f "$rclone_conf" ]] || install -m 600 "$rclone_tmpl" "$rclone_conf"
 
+# link broken until decrypt mounted by gocryptfs
 ln -sf "$decrypt_secrets/secrets.zsh" "$xdg_conf/zsh/secrets.zsh"
 
 ssh_keys=(
@@ -80,6 +103,7 @@ ssh_keys=(
     "id_rsa_work_gitlab.pub"
 )
 
+# links broken until decrypt mounted by gocryptfs
 for key in "${ssh_keys[@]}"; do
     ln -sf "$decrypt_secrets/ssh/$key" "$HOME/.ssh/$key"
 done
@@ -89,6 +113,8 @@ sudo mkdir -p /etc/{iwd,keyd}
 sudo cp "$df_dir/etc/iwd/main.conf" "/etc/iwd/main.conf"
 sudo cp "$df_dir/etc/keyd/default.conf" "/etc/keyd/default.conf"
 
+# change shell
+# TODO: do i need the check? probably smart
 if ! command -v zsh &> /dev/null; then
     warn "zsh not found; not changing shell."
 elif [[ "$SHELL" != "$(command -v zsh)" ]]; then
@@ -96,6 +122,9 @@ elif [[ "$SHELL" != "$(command -v zsh)" ]]; then
     chsh -s "$(command -v zsh)"
 fi
 
+# systemd units
+# TODO: verify these are the essential ones
+# TODO: should i check first? currently takes a bit
 info "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
@@ -110,6 +139,8 @@ sudo systemctl enable bluetooth.service
 sudo systemctl enable systemd-timesyncd.service
 sudo systemctl enable tlp.service
 
+# docker
+# TODO: seems misplaced, and do i need docker?
 info "Adding user to docker group..."
 sudo usermod -aG docker "$USER"
 

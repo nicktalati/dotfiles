@@ -2,34 +2,53 @@ set folder = "~/mail"
 set spoolfile = "+nicktalati/Inbox"
 
 # nicktalati
-named-mailboxes "nicktalati@gmail.com" "+nicktalati/Inbox"
-named-mailboxes "  Travel" "+nicktalati/Travel"
-named-mailboxes "    Flights" "+nicktalati/Travel/Flights"
-named-mailboxes "  Receipts" "+nicktalati/Receipts"
-named-mailboxes "  Health Receipts" "+nicktalati/Health Receipts"
-named-mailboxes "  Sent Mail" "+nicktalati/[Gmail]/Sent Mail"
-named-mailboxes "  Drafts" "+nicktalati/[Gmail]/Drafts"
-named-mailboxes "  Spam" "+nicktalati/[Gmail]/Spam"
-named-mailboxes "  Trash" "+nicktalati/[Gmail]/Trash"
+named-mailboxes "=== PERSONAL ===" "+.header-nicktalati"
+mailboxes "+nicktalati/Inbox"
+mailboxes "+nicktalati/Travel"
+mailboxes "+nicktalati/Travel/Flights"
+mailboxes "+nicktalati/Receipts"
+mailboxes "+nicktalati/Health Receipts"
+mailboxes "+nicktalati/[Gmail]/Sent Mail"
+mailboxes "+nicktalati/[Gmail]/Drafts"
+mailboxes "+nicktalati/[Gmail]/Spam"
+mailboxes "+nicktalati/[Gmail]/Trash"
+
+# quantworks
+named-mailboxes "=== QUANTWORKS ===" "+.header-quantworks"
+mailboxes "+quantworks/Inbox"
+mailboxes "+quantworks/CU Analysis"
+mailboxes "+quantworks/Cultivate"
+mailboxes "+quantworks/Archive"
+mailboxes "+quantworks/Drafts"
+mailboxes "+quantworks/Sent Items"
+mailboxes "+quantworks/Junk Email"
+mailboxes "+quantworks/Deleted Items"
+mailboxes "+quantworks/Trash"
 
 # nicktalatipaypal
-named-mailboxes "nicktalatipaypal@gmail.com" "+nicktalatipaypal/Inbox"
-named-mailboxes "  Sent Mail" "+nicktalatipaypal/[Gmail]/Sent Mail"
-named-mailboxes "  Drafts" "+nicktalatipaypal/[Gmail]/Drafts"
-named-mailboxes "  Spam" "+nicktalatipaypal/[Gmail]/Spam"
-named-mailboxes "  Trash" "+nicktalatipaypal/[Gmail]/Trash"
+named-mailboxes "=== PAYPAL ===" "+.header-nicktalatipaypal"
+mailboxes "+nicktalatipaypal/Inbox"
+mailboxes "+nicktalatipaypal/[Gmail]/Sent Mail"
+mailboxes "+nicktalatipaypal/[Gmail]/Drafts"
+mailboxes "+nicktalatipaypal/[Gmail]/Spam"
+mailboxes "+nicktalatipaypal/[Gmail]/Trash"
 
-set sendmail = "msmtp -a nicktalati"
-set from = "nicktalati@gmail.com"
+
+set sendmail = "/bin/false"
+set from = "UNCONFIGURED"
 set realname = "Nick Talati"
 
 folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"; set sendmail="msmtp -a nicktalati"'
 folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"; set sendmail="msmtp -a nicktalatipaypal"'
+folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"; set sendmail="msmtp -a quantworks"'
 
 set sidebar_visible = yes
-set sidebar_width = 30
-set sidebar_format = "%D%* %N"
+set sidebar_width = 25
+set sidebar_format = "%D%* %?N?%N?"
 set sidebar_short_path = yes
+set sidebar_folder_indent = yes
+set sidebar_component_depth = 0
+set sidebar_delim_chars = "/"
 
 set index_format = "%4C %Z %{%b %d} %-20.20L %s"
 set sort = reverse-date
@@ -50,3 +69,45 @@ bind pager k previous-line
 
 macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
 macro index,pager U "<pipe-message>urlscan<enter>"
+
+# Carbonfox theme for neomutt (thanks Claude)
+
+# Basic colors
+color normal        default default
+color error         color204 default              # red (#EE5396 ≈ 204)
+color message       color117 default              # cyan (#33B1FF ≈ 117)
+color status        color249 color236             # fg2 on bg0
+color indicator     standout default default
+
+# Sidebar
+color sidebar_indicator standout default default
+color sidebar_highlight bold default color239
+color sidebar_unread    color114 default          # green (#25be6a ≈ 114)
+color sidebar_flagged   color141 default
+
+# Index
+color index         color249 default "~R"         # read messages
+color index         color114 default "~U"         # unread
+color index         color204 default "~D"         # deleted
+color index         color141 default "~F"         # flagged
+
+# Headers
+color hdrdefault    color141 default              # magenta (#BE95FF ≈ 141)
+color header        color117 default "^From:"
+color header        color117 default "^To:"
+color header        color117 default "^Subject:"
+color header        color249 default "^Date:"
+
+# Body
+color quoted        color141 default              # magenta
+color quoted1       color117 default              # cyan
+color quoted2       color114 default              # green
+color signature     color243 default              # comment/grey
+color attachment    color215 default              # orange (#3DDBD9 ≈ 80, but using warmer)
+color tilde         color236 default
+
+# URLs
+color body          color111 default "(https?|ftp)://[^ ]+"
+
+# Lynx-style references [1], [2], etc.
+color body          color111 default "\\[[0-9]+\\]"

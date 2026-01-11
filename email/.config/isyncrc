@@ -41,3 +41,25 @@ Near :nicktalatipaypal-local:
 Patterns *
 Create Both
 SyncState *
+
+IMAPAccount quantworks
+Host outlook.office365.com
+User nick.talati@quantworks.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/email/quantworks.oauth2"
+TLSType IMAPS
+
+IMAPStore quantworks-remote
+Account quantworks
+
+MaildirStore quantworks-local
+Path ~/mail/quantworks/
+Inbox ~/mail/quantworks/Inbox
+Subfolders Verbatim
+
+Channel quantworks
+Far :quantworks-remote:
+Near :quantworks-local:
+Patterns *
+Create Both
+SyncState *
