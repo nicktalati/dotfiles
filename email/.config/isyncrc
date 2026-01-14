@@ -2,7 +2,7 @@ IMAPAccount nicktalati
 Host imap.gmail.com
 User nicktalati@gmail.com
 AuthMechs XOAuth2
-PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/email/nicktalati.oauth2"
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/nicktalati.oauth2"
 TLSType IMAPS
 
 IMAPStore nicktalati-remote
@@ -19,12 +19,14 @@ Near :nicktalati-local:
 Patterns *
 Create Both
 SyncState *
+Expunge Far
+Remove Both
 
 IMAPAccount nicktalatipaypal
 Host imap.gmail.com
 User nicktalatipaypal@gmail.com
 AuthMechs XOAuth2
-PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/email/nicktalatipaypal.oauth2"
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/nicktalatipaypal.oauth2"
 TLSType IMAPS
 
 IMAPStore nicktalatipaypal-remote
@@ -41,13 +43,16 @@ Near :nicktalatipaypal-local:
 Patterns *
 Create Both
 SyncState *
+Expunge Far
+Remove Both
 
 IMAPAccount quantworks
 Host outlook.office365.com
 User nick.talati@quantworks.com
 AuthMechs XOAuth2
-PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/email/quantworks.oauth2"
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/quantworks.oauth2"
 TLSType IMAPS
+PipelineDepth 50
 
 IMAPStore quantworks-remote
 Account quantworks
@@ -63,3 +68,5 @@ Near :quantworks-local:
 Patterns *
 Create Both
 SyncState *
+Expunge Far
+Remove Both

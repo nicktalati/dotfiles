@@ -1,17 +1,59 @@
 set folder = "~/mail"
 set spoolfile = "+nicktalati/Inbox"
+set mailcap_path = ~/.config/neomutt/mailcap
+
+set realname = "Nick Talati"
+set from = "UNCONFIGURED"
+set sendmail = "/bin/false"
+
+set mail_check_stats = yes
+
+set index_format = "%4C %Z %{%b %d} %-20.20L %s"
+set sort = reverse-date
+set markers = no
+
+set sidebar_visible = yes
+set sidebar_width = 25
+set sidebar_format = "%D%* %?N?%N?"
+set sidebar_short_path = yes
+set sidebar_folder_indent = yes
+set sidebar_component_depth = 0
+set sidebar_delim_chars = "/"
+
+set use_threads = threads
+
+auto_view text/html
+alternative_order text/plain text/html
+
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cj sidebar-next
+bind index,pager \Co sidebar-open
+bind index T tag-thread
+bind index \Ct tag-pattern
+
+bind pager j next-line
+bind pager k previous-line
+
+macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
+macro index,pager U "<pipe-message>urlscan<enter>"
 
 # nicktalati
 named-mailboxes "=== PERSONAL ===" "+.header-nicktalati"
 mailboxes "+nicktalati/Inbox"
-mailboxes "+nicktalati/Travel"
-mailboxes "+nicktalati/Travel/Flights"
-mailboxes "+nicktalati/Receipts"
-mailboxes "+nicktalati/Health Receipts"
+mailboxes "+nicktalati/travel"
+mailboxes "+nicktalati/receipts"
+mailboxes "+nicktalati/work"
+mailboxes "+nicktalati/family"
+mailboxes "+nicktalati/dsdt"
+mailboxes "+nicktalati/recruiting"
+mailboxes "+nicktalati/[Gmail]/All Mail"
 mailboxes "+nicktalati/[Gmail]/Sent Mail"
 mailboxes "+nicktalati/[Gmail]/Drafts"
 mailboxes "+nicktalati/[Gmail]/Spam"
 mailboxes "+nicktalati/[Gmail]/Trash"
+
+folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"; set sendmail="msmtp -a nicktalati"'
+folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
 
 # quantworks
 named-mailboxes "=== QUANTWORKS ===" "+.header-quantworks"
@@ -23,52 +65,22 @@ mailboxes "+quantworks/Drafts"
 mailboxes "+quantworks/Sent Items"
 mailboxes "+quantworks/Junk Email"
 mailboxes "+quantworks/Deleted Items"
-mailboxes "+quantworks/Trash"
+
+folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"; set sendmail="msmtp -a quantworks"'
+folder-hook ~/mail/quantworks/* 'set trash="+quantworks/Deleted Items"'
 
 # nicktalatipaypal
 named-mailboxes "=== PAYPAL ===" "+.header-nicktalatipaypal"
 mailboxes "+nicktalatipaypal/Inbox"
+mailboxes "+nicktalatipaypal/[Gmail]/All Mail"
 mailboxes "+nicktalatipaypal/[Gmail]/Sent Mail"
 mailboxes "+nicktalatipaypal/[Gmail]/Drafts"
 mailboxes "+nicktalatipaypal/[Gmail]/Spam"
 mailboxes "+nicktalatipaypal/[Gmail]/Trash"
 
-
-set sendmail = "/bin/false"
-set from = "UNCONFIGURED"
-set realname = "Nick Talati"
-
-folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"; set sendmail="msmtp -a nicktalati"'
 folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"; set sendmail="msmtp -a nicktalatipaypal"'
-folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"; set sendmail="msmtp -a quantworks"'
+folder-hook ~/mail/nicktalatipaypal/* 'set trash="+nicktalatipaypal/[Gmail]/Trash"'
 
-set sidebar_visible = yes
-set sidebar_width = 25
-set sidebar_format = "%D%* %?N?%N?"
-set sidebar_short_path = yes
-set sidebar_folder_indent = yes
-set sidebar_component_depth = 0
-set sidebar_delim_chars = "/"
-
-set index_format = "%4C %Z %{%b %d} %-20.20L %s"
-set sort = reverse-date
-set markers = no
-
-set mail_check_stats = yes
-
-set mailcap_path = ~/.config/neomutt/mailcap
-auto_view text/html
-alternative_order text/plain text/html
-
-bind index,pager \Ck sidebar-prev
-bind index,pager \Cj sidebar-next
-bind index,pager \Co sidebar-open
-
-bind pager j next-line
-bind pager k previous-line
-
-macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
-macro index,pager U "<pipe-message>urlscan<enter>"
 
 # Carbonfox theme for neomutt (thanks Claude)
 
