@@ -19,8 +19,151 @@ Near :nicktalati-local:
 Patterns *
 Create Both
 SyncState *
-Expunge Far
-Remove Both
+Expunge Both
+
+IMAPAccount quantworks
+Host outlook.office365.com
+User nick.talati@quantworks.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/quantworks.oauth2"
+TLSType IMAPS
+PipelineDepth 1
+
+IMAPStore quantworks-remote
+Account quantworks
+
+MaildirStore quantworks-local
+Path ~/mail/quantworks/
+Inbox ~/mail/quantworks/Inbox
+Subfolders Verbatim
+
+Channel quantworks
+Far :quantworks-remote:
+Near :quantworks-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+
+IMAPAccount aws-alarms
+Host outlook.office365.com
+User aws-alarms@vaiilsolutions.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/vaiil.oauth2"
+TLSType IMAPS
+PipelineDepth 1
+
+IMAPStore aws-alarms-remote
+Account aws-alarms
+
+MaildirStore aws-alarms-local
+Path ~/mail/aws-alarms/
+Inbox ~/mail/aws-alarms/Inbox
+Subfolders Verbatim
+
+Channel aws-alarms
+Far :aws-alarms-remote:
+Near :aws-alarms-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+
+IMAPAccount vaiil
+Host outlook.office365.com
+User nick.talati@vaiilsolutions.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/vaiil.oauth2"
+TLSType IMAPS
+PipelineDepth 1
+
+IMAPStore vaiil-remote
+Account vaiil
+
+MaildirStore vaiil-local
+Path ~/mail/vaiil/
+Inbox ~/mail/vaiil/Inbox
+Subfolders Verbatim
+
+Channel vaiil
+Far :vaiil-remote:
+Near :vaiil-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+
+IMAPAccount vaiil-support
+Host outlook.office365.com
+User support@vaiilsolutions.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/vaiil.oauth2"
+TLSType IMAPS
+PipelineDepth 1
+
+IMAPStore vaiil-support-remote
+Account vaiil-support
+
+MaildirStore vaiil-support-local
+Path ~/mail/vaiil-support/
+Inbox ~/mail/vaiil-support/Inbox
+Subfolders Verbatim
+
+Channel vaiil-support
+Far :vaiil-support-remote:
+Near :vaiil-support-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+
+IMAPAccount defaultsleuth
+Host outlook.office365.com
+User nick.talati@defaultsleuth.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/vaiil.oauth2"
+TLSType IMAPS
+PipelineDepth 1
+
+IMAPStore defaultsleuth-remote
+Account defaultsleuth
+
+MaildirStore defaultsleuth-local
+Path ~/mail/defaultsleuth/
+Inbox ~/mail/defaultsleuth/Inbox
+Subfolders Verbatim
+
+Channel defaultsleuth
+Far :defaultsleuth-remote:
+Near :defaultsleuth-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+
+IMAPAccount defaultsleuth-support
+Host outlook.office365.com
+User support@defaultsleuth.com
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/vaiil.oauth2"
+TLSType IMAPS
+PipelineDepth 1
+
+IMAPStore defaultsleuth-support-remote
+Account defaultsleuth-support
+
+MaildirStore defaultsleuth-support-local
+Path ~/mail/defaultsleuth-support/
+Inbox ~/mail/defaultsleuth-support/Inbox
+Subfolders Verbatim
+
+Channel defaultsleuth-support
+Far :defaultsleuth-support-remote:
+Near :defaultsleuth-support-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
 
 IMAPAccount nicktalatipaypal
 Host imap.gmail.com
@@ -43,30 +186,4 @@ Near :nicktalatipaypal-local:
 Patterns *
 Create Both
 SyncState *
-Expunge Far
-Remove Both
-
-IMAPAccount quantworks
-Host outlook.office365.com
-User nick.talati@quantworks.com
-AuthMechs XOAuth2
-PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/quantworks.oauth2"
-TLSType IMAPS
-PipelineDepth 50
-
-IMAPStore quantworks-remote
-Account quantworks
-
-MaildirStore quantworks-local
-Path ~/mail/quantworks/
-Inbox ~/mail/quantworks/Inbox
-Subfolders Verbatim
-
-Channel quantworks
-Far :quantworks-remote:
-Near :quantworks-local:
-Patterns *
-Create Both
-SyncState *
-Expunge Far
-Remove Both
+Expunge Both

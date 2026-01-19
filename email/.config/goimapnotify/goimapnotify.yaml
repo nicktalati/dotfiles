@@ -1,0 +1,52 @@
+configurations:
+  -
+    host: imap.gmail.com
+    port: 993
+    tls: true
+    tlsOptions:
+      rejectUnauthorized: true
+    username: nicktalati@gmail.com
+    passwordCMD: "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/nicktalati.oauth2"
+    xoAuth2: true
+    wait: 5
+    boxes:
+      - 
+        mailbox: INBOX
+        onNewMail: "mbsync nicktalati:INBOX"
+        onNewMailPost: "notify-mail ~/mail/nicktalati/Inbox"
+      -
+        mailbox: "[Gmail]/All Mail"
+        onNewMail: "mbsync 'nicktalati:[Gmail]/All Mail'"
+  -
+    host: outlook.office365.com
+    port: 993
+    tls: true
+    tlsOptions:
+      rejectUnauthorized: true
+    username: nick.talati@quantworks.com
+    passwordCMD: "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/quantworks.oauth2"
+    xoAuth2: true
+    wait: 5
+    boxes:
+      - 
+        mailbox: INBOX
+        onNewMail: "mbsync quantworks:INBOX"
+        onNewMailPost: "notify-mail ~/mail/quantworks/Inbox"
+  -
+    host: imap.gmail.com
+    port: 993
+    tls: true
+    tlsOptions:
+      rejectUnauthorized: true
+    username: nicktalatipaypal@gmail.com
+    passwordCMD: "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/nicktalatipaypal.oauth2"
+    xoAuth2: true
+    wait: 5
+    boxes:
+      - 
+        mailbox: INBOX
+        onNewMail: "mbsync nicktalatipaypal:INBOX"
+        onNewMailPost: "notify-mail ~/mail/nicktalatipaypal/Inbox"
+      -
+        mailbox: "[Gmail]/All Mail"
+        onNewMail: "mbsync 'nicktalatipaypal:[Gmail]/All Mail'"

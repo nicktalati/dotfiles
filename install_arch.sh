@@ -50,13 +50,19 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
 # general dirs TODO: is this the right place
 mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh,msmtp}
-mkdir -p "$HOME/Downloads"
+mkdir -p "$HOME/downloads"
 
 # email dir setup for neomutt
 readonly email_accounts=(
+    "saved"
     "nicktalati"
-    "nicktalatipaypal"
     "quantworks"
+    "aws-alarms"
+    "vaiil"
+    "vaiil-support"
+    "defaultsleuth"
+    "defaultsleuth-support"
+    "nicktalatipaypal"
 )
 
 for account in "${email_accounts[@]}"; do
@@ -128,6 +134,8 @@ fi
 info "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
+systemctl --user enable mbsync.timer
+systemctl --user enable goimapnotify@goimapnotify.service
 systemctl --user enable zsh-hist-backup.timer
 systemctl --user enable crypt-backup.timer
 systemctl --user enable crypt-mount.service

@@ -6,7 +6,13 @@ set realname = "Nick Talati"
 set from = "UNCONFIGURED"
 set sendmail = "/bin/false"
 
+set mail_check = 5
 set mail_check_stats = yes
+set mail_check_stats_interval = 5
+
+set use_threads = threads
+
+set wait_key = no
 
 set index_format = "%4C %Z %{%b %d} %-20.20L %s"
 set sort = reverse-date
@@ -15,12 +21,7 @@ set markers = no
 set sidebar_visible = yes
 set sidebar_width = 25
 set sidebar_format = "%D%* %?N?%N?"
-set sidebar_short_path = yes
-set sidebar_folder_indent = yes
-set sidebar_component_depth = 0
-set sidebar_delim_chars = "/"
-
-set use_threads = threads
+set sidebar_non_empty_mailbox_only = yes
 
 auto_view text/html
 alternative_order text/plain text/html
@@ -36,49 +37,144 @@ bind pager k previous-line
 
 macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
 macro index,pager U "<pipe-message>urlscan<enter>"
+macro index S "<sync-mailbox><shell-escape>mbsync -a &>/dev/null &<enter>"
 
 # nicktalati
-named-mailboxes "=== PERSONAL ===" "+.header-nicktalati"
-mailboxes "+nicktalati/Inbox"
-mailboxes "+nicktalati/travel"
-mailboxes "+nicktalati/receipts"
-mailboxes "+nicktalati/work"
-mailboxes "+nicktalati/family"
-mailboxes "+nicktalati/dsdt"
-mailboxes "+nicktalati/recruiting"
-mailboxes "+nicktalati/[Gmail]/All Mail"
-mailboxes "+nicktalati/[Gmail]/Sent Mail"
-mailboxes "+nicktalati/[Gmail]/Drafts"
-mailboxes "+nicktalati/[Gmail]/Spam"
-mailboxes "+nicktalati/[Gmail]/Trash"
+named-mailboxes "=== PERSONAL ==="  "+.header-nicktalati"
+named-mailboxes "  Inbox"           "+nicktalati/Inbox"
+named-mailboxes "  travel"          "+nicktalati/travel"
+named-mailboxes "  receipts"        "+nicktalati/receipts"
+named-mailboxes "  sent"            "+nicktalati/[Gmail]/Sent Mail"
+named-mailboxes "  drafts"          "+nicktalati/[Gmail]/Drafts"
+named-mailboxes "  spam"            "+nicktalati/[Gmail]/Spam"
+# named-mailboxes "  trash"           "+nicktalati/[Gmail]/Trash"
 
-folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"; set sendmail="msmtp -a nicktalati"'
+sidebar_pin "+.header-nicktalati"
+sidebar_pin "+nicktalati/Inbox"
+
+folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"'
+folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp -a nicktalati"'
 folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
 
 # quantworks
-named-mailboxes "=== QUANTWORKS ===" "+.header-quantworks"
-mailboxes "+quantworks/Inbox"
-mailboxes "+quantworks/CU Analysis"
-mailboxes "+quantworks/Cultivate"
-mailboxes "+quantworks/Archive"
-mailboxes "+quantworks/Drafts"
-mailboxes "+quantworks/Sent Items"
-mailboxes "+quantworks/Junk Email"
-mailboxes "+quantworks/Deleted Items"
+named-mailboxes "=== QUANTWORKS ==="  "+.header-quantworks"
+named-mailboxes "  Inbox"             "+quantworks/Inbox"
+named-mailboxes "  defaultsleuth"     "+quantworks/defaultsleuth"
+named-mailboxes "    greenville"      "+quantworks/defaultsleuth/greenville"
+named-mailboxes "    pheple"          "+quantworks/defaultsleuth/pheple"
+named-mailboxes "    peake"           "+quantworks/defaultsleuth/peake"
+named-mailboxes "    duke"            "+quantworks/defaultsleuth/duke"
+named-mailboxes "    cuanswers"       "+quantworks/defaultsleuth/cuanswers"
+named-mailboxes "  cultivate"         "+quantworks/cultivate"
+# named-mailboxes "  giveawaygood"      "+quantworks/giveawaygood"
+# named-mailboxes "  acat"              "+quantworks/acat"
+named-mailboxes "  archive"           "+quantworks/Archive"
+named-mailboxes "  drafts"            "+quantworks/Drafts"
+named-mailboxes "  sent"              "+quantworks/Sent Items"
+named-mailboxes "  junk"              "+quantworks/Junk Email"
+# named-mailboxes "  deleted"           "+quantworks/Deleted Items"
 
-folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"; set sendmail="msmtp -a quantworks"'
+sidebar_pin "+.header-quantworks"
+sidebar_pin "+quantworks/Inbox"
+sidebar_pin "+quantworks/defaultsleuth"
+
+folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"'
+folder-hook ~/mail/quantworks/* 'set sendmail="msmtp -a quantworks"'
 folder-hook ~/mail/quantworks/* 'set trash="+quantworks/Deleted Items"'
 
-# nicktalatipaypal
-named-mailboxes "=== PAYPAL ===" "+.header-nicktalatipaypal"
-mailboxes "+nicktalatipaypal/Inbox"
-mailboxes "+nicktalatipaypal/[Gmail]/All Mail"
-mailboxes "+nicktalatipaypal/[Gmail]/Sent Mail"
-mailboxes "+nicktalatipaypal/[Gmail]/Drafts"
-mailboxes "+nicktalatipaypal/[Gmail]/Spam"
-mailboxes "+nicktalatipaypal/[Gmail]/Trash"
+# aws-alarms
+named-mailboxes "=== AWS ALARMS ==="  "+.header-aws-alarms"
+named-mailboxes "  Inbox"             "+aws-alarms/Inbox"
+named-mailboxes "  archive"           "+aws-alarms/Archive"
+named-mailboxes "  drafts"            "+aws-alarms/Drafts"
+named-mailboxes "  sent"              "+aws-alarms/Sent Items"
+named-mailboxes "  junk"              "+aws-alarms/Junk Email"
+# named-mailboxes "  deleted"           "+aws-alarms/Deleted Items"
 
-folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"; set sendmail="msmtp -a nicktalatipaypal"'
+sidebar_pin "+.header-aws-alarms"
+sidebar_pin "+aws-alarms/Inbox"
+
+folder-hook ~/mail/aws-alarms/* 'set from="UNCONFIGURED"'
+folder-hook ~/mail/aws-alarms/* 'set sendmail="/bin/false"'
+folder-hook ~/mail/aws-alarms/* 'set trash="+aws-alarms/Deleted Items"'
+
+# vaiil
+named-mailboxes "=== VAIIL ==="  "+.header-vaiil"
+named-mailboxes "  Inbox"        "+vaiil/Inbox"
+named-mailboxes "  archive"      "+vaiil/Archive"
+named-mailboxes "  drafts"       "+vaiil/Drafts"
+named-mailboxes "  sent"         "+vaiil/Sent Items"
+named-mailboxes "  junk"         "+vaiil/Junk Email"
+# named-mailboxes "  deleted"      "+vaiil/Deleted Items"
+
+sidebar_pin "+.header-vaiil"
+sidebar_pin "+vaiil/Inbox"
+
+folder-hook ~/mail/vaiil/* 'set from="nick.talati@vaiilsolutions.com"'
+folder-hook ~/mail/vaiil/* 'set sendmail="msmtp -a vaiil"'
+folder-hook ~/mail/vaiil/* 'set trash="+vaiil/Deleted Items"'
+
+# vaiil-support
+named-mailboxes "=== VAIIL SUPPORT ==="  "+.header-vaiil-support"
+named-mailboxes "  Inbox"                "+vaiil-support/Inbox"
+named-mailboxes "  archive"              "+vaiil-support/Archive"
+named-mailboxes "  drafts"               "+vaiil-support/Drafts"
+named-mailboxes "  sent"                 "+vaiil-support/Sent Items"
+named-mailboxes "  junk"                 "+vaiil-support/Junk Email"
+# named-mailboxes "  deleted"              "+vaiil-support/Deleted Items"
+
+sidebar_pin "+.header-vaiil-support"
+sidebar_pin "+vaiil-support/Inbox"
+
+folder-hook ~/mail/vaiil-support/* 'set from="support@vaiilsolutions.com"'
+folder-hook ~/mail/vaiil-support/* 'set sendmail="msmtp -a vaiil-support"'
+folder-hook ~/mail/vaiil-support/* 'set trash="+vaiil-support/Deleted Items"'
+
+# defaultsleuth
+named-mailboxes "=== DEFAULTSLEUTH ==="  "+.header-defaultsleuth"
+named-mailboxes "  Inbox"                "+defaultsleuth/Inbox"
+named-mailboxes "  archive"              "+defaultsleuth/Archive"
+named-mailboxes "  drafts"               "+defaultsleuth/Drafts"
+named-mailboxes "  sent"                 "+defaultsleuth/Sent Items"
+named-mailboxes "  junk"                 "+defaultsleuth/Junk Email"
+# named-mailboxes "  deleted"              "+defaultsleuth/Deleted Items"
+
+sidebar_pin "+.header-defaultsleuth"
+sidebar_pin "+defaultsleuth/Inbox"
+
+folder-hook ~/mail/defaultsleuth/* 'set from="nick.talati@defaultsleuth.com"'
+folder-hook ~/mail/defaultsleuth/* 'set sendmail="msmtp -a defaultsleuth"'
+folder-hook ~/mail/defaultsleuth/* 'set trash="+defaultsleuth/Deleted Items"'
+
+# defaultsleuth-support
+named-mailboxes "=== DS SUPPORT ==="  "+.header-defaultsleuth-support"
+named-mailboxes "  Inbox"             "+defaultsleuth-support/Inbox"
+named-mailboxes "  archive"           "+defaultsleuth-support/Archive"
+named-mailboxes "  drafts"            "+defaultsleuth-support/Drafts"
+named-mailboxes "  sent"              "+defaultsleuth-support/Sent Items"
+named-mailboxes "  junk"              "+defaultsleuth-support/Junk Email"
+# named-mailboxes "  deleted"           "+defaultsleuth-support/Deleted Items"
+
+sidebar_pin "+.header-defaultsleuth-support"
+sidebar_pin "+defaultsleuth-support/Inbox"
+
+folder-hook ~/mail/defaultsleuth-support/* 'set from="support@defaultsleuth.com"'
+folder-hook ~/mail/defaultsleuth-support/* 'set sendmail="msmtp -a defaultsleuth-support"'
+folder-hook ~/mail/defaultsleuth-support/* 'set trash="+defaultsleuth-support/Deleted Items"'
+
+# nicktalatipaypal
+named-mailboxes "=== PAYPAL ==="  "+.header-nicktalatipaypal"
+named-mailboxes "  Inbox"         "+nicktalatipaypal/Inbox"
+named-mailboxes "  sent"          "+nicktalatipaypal/[Gmail]/Sent Mail"
+named-mailboxes "  drafts"        "+nicktalatipaypal/[Gmail]/Drafts"
+named-mailboxes "  spam"          "+nicktalatipaypal/[Gmail]/Spam"
+# named-mailboxes "  trash"         "+nicktalatipaypal/[Gmail]/Trash"
+
+sidebar_pin "+.header-nicktalatipaypal"
+sidebar_pin "+nicktalatipaypal/Inbox"
+
+folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"'
+folder-hook ~/mail/nicktalatipaypal/* 'set sendmail="msmtp -a nicktalatipaypal"'
 folder-hook ~/mail/nicktalatipaypal/* 'set trash="+nicktalatipaypal/[Gmail]/Trash"'
 
 

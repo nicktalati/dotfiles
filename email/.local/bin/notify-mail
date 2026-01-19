@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -euo pipefail
+
+readonly nm_state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/notify-mail"
+readonly nm_notified="$nm_state_dir/notified"
+
+[[ "$#" -eq 1 ]] || { echo "Usage: notify-mail <mailbox-path>"; exit 1; }
+
+mailbox=$1
+[[ -d "$mailbox" ]] || { echo "Directory does not exist: $mailbox"; exit 1; }
+
+new="$mailbox/new"
+[[ -d "$new" ]] || { echo "Not a valid mailbox (no 'new' subdir): $mailbox"; exit 1; }
+
+mkdir -p "$nm_state_dir"
+touch "$nm_notified"
+
+notify() {
+    local file="$1"
+    local to from subject
+    to=$(grep -i '^To: ' "$file" | head -n 1 | sed "s/^[Tt]o: //")
+    from=$(grep -i '^From: ' "$file" | head -n 1)
+    subject=$(grep -i '^Subject: ' "$file" | head -n 1)
+    if ! grep -Fxq "$file" "$nm_notified"; then
+        echo "$file" >> "$nm_notified"
+        notify-send -a "$to" "$from" "$subject"
+    fi
+}
+
+shopt -s nullglob
+files=("$new"/*)
+shopt -u nullglob
+
+for file in "${files[@]}"; do
+    notify "$file"
+done

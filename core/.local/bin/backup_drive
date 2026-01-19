@@ -1,6 +1,7 @@
 #!/bin/bash
 
-readonly source_vault="$HOME/crypt"
+readonly vault="$HOME/crypt"
+readonly reading="$HOME/reading"
 readonly dest="/mnt/backup"
 
 if ! mountpoint -q "/mnt/backup"; then
@@ -13,7 +14,9 @@ echo "Starting backup..."
 mkdir -p "$dest"
 
 echo "Syncing vault..."
-rsync -av --delete "$source_vault/" "$dest/crypt/"
+rsync -av --delete "$vault/" "$dest/crypt/"
+echo "Syncing reading..."
+rsync -av --delete "$reading/" "$dest/reading/"
 
 echo "Backup complete."
 sync
