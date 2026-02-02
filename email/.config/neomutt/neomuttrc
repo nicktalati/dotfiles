@@ -23,8 +23,8 @@ set sidebar_width = 25
 set sidebar_format = "%D%* %?N?%N?"
 set sidebar_non_empty_mailbox_only = yes
 
-auto_view text/html
-alternative_order text/plain text/html
+auto_view text/html text/calendar application/ics
+alternative_order text/calendar text/plain text/html
 
 bind index,pager \Ck sidebar-prev
 bind index,pager \Cj sidebar-next
@@ -66,6 +66,7 @@ named-mailboxes "    peake"           "+quantworks/defaultsleuth/peake"
 named-mailboxes "    duke"            "+quantworks/defaultsleuth/duke"
 named-mailboxes "    cuanswers"       "+quantworks/defaultsleuth/cuanswers"
 named-mailboxes "  cultivate"         "+quantworks/cultivate"
+named-mailboxes "  acat"              "+quantworks/acat"
 # named-mailboxes "  giveawaygood"      "+quantworks/giveawaygood"
 # named-mailboxes "  acat"              "+quantworks/acat"
 named-mailboxes "  archive"           "+quantworks/Archive"

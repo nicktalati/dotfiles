@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FILE="$HOME/Downloads/ss_$(date +%s).png"
+FILE="$HOME/downloads/ss_$(date +%s).png"
 
 if [ "$1" = "region" ]; then
     grim -g "$(slurp)" "$FILE"

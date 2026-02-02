@@ -74,7 +74,7 @@ bindkey -M vicmd 'j' down-line-or-beginning-search
 
 # aliases
 
-alias sv="uv sync && uv pip install python-lsp-server pylsp-mypy mypy"
+alias sv="uv pip install python-lsp-server pylsp-mypy mypy"
 
 alias t="nvim -c 'normal Go' -c 'startinsert' $HOME/decrypt/notes/todo.txt"
 alias n="nvim"

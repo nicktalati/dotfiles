@@ -1,0 +1,17 @@
+[calendars]
+  [[personal]]
+    path = ~/.local/share/khal/calendars/personal/
+    type = calendar
+
+[default]
+  default_calendar = personal
+
+[locale]
+  timeformat = "%H:%M"
+  dateformat = "%Y-%m-%d"
+  longdateformat = "%Y-%m-%d"
+  datetimeformat = "%Y-%m-%d %H:%M"
+  longdatetimeformat = "%Y-%m-%d %H:%M"
+  firstweekday = 0
+  local_timezone = America/Argentina/Buenos_Aires
+  default_timezone = America/Argentina/Buenos_Aires

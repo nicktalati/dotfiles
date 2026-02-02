@@ -18,6 +18,8 @@ This more or less contains my entire Arch Linux config.
 
 **Management:** Stow
 
+**Email:** Goimapnotify + mbsync + neomutt
+
 ## New Machines
 
 Visit [https://archlinux.org/download](https://archlinux.org/download) and retrieve the .iso and .iso.sig files.
