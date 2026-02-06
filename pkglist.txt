@@ -7,7 +7,6 @@ bluetui
 bluez
 bluez-utils
 brightnessctl
-btop
 cmake
 cyme
 docker
@@ -25,6 +24,7 @@ gocryptfs
 goimapnotify
 grim
 grub
+htop
 imv
 intel-ucode
 iptables-nft
@@ -33,6 +33,7 @@ iw
 iwd
 jq
 keyd
+khal
 libnotify
 linux
 linux-firmware
@@ -76,7 +77,6 @@ swaybg
 swayidle
 swaylock
 tcpdump
-thunderbird
 tldr
 tlp
 tmux
