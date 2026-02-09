@@ -76,6 +76,7 @@ sway
 swaybg
 swayidle
 swaylock
+tailscale
 tcpdump
 tldr
 tlp
