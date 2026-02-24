@@ -78,7 +78,7 @@ sudo pacman -S --needed -- $(< "$pkglist")
 ensure_commands stow
 
 info "Stowing dotfiles..."
-stow -v -R --no-folding -d "$df_dir" -t "$HOME" core email gui
+stow -v -R --no-folding -d "$df_dir" -t "$HOME" core email calendar gui
 
 # secrets
 info "Setting up secrets..."

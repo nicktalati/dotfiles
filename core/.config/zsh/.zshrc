@@ -76,8 +76,6 @@ bindkey -M vicmd 'j' down-line-or-beginning-search
 
 alias sv="uv pip install python-lsp-server pylsp-mypy mypy"
 
-alias t="nvim -c 'normal Go' -c 'startinsert' $HOME/decrypt/notes/todo.txt"
-alias n="nvim"
 alias m="neomutt"
 alias s="mbsync -a"
 alias o="xdg-open"

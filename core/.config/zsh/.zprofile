@@ -1,4 +1,5 @@
 export PAGER=less
+export MANPAGER="less -R"
 export EDITOR=nvim
 export VISUAL=nvim
 

@@ -88,6 +88,7 @@ ttf-dejavu
 unzip
 urlscan
 uv
+vdirsyncer
 wireguard-tools
 wl-clipboard
 wob

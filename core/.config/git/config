@@ -1,7 +1,14 @@
 [user]
 	email = nicktalati@gmail.com
 	name = Nick Talati
+	signingkey = /home/talati/.ssh/id_rsa_personal
 [merge]
 	tool = nvimdiff
 [init]
     defaultBranch = main
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true

@@ -23,6 +23,9 @@ set sidebar_width = 25
 set sidebar_format = "%D%* %?N?%N?"
 set sidebar_non_empty_mailbox_only = yes
 
+set mime_forward = yes
+set mime_forward_rest = yes
+
 auto_view text/html text/calendar application/ics
 alternative_order text/calendar text/plain text/html
 
@@ -42,11 +45,13 @@ macro index S "<sync-mailbox><shell-escape>mbsync -a &>/dev/null &<enter>"
 # nicktalati
 named-mailboxes "=== PERSONAL ==="  "+.header-nicktalati"
 named-mailboxes "  Inbox"           "+nicktalati/Inbox"
-named-mailboxes "  travel"          "+nicktalati/travel"
 named-mailboxes "  receipts"        "+nicktalati/receipts"
+named-mailboxes "  van alen"        "+nicktalati/van alen"
+named-mailboxes "  travel"          "+nicktalati/travel"
 named-mailboxes "  sent"            "+nicktalati/[Gmail]/Sent Mail"
 named-mailboxes "  drafts"          "+nicktalati/[Gmail]/Drafts"
 named-mailboxes "  spam"            "+nicktalati/[Gmail]/Spam"
+# named-mailboxes "  all"           "+nicktalati/[Gmail]/All Mail"
 # named-mailboxes "  trash"           "+nicktalati/[Gmail]/Trash"
 
 sidebar_pin "+.header-nicktalati"
@@ -73,7 +78,7 @@ named-mailboxes "  archive"           "+quantworks/Archive"
 named-mailboxes "  drafts"            "+quantworks/Drafts"
 named-mailboxes "  sent"              "+quantworks/Sent Items"
 named-mailboxes "  junk"              "+quantworks/Junk Email"
-# named-mailboxes "  deleted"           "+quantworks/Deleted Items"
+named-mailboxes "  deleted"           "+quantworks/Deleted Items"
 
 sidebar_pin "+.header-quantworks"
 sidebar_pin "+quantworks/Inbox"

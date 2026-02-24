@@ -40,7 +40,7 @@ Subfolders Verbatim
 Channel quantworks
 Far :quantworks-remote:
 Near :quantworks-local:
-Patterns *
+Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
 Create Both
 SyncState *
 Expunge Both
@@ -64,7 +64,7 @@ Subfolders Verbatim
 Channel aws-alarms
 Far :aws-alarms-remote:
 Near :aws-alarms-local:
-Patterns *
+Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
 Create Both
 SyncState *
 Expunge Both
@@ -88,7 +88,7 @@ Subfolders Verbatim
 Channel vaiil
 Far :vaiil-remote:
 Near :vaiil-local:
-Patterns *
+Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
 Create Both
 SyncState *
 Expunge Both
@@ -112,7 +112,7 @@ Subfolders Verbatim
 Channel vaiil-support
 Far :vaiil-support-remote:
 Near :vaiil-support-local:
-Patterns *
+Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
 Create Both
 SyncState *
 Expunge Both
@@ -136,7 +136,7 @@ Subfolders Verbatim
 Channel defaultsleuth
 Far :defaultsleuth-remote:
 Near :defaultsleuth-local:
-Patterns *
+Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
 Create Both
 SyncState *
 Expunge Both
@@ -160,7 +160,7 @@ Subfolders Verbatim
 Channel defaultsleuth-support
 Far :defaultsleuth-support-remote:
 Near :defaultsleuth-support-local:
-Patterns *
+Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
 Create Both
 SyncState *
 Expunge Both

@@ -1,0 +1,20 @@
+[general]
+status_path = "~/.local/share/vdirsyncer/status/"
+
+[pair outlook_calendar]
+a = "outlook_calendar_local"
+b = "outlook_calendar_remote"
+collections = ["from a", "from b"]
+metadata = ["color"]
+
+[storage outlook_calendar_local]
+type = "filesystem"
+path = "~/.local/share/khal/calendars/outlook/"
+fileext = ".ics"
+
+[storage outlook_calendar_remote]
+type = "caldav"
+url = "https://outlook.office365.com/caldav/v2/me/events"
+username = "nick.talati@quantworks.com"
+password.fetch = ["shell", "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/quantworks.oauth2"]
+auth = "basic"
