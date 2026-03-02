@@ -67,9 +67,17 @@ for account in "${email_accounts[@]}"; do
     mkdir -p "$HOME/mail/.header-$account"/{cur,new,tmp}
 done
 
+# bootstrap yay
+if ! command -v yay &> /dev/null; then
+    info "Installing yay..."
+    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    (cd /tmp/yay-bin && makepkg -si --noconfirm)
+    rm -rf /tmp/yay-bin
+fi
+
 # pkg install
 info "Installing packages from $pkglist..."
-sudo pacman -S --needed -- $(< "$pkglist")
+yay -S --needed - < "$pkglist"
 
 # stow
 ensure_commands stow

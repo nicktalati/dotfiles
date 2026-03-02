@@ -8,6 +8,7 @@ bluez
 bluez-utils
 brightnessctl
 cmake
+cyrus-sasl-xoauth2-git
 cyme
 docker
 docker-buildx
@@ -16,10 +17,12 @@ efibootmgr
 expac
 fd
 firefox
+fnm
 foot
 fzf
 git
 glow
+google-chrome
 gocryptfs
 goimapnotify
 grim
@@ -37,6 +40,7 @@ khal
 libnotify
 linux
 linux-firmware
+llama.cpp
 lsof
 ltrace
 lua-language-server
@@ -67,8 +71,10 @@ rclone
 ripgrep
 rsync
 slurp
+shellcheck-bin
 socat
 sof-firmware
+stockfish
 stow
 strace
 sudo
@@ -77,6 +83,7 @@ swaybg
 swayidle
 swaylock
 tailscale
+task
 tcpdump
 tldr
 tlp

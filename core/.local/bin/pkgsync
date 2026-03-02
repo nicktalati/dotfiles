@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -euo pipefail
+
+readonly pkglist="$HOME/dotfiles/pkglist.txt"
+
+[[ -f "$pkglist" ]] || { echo "Missing $pkglist"; exit 1; }
+
+case "${1:-}" in
+    sync)
+        echo "Installing packages..."
+        yay -S --needed - < "$pkglist"
+        ;;
+    diff)
+        echo "=== installed but not in list ==="
+        comm -23 <(pacman -Qqe | sort) <(sort "$pkglist")
+        echo ""
+        echo "=== in list but not installed ==="
+        comm -23 <(sort "$pkglist") <(pacman -Qqe | sort)
+        ;;
+    *)
+        echo "Usage: pkgsync {sync|diff}"
+        echo "  sync  - install packages from list"
+        echo "  diff  - show divergence from list"
+        ;;
+esac

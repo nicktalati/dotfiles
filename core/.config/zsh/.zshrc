@@ -95,7 +95,7 @@ alias history="history 1"
 
 alias gco='git checkout'
 
-alias pkgup="pacman -Qqen > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
+alias pe="$EDITOR $HOME/dotfiles/pkglist.txt"
 
 # fast nvm
 command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
