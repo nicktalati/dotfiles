@@ -79,6 +79,7 @@ alias sv="uv pip install python-lsp-server pylsp-mypy mypy"
 alias m="neomutt"
 alias s="mbsync -a"
 alias o="xdg-open"
+alias t="tmux_launcher"
 
 alias ze="$EDITOR $ZDOTDIR/.zshrc"
 alias zs="source $ZDOTDIR/.zshrc"

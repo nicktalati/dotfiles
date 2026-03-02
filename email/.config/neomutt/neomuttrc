@@ -78,7 +78,7 @@ named-mailboxes "  archive"           "+quantworks/Archive"
 named-mailboxes "  drafts"            "+quantworks/Drafts"
 named-mailboxes "  sent"              "+quantworks/Sent Items"
 named-mailboxes "  junk"              "+quantworks/Junk Email"
-named-mailboxes "  deleted"           "+quantworks/Deleted Items"
+# named-mailboxes "  deleted"           "+quantworks/Deleted Items"
 
 sidebar_pin "+.header-quantworks"
 sidebar_pin "+quantworks/Inbox"
