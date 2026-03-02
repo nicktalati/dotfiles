@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 CODE_DIR="$HOME/code"
 mkdir -p "$CODE_DIR"
 cd "$CODE_DIR"

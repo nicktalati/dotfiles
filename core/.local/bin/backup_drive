@@ -1,22 +1,28 @@
 #!/bin/bash
 
-readonly vault="$HOME/crypt"
-readonly reading="$HOME/reading"
-readonly dest="/mnt/backup"
+set -euo pipefail
 
-if ! mountpoint -q "/mnt/backup"; then
+readonly backup_conf="$XDG_CONFIG_HOME/backup/config"
+
+if ! [[ -f "$backup_conf" ]]; then
+    echo "backup config not found at $backup_conf"
+    exit 1
+fi
+
+source "$backup_conf"
+
+if ! mountpoint -q "$BACKUP_MOUNT"; then
     echo "Drive not mounted. Run 'mount_drive' first"
     exit 1
 fi
 
 echo "Starting backup..."
 
-mkdir -p "$dest"
-
-echo "Syncing vault..."
-rsync -av --delete "$vault/" "$dest/crypt/"
-echo "Syncing reading..."
-rsync -av --delete "$reading/" "$dest/reading/"
+for source in "${BACKUP_SOURCES[@]}"; do
+    base=$(basename "$source")
+    echo "Syncing $base..."
+    rsync -av --delete "$source/" "$BACKUP_MOUNT/$base/"
+done
 
 echo "Backup complete."
 sync

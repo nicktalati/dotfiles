@@ -95,9 +95,6 @@ alias history="history 1"
 
 alias gco='git checkout'
 
-alias connect-beats="bluetoothctl connect 28:2D:7F:04:C7:7D"
-alias disconnect-beats="bluetoothctl disconnect 28:2D:7F:04:C7:7D"
-
 alias pkgup="pacman -Qqen > $HOME/dotfiles/pkglist.txt && echo 'Package list updated.'"
 
 # fast nvm

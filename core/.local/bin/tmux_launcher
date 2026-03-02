@@ -4,7 +4,6 @@ set -euo pipefail
 shopt -s nullglob
 
 readonly dirs=(
-    "/home"
     "$HOME"
     "$HOME/code"
     "$HOME/work/ds"
@@ -22,8 +21,10 @@ fi
 
 readonly session_dir=$(
     for d in "${dirs[@]}"; do
-        printf '%s\n' "$d"/*/ | sed 's|/$||'
-    done | fzf --preview 'ls -lah --color=always {}'
+        [[ -d "$d" ]] || continue
+        printf '%s\n' "$d"
+        printf '%s\n' "$d"/*/
+    done  | sed 's|/$||' | fzf --preview 'ls -lah --color=always {}'
 )
 [[ -z "$session_dir" ]] && exit 1
 readonly session_name=$(basename "$session_dir" | tr '.:"' '-')

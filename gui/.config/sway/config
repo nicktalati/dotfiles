@@ -27,7 +27,6 @@ exec rm -f /tmp/wobpipe && \
 bindsym $mod+Return exec $term
 bindsym $mod+p exec firefox -P personal
 bindsym $mod+w exec firefox -P work
-bindsym $mod+t exec thunderbird
 bindsym $mod+z exec zathura
 bindsym $mod+m exec launcher_menu
 

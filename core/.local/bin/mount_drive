@@ -1,28 +1,36 @@
 #!/bin/bash
 
-LABEL="backup"
-MOUNTPOINT="/mnt/backup"
+set -euo pipefail
 
-if mountpoint -q "$MOUNTPOINT"; then
-    echo "$LABEL is already mounted at $MOUNTPOINT"
-    exit 0
-fi
+readonly backup_conf="$XDG_CONFIG_HOME/backup/config"
 
-if [ ! -d "$MOUNTPOINT" ]; then
-    echo "Creating mount point directory..."
-    sudo mkdir -p "$MOUNTPOINT"
-fi
-
-DEV=$(blkid -L "$LABEL")
-
-if [ -z "$DEV" ]; then
-    echo "Drive '$LABEL' not found. Is it plugged in?"
+if ! [[ -f "$backup_conf" ]]; then
+    echo "backup config not found at $backup_conf"
     exit 1
 fi
 
-echo "Mounting $DEV to $MOUNTPOINT..."
-sudo mount "$DEV" "$MOUNTPOINT"
+source "$backup_conf"
 
-sudo chown "$USER":"$USER" "$MOUNTPOINT"
+if mountpoint -q "$BACKUP_MOUNT"; then
+    echo "$BACKUP_LABEL is already mounted at $BACKUP_MOUNT"
+    exit 0
+fi
+
+if [ ! -d "$BACKUP_MOUNT" ]; then
+    echo "Creating mount point directory..."
+    sudo mkdir -p "$BACKUP_MOUNT"
+fi
+
+readonly dev=$(blkid -L "$BACKUP_LABEL")
+
+if [ -z "$dev" ]; then
+    echo "Drive '$BACKUP_LABEL' not found. Is it plugged in?"
+    exit 1
+fi
+
+echo "Mounting $dev to $BACKUP_MOUNT..."
+sudo mount "$dev" "$BACKUP_MOUNT"
+
+sudo chown "$USER":"$USER" "$BACKUP_MOUNT"
 
 echo "Done."

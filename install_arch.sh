@@ -1,10 +1,8 @@
 #!/bin/bash
-# TODO: define vars in .zprofile and source here?
 
 set -Eeuo pipefail
 exec > >(tee -i "/tmp/install-$(date +%Y%m%d.%H-%M-%S).log") 2>&1
 
-# TODO: some of the vars in question...
 readonly df_dir="$HOME/dotfiles"
 readonly df_conf="$df_dir/core/.config"
 readonly pkglist="$df_dir/pkglist.txt"
@@ -45,10 +43,9 @@ grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
 
 sudo -v || error "This script required sudo privileges."
 
-# sudo loop so no reauth TODO: chsh still asks
+# sudo loop so no reauth
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 
-# general dirs TODO: is this the right place
 mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh,msmtp}
 mkdir -p "$HOME/downloads"
 
@@ -120,17 +117,14 @@ sudo cp "$df_dir/etc/iwd/main.conf" "/etc/iwd/main.conf"
 sudo cp "$df_dir/etc/keyd/default.conf" "/etc/keyd/default.conf"
 
 # change shell
-# TODO: do i need the check? probably smart
 if ! command -v zsh &> /dev/null; then
     warn "zsh not found; not changing shell."
 elif [[ "$SHELL" != "$(command -v zsh)" ]]; then
     info "Changing shell to zsh..."
-    chsh -s "$(command -v zsh)"
+    sudo chsh -s "$(command -v zsh)" "$USER"
 fi
 
 # systemd units
-# TODO: verify these are the essential ones
-# TODO: should i check first? currently takes a bit
 info "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
@@ -146,11 +140,6 @@ sudo systemctl enable keyd.service
 sudo systemctl enable bluetooth.service
 sudo systemctl enable systemd-timesyncd.service
 sudo systemctl enable tlp.service
-
-# docker
-# TODO: seems misplaced, and do i need docker?
-info "Adding user to docker group..."
-sudo usermod -aG docker "$USER"
 
 cat <<'EOF'
 =========================================================
