@@ -61,17 +61,33 @@ folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"'
 folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp -a nicktalati"'
 folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
 
+# cultivate
+named-mailboxes "=== CULTIVATE ==="  "+.header-cultivate"
+named-mailboxes "  Inbox"            "+cultivate/Inbox"
+named-mailboxes "  sent"             "+cultivate/[Gmail]/Sent Mail"
+named-mailboxes "  drafts"           "+cultivate/[Gmail]/Drafts"
+named-mailboxes "  spam"             "+cultivate/[Gmail]/Spam"
+# named-mailboxes "  all"            "+cultivate/[Gmail]/All Mail"
+# named-mailboxes "  trash"            "+cultivate/[Gmail]/Trash"
+
+sidebar_pin "+.header-cultivate"
+sidebar_pin "+cultivate/Inbox"
+
+folder-hook ~/mail/cultivate/* 'set from="talati@getcultivate.ai"'
+folder-hook ~/mail/cultivate/* 'set sendmail="msmtp -a cultivate"'
+folder-hook ~/mail/cultivate/* 'set trash="+cultivate/[Gmail]/Trash"'
+
 # quantworks
 named-mailboxes "=== QUANTWORKS ==="  "+.header-quantworks"
 named-mailboxes "  Inbox"             "+quantworks/Inbox"
-named-mailboxes "  defaultsleuth"     "+quantworks/defaultsleuth"
-named-mailboxes "    greenville"      "+quantworks/defaultsleuth/greenville"
-named-mailboxes "    pheple"          "+quantworks/defaultsleuth/pheple"
-named-mailboxes "    peake"           "+quantworks/defaultsleuth/peake"
-named-mailboxes "    duke"            "+quantworks/defaultsleuth/duke"
-named-mailboxes "    cuanswers"       "+quantworks/defaultsleuth/cuanswers"
+# named-mailboxes "  defaultsleuth"     "+quantworks/defaultsleuth"
+# named-mailboxes "    greenville"      "+quantworks/defaultsleuth/greenville"
+# named-mailboxes "    pheple"          "+quantworks/defaultsleuth/pheple"
+# named-mailboxes "    peake"           "+quantworks/defaultsleuth/peake"
+# named-mailboxes "    duke"            "+quantworks/defaultsleuth/duke"
+# named-mailboxes "    cuanswers"       "+quantworks/defaultsleuth/cuanswers"
 named-mailboxes "  cultivate"         "+quantworks/cultivate"
-named-mailboxes "  acat"              "+quantworks/acat"
+# named-mailboxes "  acat"              "+quantworks/acat"
 # named-mailboxes "  giveawaygood"      "+quantworks/giveawaygood"
 # named-mailboxes "  acat"              "+quantworks/acat"
 named-mailboxes "  archive"           "+quantworks/Archive"
@@ -87,86 +103,6 @@ sidebar_pin "+quantworks/defaultsleuth"
 folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"'
 folder-hook ~/mail/quantworks/* 'set sendmail="msmtp -a quantworks"'
 folder-hook ~/mail/quantworks/* 'set trash="+quantworks/Deleted Items"'
-
-# aws-alarms
-named-mailboxes "=== AWS ALARMS ==="  "+.header-aws-alarms"
-named-mailboxes "  Inbox"             "+aws-alarms/Inbox"
-named-mailboxes "  archive"           "+aws-alarms/Archive"
-named-mailboxes "  drafts"            "+aws-alarms/Drafts"
-named-mailboxes "  sent"              "+aws-alarms/Sent Items"
-named-mailboxes "  junk"              "+aws-alarms/Junk Email"
-# named-mailboxes "  deleted"           "+aws-alarms/Deleted Items"
-
-sidebar_pin "+.header-aws-alarms"
-sidebar_pin "+aws-alarms/Inbox"
-
-folder-hook ~/mail/aws-alarms/* 'set from="UNCONFIGURED"'
-folder-hook ~/mail/aws-alarms/* 'set sendmail="/bin/false"'
-folder-hook ~/mail/aws-alarms/* 'set trash="+aws-alarms/Deleted Items"'
-
-# vaiil
-named-mailboxes "=== VAIIL ==="  "+.header-vaiil"
-named-mailboxes "  Inbox"        "+vaiil/Inbox"
-named-mailboxes "  archive"      "+vaiil/Archive"
-named-mailboxes "  drafts"       "+vaiil/Drafts"
-named-mailboxes "  sent"         "+vaiil/Sent Items"
-named-mailboxes "  junk"         "+vaiil/Junk Email"
-# named-mailboxes "  deleted"      "+vaiil/Deleted Items"
-
-sidebar_pin "+.header-vaiil"
-sidebar_pin "+vaiil/Inbox"
-
-folder-hook ~/mail/vaiil/* 'set from="nick.talati@vaiilsolutions.com"'
-folder-hook ~/mail/vaiil/* 'set sendmail="msmtp -a vaiil"'
-folder-hook ~/mail/vaiil/* 'set trash="+vaiil/Deleted Items"'
-
-# vaiil-support
-named-mailboxes "=== VAIIL SUPPORT ==="  "+.header-vaiil-support"
-named-mailboxes "  Inbox"                "+vaiil-support/Inbox"
-named-mailboxes "  archive"              "+vaiil-support/Archive"
-named-mailboxes "  drafts"               "+vaiil-support/Drafts"
-named-mailboxes "  sent"                 "+vaiil-support/Sent Items"
-named-mailboxes "  junk"                 "+vaiil-support/Junk Email"
-# named-mailboxes "  deleted"              "+vaiil-support/Deleted Items"
-
-sidebar_pin "+.header-vaiil-support"
-sidebar_pin "+vaiil-support/Inbox"
-
-folder-hook ~/mail/vaiil-support/* 'set from="support@vaiilsolutions.com"'
-folder-hook ~/mail/vaiil-support/* 'set sendmail="msmtp -a vaiil-support"'
-folder-hook ~/mail/vaiil-support/* 'set trash="+vaiil-support/Deleted Items"'
-
-# defaultsleuth
-named-mailboxes "=== DEFAULTSLEUTH ==="  "+.header-defaultsleuth"
-named-mailboxes "  Inbox"                "+defaultsleuth/Inbox"
-named-mailboxes "  archive"              "+defaultsleuth/Archive"
-named-mailboxes "  drafts"               "+defaultsleuth/Drafts"
-named-mailboxes "  sent"                 "+defaultsleuth/Sent Items"
-named-mailboxes "  junk"                 "+defaultsleuth/Junk Email"
-# named-mailboxes "  deleted"              "+defaultsleuth/Deleted Items"
-
-sidebar_pin "+.header-defaultsleuth"
-sidebar_pin "+defaultsleuth/Inbox"
-
-folder-hook ~/mail/defaultsleuth/* 'set from="nick.talati@defaultsleuth.com"'
-folder-hook ~/mail/defaultsleuth/* 'set sendmail="msmtp -a defaultsleuth"'
-folder-hook ~/mail/defaultsleuth/* 'set trash="+defaultsleuth/Deleted Items"'
-
-# defaultsleuth-support
-named-mailboxes "=== DS SUPPORT ==="  "+.header-defaultsleuth-support"
-named-mailboxes "  Inbox"             "+defaultsleuth-support/Inbox"
-named-mailboxes "  archive"           "+defaultsleuth-support/Archive"
-named-mailboxes "  drafts"            "+defaultsleuth-support/Drafts"
-named-mailboxes "  sent"              "+defaultsleuth-support/Sent Items"
-named-mailboxes "  junk"              "+defaultsleuth-support/Junk Email"
-# named-mailboxes "  deleted"           "+defaultsleuth-support/Deleted Items"
-
-sidebar_pin "+.header-defaultsleuth-support"
-sidebar_pin "+defaultsleuth-support/Inbox"
-
-folder-hook ~/mail/defaultsleuth-support/* 'set from="support@defaultsleuth.com"'
-folder-hook ~/mail/defaultsleuth-support/* 'set sendmail="msmtp -a defaultsleuth-support"'
-folder-hook ~/mail/defaultsleuth-support/* 'set trash="+defaultsleuth-support/Deleted Items"'
 
 # nicktalatipaypal
 named-mailboxes "=== PAYPAL ==="  "+.header-nicktalatipaypal"

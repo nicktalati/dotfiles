@@ -7,7 +7,7 @@ readonly dirs=(
     "$HOME"
     "$HOME/code"
     "$HOME/work/ds"
-    "$HOME/work/cultivate"
+    "$HOME/work/cultivate-ai"
 )
 
 if ! command -v tmux &>/dev/null; then

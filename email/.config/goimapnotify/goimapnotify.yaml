@@ -19,6 +19,22 @@ configurations:
         mailbox: "[Gmail]/All Mail"
         onNewMail: "mbsync 'nicktalati:[Gmail]/All Mail'"
   -
+    host: imap.gmail.com
+    port: 993
+    tls: true
+    tlsOptions:
+      rejectUnauthorized: true
+    username: talati@getcultivate.ai
+    passwordCMD: "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/cultivate.oauth2"
+    xoAuth2: true
+    wait: 5
+    idleLogoutTimeout: 10
+    boxes:
+      - 
+        mailbox: INBOX
+        onNewMail: "mbsync cultivate:INBOX"
+        onNewMailPost: "notify-mail ~/mail/cultivate/Inbox"
+  -
     host: outlook.office365.com
     port: 993
     tls: true

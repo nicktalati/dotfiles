@@ -21,6 +21,29 @@ Create Both
 SyncState *
 Expunge Both
 
+IMAPAccount cultivate
+Host imap.gmail.com
+User talati@getcultivate.ai
+AuthMechs XOAuth2
+PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/cultivate.oauth2"
+TLSType IMAPS
+
+IMAPStore cultivate-remote
+Account cultivate
+
+MaildirStore cultivate-local
+Path ~/mail/cultivate/
+Inbox ~/mail/cultivate/Inbox
+Subfolders Verbatim
+
+Channel cultivate
+Far :cultivate-remote:
+Near :cultivate-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+
 IMAPAccount quantworks
 Host outlook.office365.com
 User nick.talati@quantworks.com

@@ -53,6 +53,7 @@ mkdir -p "$HOME/downloads"
 readonly email_accounts=(
     "saved"
     "nicktalati"
+    "cultivate"
     "quantworks"
     "aws-alarms"
     "vaiil"
