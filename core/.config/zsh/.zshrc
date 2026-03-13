@@ -87,7 +87,7 @@ alias ae="$EDITOR $XDG_CONFIG_HOME/aws/credentials"
 alias ne="$EDITOR $XDG_CONFIG_HOME/nvim/init.lua"
 
 alias tree="tree --dirsfirst -a -I .git"
-alias gtree="tree --gitignore --dirsfirst"
+alias gtree="git ls-files | tree --fromfile"
 alias ls="ls --color=tty --group-directories-first"
 alias lsa="ls -a --color=tty"
 alias l="ls -lAh"
