@@ -1,7 +1,7 @@
 [user]
 	email = nicktalati@gmail.com
 	name = Nick Talati
-	signingkey = /home/talati/.ssh/id_rsa_personal
+	signingkey = /home/talati/.ssh/id_rsa_personal.pub
 [merge]
 	tool = nvimdiff
 [init]
