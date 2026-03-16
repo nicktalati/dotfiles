@@ -142,6 +142,7 @@ systemctl --user enable goimapnotify@goimapnotify.service
 systemctl --user enable zsh-hist-backup.timer
 systemctl --user enable crypt-backup.timer
 systemctl --user enable crypt-mount.service
+systemctl --user enable ssh-agent.service
 
 sudo systemctl daemon-reload
 sudo systemctl enable iwd.service

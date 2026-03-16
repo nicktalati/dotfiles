@@ -1,6 +1,9 @@
 font=0xProtoNerdFont 10
-background-color=#202632f0
-border-color=#4287f550
+background-color=#0000004d
+text-color=#dddddd
+border-color=#dddddd
+border-size=1
+border-radius=0
 format=%a\n\n%s\n\n%b
 padding=10,15
 max-icon-size=32
