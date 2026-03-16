@@ -36,6 +36,8 @@ export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/claude"
 
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 export TASKRC="$XDG_CONFIG_HOME/task/taskrc"
 export TASKDATA="$XDG_DATA_HOME/task"
 
