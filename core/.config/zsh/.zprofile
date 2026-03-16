@@ -20,9 +20,6 @@ export MPLBACKEND=Agg
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 export ELAN_HOME="$XDG_DATA_HOME/elan"
 
-export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
-export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
-
 export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
 
 export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
@@ -38,6 +35,9 @@ export CODEX_HOME="$XDG_CONFIG_HOME/codex"
 export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/claude"
 
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
+
+export TASKRC="$XDG_CONFIG_HOME/task/taskrc"
+export TASKDATA="$XDG_DATA_HOME/task"
 
 typeset -U path PATH
 path=(

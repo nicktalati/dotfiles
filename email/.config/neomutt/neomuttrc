@@ -1,5 +1,5 @@
 set folder = "~/mail"
-set spoolfile = "+nicktalati/Inbox"
+set spoolfile = "+cultivate/Inbox"
 set mailcap_path = ~/.config/neomutt/mailcap
 
 set realname = "Nick Talati"
@@ -38,9 +38,29 @@ bind index \Ct tag-pattern
 bind pager j next-line
 bind pager k previous-line
 
+set pipe_decode = yes
+macro pager V "<pipe-message>nvim -R -<enter>"
 macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
 macro index,pager U "<pipe-message>urlscan<enter>"
 macro index S "<sync-mailbox><shell-escape>mbsync -a &>/dev/null &<enter>"
+
+# cultivate
+named-mailboxes "=== CULTIVATE ==="  "+.header-cultivate"
+named-mailboxes "  Inbox"            "+cultivate/Inbox"
+named-mailboxes "  sent"             "+cultivate/[Gmail]/Sent Mail"
+named-mailboxes "  drafts"           "+cultivate/[Gmail]/Drafts"
+named-mailboxes "  spam"             "+cultivate/[Gmail]/Spam"
+# named-mailboxes "  all"            "+cultivate/[Gmail]/All Mail"
+# named-mailboxes "  trash"            "+cultivate/[Gmail]/Trash"
+
+sidebar_pin "+.header-cultivate"
+sidebar_pin "+cultivate/Inbox"
+
+folder-hook ~/mail/cultivate/* 'set from="talati@getcultivate.ai"'
+folder-hook ~/mail/cultivate/* 'set sendmail="msmtp -a cultivate"'
+folder-hook ~/mail/cultivate/* 'set trash="+cultivate/[Gmail]/Trash"'
+folder-hook ~/mail/cultivate/* 'set postponed="+cultivate/[Gmail]/Drafts"'
+folder-hook ~/mail/cultivate/* 'unset record'
 
 # nicktalati
 named-mailboxes "=== PERSONAL ==="  "+.header-nicktalati"
@@ -60,22 +80,8 @@ sidebar_pin "+nicktalati/Inbox"
 folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"'
 folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp -a nicktalati"'
 folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
-
-# cultivate
-named-mailboxes "=== CULTIVATE ==="  "+.header-cultivate"
-named-mailboxes "  Inbox"            "+cultivate/Inbox"
-named-mailboxes "  sent"             "+cultivate/[Gmail]/Sent Mail"
-named-mailboxes "  drafts"           "+cultivate/[Gmail]/Drafts"
-named-mailboxes "  spam"             "+cultivate/[Gmail]/Spam"
-# named-mailboxes "  all"            "+cultivate/[Gmail]/All Mail"
-# named-mailboxes "  trash"            "+cultivate/[Gmail]/Trash"
-
-sidebar_pin "+.header-cultivate"
-sidebar_pin "+cultivate/Inbox"
-
-folder-hook ~/mail/cultivate/* 'set from="talati@getcultivate.ai"'
-folder-hook ~/mail/cultivate/* 'set sendmail="msmtp -a cultivate"'
-folder-hook ~/mail/cultivate/* 'set trash="+cultivate/[Gmail]/Trash"'
+folder-hook ~/mail/nicktalati/* 'set postponed="+nicktalati/[Gmail]/Drafts"'
+folder-hook ~/mail/nicktalati/* 'unset record'
 
 # quantworks
 named-mailboxes "=== QUANTWORKS ==="  "+.header-quantworks"
@@ -103,6 +109,8 @@ sidebar_pin "+quantworks/defaultsleuth"
 folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"'
 folder-hook ~/mail/quantworks/* 'set sendmail="msmtp -a quantworks"'
 folder-hook ~/mail/quantworks/* 'set trash="+quantworks/Deleted Items"'
+folder-hook ~/mail/quantworks/* 'set postponed="+quantworks/Drafts"'
+folder-hook ~/mail/quantworks/* 'unset record'
 
 # nicktalatipaypal
 named-mailboxes "=== PAYPAL ==="  "+.header-nicktalatipaypal"
@@ -118,6 +126,8 @@ sidebar_pin "+nicktalatipaypal/Inbox"
 folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"'
 folder-hook ~/mail/nicktalatipaypal/* 'set sendmail="msmtp -a nicktalatipaypal"'
 folder-hook ~/mail/nicktalatipaypal/* 'set trash="+nicktalatipaypal/[Gmail]/Trash"'
+folder-hook ~/mail/nicktalatipaypal/* 'set postponed="+nicktalatipaypal/[Gmail]/Drafts"'
+folder-hook ~/mail/nicktalatipaypal/* 'unset record'
 
 
 # Carbonfox theme for neomutt (thanks Claude)

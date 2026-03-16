@@ -5,6 +5,7 @@ shopt -s nullglob
 
 readonly dirs=(
     "$HOME"
+    "$HOME/decrypt"
     "$HOME/code"
     "$HOME/work/ds"
     "$HOME/work/cultivate-ai"
@@ -24,7 +25,7 @@ readonly session_dir=$(
         [[ -d "$d" ]] || continue
         printf '%s\n' "$d"
         printf '%s\n' "$d"/*/
-    done  | sed 's|/$||' | fzf --preview 'ls -lah --color=always {}'
+    done  | sed 's|/$||' | fzf --no-scrollbar
 )
 [[ -z "$session_dir" ]] && exit 1
 readonly session_name=$(basename "$session_dir" | tr '.:"' '-')
