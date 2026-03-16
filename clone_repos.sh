@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-CODE_DIR="$HOME/code"
-mkdir -p "$CODE_DIR"
-cd "$CODE_DIR"
+readonly code_dir="$HOME/code"
+mkdir -p "$code_dir"
+cd "$code_dir"
 
 REPOS=(
     "git@personal:nicktalati/blog"
