@@ -2,7 +2,9 @@
 
 This more or less contains my entire Arch Linux config.
 
-`pkglist.txt` contains all packages to be installed. Stow symlinks all configs and systemd units. Rclone downloads encrypted personal files from S3, and gocryptfs decrypts them to `~/decrypt`.
+`pkglist.txt` contains all packages to be installed. Stow symlinks all configs
+and systemd units. Rclone downloads encrypted personal files from S3, and
+gocryptfs decrypts them to `~/decrypt`.
 
 ## Stack
 
@@ -22,7 +24,8 @@ This more or less contains my entire Arch Linux config.
 
 ## New Machines
 
-Visit [https://archlinux.org/download](https://archlinux.org/download) and retrieve the .iso and .iso.sig files.
+Visit [https://archlinux.org/download](https://archlinux.org/download) and
+retrieve the .iso and .iso.sig files.
 
 Run
 
@@ -30,7 +33,8 @@ Run
 gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig archlinux-version-x86_64.iso
 ```
 
-Verify the fingerprint at [https://archlinux.org/people/developers](https://archlinux.org/people/developers).
+Verify the fingerprint at
+[https://archlinux.org/people/developers](https://archlinux.org/people/developers).
 
 Plug in an (unused!) usb drive and run
 
@@ -40,11 +44,12 @@ cp archlinux-version-x86_64.iso /dev/drive
 
 And finish with `sync`.
 
-Plug the drive into the new machine and boot into it (hold f12/machine-specific-key during boot).
+Plug the drive into the new machine and boot into it (hold
+f12/machine-specific-key during boot).
 
 Identify the main disk and create EFI (512M) and Linux partitions with `fdisk`.
 
-Create filesystems with `mkfs.ext4` (Linux) and `mkfs.fat -F 32` (EFI). 
+Create filesystems with `mkfs.ext4` (Linux) and `mkfs.fat -F 32` (EFI).
 
 Mount the Linux partition to `/mnt` and the EFI partition to `/mnt/boot`.
 
@@ -77,4 +82,6 @@ rclone sync crypt:talati-crypt/crypt ~/crypt
 
 And reboot.
 
-Firefox is finicky. After creating "personal" and "work" profiles, launching each and signing in, copy `firefox/userContent.css` to `~/.mozilla/firefox/<profile>/chrome/userContent.css`.
+Firefox is finicky. After creating "personal" and "work" profiles, launching
+each and signing in, copy `firefox/userContent.css` to
+`~/.mozilla/firefox/<profile>/chrome/userContent.css`.
