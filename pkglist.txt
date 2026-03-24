@@ -12,6 +12,7 @@ cyrus-sasl-xoauth2-git
 cyme
 docker
 docker-buildx
+earlyoom
 edk2-ovmf
 efibootmgr
 expac

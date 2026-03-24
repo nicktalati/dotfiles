@@ -83,7 +83,6 @@ alias t="tmux_launcher"
 
 alias ze="$EDITOR $ZDOTDIR/.zshrc"
 alias zs="source $ZDOTDIR/.zshrc"
-alias ae="$EDITOR $XDG_CONFIG_HOME/aws/credentials"
 alias ne="$EDITOR $XDG_CONFIG_HOME/nvim/init.lua"
 
 alias tree="tree --dirsfirst -a -I .git"
@@ -94,6 +93,9 @@ alias l="ls -lAh"
 alias history="history 1"
 
 alias gco='git checkout'
+alias gs="git status"
+alias gd="git diff --color-moved"
+alias gdc="git diff --cached --color-moved"
 
 alias pe="$EDITOR $HOME/dotfiles/pkglist.txt"
 

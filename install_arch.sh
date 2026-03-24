@@ -145,6 +145,7 @@ systemctl --user enable crypt-mount.service
 systemctl --user enable ssh-agent.service
 
 sudo systemctl daemon-reload
+sudo systemctl enable earlyoom
 sudo systemctl enable iwd.service
 sudo systemctl enable keyd.service
 sudo systemctl enable bluetooth.service
