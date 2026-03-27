@@ -82,6 +82,6 @@ rclone sync crypt:talati-crypt/crypt ~/crypt
 
 And reboot.
 
-Firefox is finicky. After creating "personal" and "work" profiles, launching
-each and signing in, copy `firefox/userContent.css` to
-`~/.mozilla/firefox/<profile>/chrome/userContent.css`.
+Firefox profiles, extensions, and policies are managed by `firefox/setup.sh`
+(called by `install_arch.sh`). After install, launch each profile and sign into
+the corresponding Mozilla account to restore bookmarks, passwords, etc. via Sync.

@@ -1,0 +1,7 @@
+.tab-background[selected] {
+  border: 2px solid #2a5a9b !important;
+}
+
+#PlacesToolbarItems {
+  justify-content: center;
+}

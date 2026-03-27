@@ -1,14 +1,3 @@
-@-moz-document domain("voice.google.com") {
-  html {
-    filter: invert(1) contrast(0.9) !important;
-    background: #fff !important;
-  }
-  :root, body { background: #fff !important; }
-  img, video, picture, canvas, svg {
-    filter: invert(1) contrast(1.11) !important;
-  }
-}
-
 @-moz-document domain("reuters.com") {
   html { background: #000 !important; }
 

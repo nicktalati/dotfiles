@@ -125,6 +125,9 @@ sudo mkdir -p /etc/{iwd,keyd}
 sudo cp "$df_dir/etc/iwd/main.conf" "/etc/iwd/main.conf"
 sudo cp "$df_dir/etc/keyd/default.conf" "/etc/keyd/default.conf"
 
+info "Setting up Firefox profiles..."
+"$df_dir/firefox/setup.sh"
+
 # change shell
 if ! command -v zsh &> /dev/null; then
     warn "zsh not found; not changing shell."
