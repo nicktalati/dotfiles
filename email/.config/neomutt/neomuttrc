@@ -26,6 +26,9 @@ set sidebar_non_empty_mailbox_only = yes
 set mime_forward = yes
 set mime_forward_rest = yes
 
+set query_command = "echo && notmuch address '%s*' | grep -i %s"
+bind editor <Tab> complete-query
+
 auto_view text/html text/calendar application/ics
 alternative_order text/calendar text/plain text/html
 

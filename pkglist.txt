@@ -10,7 +10,9 @@ brightnessctl
 cmake
 cyrus-sasl-xoauth2-git
 cyme
+dbmate
 docker
+docker-compose
 docker-buildx
 earlyoom
 edk2-ovmf
@@ -55,10 +57,12 @@ ncdu
 neomutt
 neovim
 nethogs
+notmuch
 noto-fonts
 noto-fonts-emoji
 openbsd-netcat
 openssh
+opentofu
 os-prober
 pacman-contrib
 parted
