@@ -15,8 +15,8 @@ for_window [app_id=".*"] inhibit_idle fullscreen
 for_window [class=".*"] inhibit_idle fullscreen
 
 exec swayidle -w \
-    timeout 900 'swaylock -f' \
-    timeout 930 'swaymsg "output * power off"' \
+    timeout 2000 'swaylock -f' \
+    timeout 2030 'swaymsg "output * power off"' \
     resume 'swaymsg "output * power on"' \
     before-sleep 'swaylock -f'
 
