@@ -1,2 +1,3 @@
 confirmation=on
 news.version=3.4.2
+verbose=blank,header,footnote,label,new-id,affected,edit,special,project,sync,unwait

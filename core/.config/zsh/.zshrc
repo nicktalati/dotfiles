@@ -86,7 +86,8 @@ alias zs="source $ZDOTDIR/.zshrc"
 alias ne="$EDITOR $XDG_CONFIG_HOME/nvim/init.lua"
 
 alias tree="tree --dirsfirst -a -I .git"
-alias gtree="git ls-files | tree --fromfile"
+function gtree() { git ls-files $1 | tree --fromfile }
+
 alias ls="ls --color=tty --group-directories-first"
 alias lsa="ls -a --color=tty"
 alias l="ls -lAh"

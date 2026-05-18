@@ -33,7 +33,7 @@ grub
 htop
 imv
 intel-ucode
-iptables-nft
+iptables
 isync
 iw
 iwd

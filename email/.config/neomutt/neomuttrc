@@ -19,7 +19,7 @@ set sort = reverse-date
 set markers = no
 
 set sidebar_visible = yes
-set sidebar_width = 25
+set sidebar_width = 20
 set sidebar_format = "%D%* %?N?%N?"
 set sidebar_non_empty_mailbox_only = yes
 
@@ -38,6 +38,9 @@ bind index,pager \Co sidebar-open
 bind index T tag-thread
 bind index \Ct tag-pattern
 
+# allow literal spaces in mailbox path prompts (default binds <space> to mailbox-cycle)
+bind editor <space> noop
+
 bind pager j next-line
 bind pager k previous-line
 
@@ -46,6 +49,7 @@ macro pager V "<pipe-message>nvim -R -<enter>"
 macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
 macro index,pager U "<pipe-message>urlscan<enter>"
 macro index S "<sync-mailbox><shell-escape>mbsync -a &>/dev/null &<enter>"
+macro index,pager ,cl "<enter-command>set pipe_decode=no<enter><pipe-message>~/.local/bin/claude-mail.py<enter><enter-command>set pipe_decode=yes<enter>"
 
 # cultivate
 named-mailboxes "=== CULTIVATE ==="  "+.header-cultivate"
@@ -59,7 +63,7 @@ named-mailboxes "  receipts"         "+cultivate/receipts"
 named-mailboxes "  sent"             "+cultivate/[Gmail]/Sent Mail"
 named-mailboxes "  drafts"           "+cultivate/[Gmail]/Drafts"
 named-mailboxes "  spam"             "+cultivate/[Gmail]/Spam"
-# named-mailboxes "  all"            "+cultivate/[Gmail]/All Mail"
+named-mailboxes "  all"              "+cultivate/[Gmail]/All Mail"
 # named-mailboxes "  trash"            "+cultivate/[Gmail]/Trash"
 
 sidebar_pin "+.header-cultivate"
@@ -70,6 +74,7 @@ folder-hook ~/mail/cultivate/* 'set sendmail="msmtp -a cultivate"'
 folder-hook ~/mail/cultivate/* 'set trash="+cultivate/[Gmail]/Trash"'
 folder-hook ~/mail/cultivate/* 'set postponed="+cultivate/[Gmail]/Drafts"'
 folder-hook ~/mail/cultivate/* 'unset record'
+folder-hook ~/mail/cultivate/* 'macro index,pager A "<save-message>=cultivate/[Gmail]/All Mail<enter>" "archive"'
 
 # nicktalati
 named-mailboxes "=== PERSONAL ==="  "+.header-nicktalati"
@@ -77,10 +82,11 @@ named-mailboxes "  Inbox"           "+nicktalati/Inbox"
 named-mailboxes "  receipts"        "+nicktalati/receipts"
 named-mailboxes "  van alen"        "+nicktalati/van alen"
 named-mailboxes "  travel"          "+nicktalati/travel"
+# named-mailboxes "  sentimental"     "+nicktalati/sentimental"
 named-mailboxes "  sent"            "+nicktalati/[Gmail]/Sent Mail"
 named-mailboxes "  drafts"          "+nicktalati/[Gmail]/Drafts"
 named-mailboxes "  spam"            "+nicktalati/[Gmail]/Spam"
-# named-mailboxes "  all"           "+nicktalati/[Gmail]/All Mail"
+named-mailboxes "  all"             "+nicktalati/[Gmail]/All Mail"
 # named-mailboxes "  trash"           "+nicktalati/[Gmail]/Trash"
 
 sidebar_pin "+.header-nicktalati"
@@ -91,6 +97,7 @@ folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp -a nicktalati"'
 folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
 folder-hook ~/mail/nicktalati/* 'set postponed="+nicktalati/[Gmail]/Drafts"'
 folder-hook ~/mail/nicktalati/* 'unset record'
+folder-hook ~/mail/nicktalati/* 'macro index,pager A "<save-message>=nicktalati/[Gmail]/All Mail<enter>" "archive"'
 
 # quantworks
 named-mailboxes "=== QUANTWORKS ==="  "+.header-quantworks"
@@ -120,6 +127,7 @@ folder-hook ~/mail/quantworks/* 'set sendmail="msmtp -a quantworks"'
 folder-hook ~/mail/quantworks/* 'set trash="+quantworks/Deleted Items"'
 folder-hook ~/mail/quantworks/* 'set postponed="+quantworks/Drafts"'
 folder-hook ~/mail/quantworks/* 'unset record'
+folder-hook ~/mail/quantworks/* 'macro index,pager A "<save-message>=quantworks/Archive<enter>" "archive"'
 
 # nicktalatipaypal
 named-mailboxes "=== PAYPAL ==="  "+.header-nicktalatipaypal"
@@ -127,6 +135,7 @@ named-mailboxes "  Inbox"         "+nicktalatipaypal/Inbox"
 named-mailboxes "  sent"          "+nicktalatipaypal/[Gmail]/Sent Mail"
 named-mailboxes "  drafts"        "+nicktalatipaypal/[Gmail]/Drafts"
 named-mailboxes "  spam"          "+nicktalatipaypal/[Gmail]/Spam"
+named-mailboxes "  all"           "+nicktalatipaypal/[Gmail]/All Mail"
 # named-mailboxes "  trash"         "+nicktalatipaypal/[Gmail]/Trash"
 
 sidebar_pin "+.header-nicktalatipaypal"
@@ -137,6 +146,7 @@ folder-hook ~/mail/nicktalatipaypal/* 'set sendmail="msmtp -a nicktalatipaypal"'
 folder-hook ~/mail/nicktalatipaypal/* 'set trash="+nicktalatipaypal/[Gmail]/Trash"'
 folder-hook ~/mail/nicktalatipaypal/* 'set postponed="+nicktalatipaypal/[Gmail]/Drafts"'
 folder-hook ~/mail/nicktalatipaypal/* 'unset record'
+folder-hook ~/mail/nicktalatipaypal/* 'macro index,pager A "<save-message>=nicktalatipaypal/[Gmail]/All Mail<enter>" "archive"'
 
 
 # Carbonfox theme for neomutt (thanks Claude)
