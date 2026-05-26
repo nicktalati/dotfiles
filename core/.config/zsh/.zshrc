@@ -98,6 +98,10 @@ alias gs="git status"
 alias gd="git diff --color-moved"
 alias gdc="git diff --cached --color-moved"
 
+alias tl="task list"
+alias ta="task add"
+alias tm="task modify"
+
 alias pe="$EDITOR $HOME/dotfiles/pkglist.txt"
 
 # fast nvm
