@@ -94,6 +94,9 @@ alias l="ls -lAh"
 alias history="history 1"
 
 alias gco='git checkout'
+alias gaa="git add --all"
+alias gba="git branch --all"
+alias gfa="git fetch --all --prune"
 alias gs="git status"
 alias gd="git diff --color-moved"
 alias gdc="git diff --cached --color-moved"
@@ -101,6 +104,7 @@ alias gdc="git diff --cached --color-moved"
 alias tl="task list"
 alias ta="task add"
 alias tm="task modify"
+alias td="task done"
 
 alias pe="$EDITOR $HOME/dotfiles/pkglist.txt"
 
