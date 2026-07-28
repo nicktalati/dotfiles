@@ -44,30 +44,6 @@ Create Both
 SyncState *
 Expunge Both
 
-IMAPAccount quantworks
-Host outlook.office365.com
-User nick.talati@quantworks.com
-AuthMechs XOAuth2
-PassCmd "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/decrypt/secrets/oauth/quantworks.oauth2"
-TLSType IMAPS
-PipelineDepth 1
-
-IMAPStore quantworks-remote
-Account quantworks
-
-MaildirStore quantworks-local
-Path ~/mail/quantworks/
-Inbox ~/mail/quantworks/Inbox
-Subfolders Verbatim
-
-Channel quantworks
-Far :quantworks-remote:
-Near :quantworks-local:
-Patterns * !Calendar !Calendar/* !Contacts !Contacts/* !Journal !Journal/* !Notes !Notes/* !Outbox !Outbox/* !Tasks !Tasks/*
-Create Both
-SyncState *
-Expunge Both
-
 IMAPAccount nicktalatipaypal
 Host imap.gmail.com
 User nicktalatipaypal@gmail.com

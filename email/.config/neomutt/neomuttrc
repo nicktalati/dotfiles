@@ -101,36 +101,6 @@ folder-hook ~/mail/nicktalati/* 'set postponed="+nicktalati/[Gmail]/Drafts"'
 folder-hook ~/mail/nicktalati/* 'unset record'
 folder-hook ~/mail/nicktalati/* 'macro index,pager A "<save-message>=nicktalati/[Gmail]/All Mail<enter>" "archive"'
 
-# quantworks
-named-mailboxes "=== QUANTWORKS ==="  "+.header-quantworks"
-named-mailboxes "  Inbox"             "+quantworks/Inbox"
-# named-mailboxes "  defaultsleuth"     "+quantworks/defaultsleuth"
-# named-mailboxes "    greenville"      "+quantworks/defaultsleuth/greenville"
-# named-mailboxes "    pheple"          "+quantworks/defaultsleuth/pheple"
-# named-mailboxes "    peake"           "+quantworks/defaultsleuth/peake"
-# named-mailboxes "    duke"            "+quantworks/defaultsleuth/duke"
-# named-mailboxes "    cuanswers"       "+quantworks/defaultsleuth/cuanswers"
-named-mailboxes "  cultivate"         "+quantworks/cultivate"
-# named-mailboxes "  acat"              "+quantworks/acat"
-# named-mailboxes "  giveawaygood"      "+quantworks/giveawaygood"
-# named-mailboxes "  acat"              "+quantworks/acat"
-named-mailboxes "  archive"           "+quantworks/Archive"
-named-mailboxes "  drafts"            "+quantworks/Drafts"
-named-mailboxes "  sent"              "+quantworks/Sent Items"
-named-mailboxes "  junk"              "+quantworks/Junk Email"
-# named-mailboxes "  deleted"           "+quantworks/Deleted Items"
-
-sidebar_pin "+.header-quantworks"
-sidebar_pin "+quantworks/Inbox"
-sidebar_pin "+quantworks/defaultsleuth"
-
-folder-hook ~/mail/quantworks/* 'set from="nick.talati@quantworks.com"'
-folder-hook ~/mail/quantworks/* 'set sendmail="msmtp -a quantworks"'
-folder-hook ~/mail/quantworks/* 'set trash="+quantworks/Deleted Items"'
-folder-hook ~/mail/quantworks/* 'set postponed="+quantworks/Drafts"'
-folder-hook ~/mail/quantworks/* 'unset record'
-folder-hook ~/mail/quantworks/* 'macro index,pager A "<save-message>=quantworks/Archive<enter>" "archive"'
-
 # nicktalatipaypal
 named-mailboxes "=== PAYPAL ==="  "+.header-nicktalatipaypal"
 named-mailboxes "  Inbox"         "+nicktalatipaypal/Inbox"
