@@ -7,11 +7,11 @@
   default_calendar = personal
 
 [locale]
-  timeformat = "%H:%M"
+  timeformat = "%-I:%M%P"
   dateformat = "%Y-%m-%d"
   longdateformat = "%Y-%m-%d"
-  datetimeformat = "%Y-%m-%d %H:%M"
-  longdatetimeformat = "%Y-%m-%d %H:%M"
+  datetimeformat = "%Y-%m-%d %-I:%M%P"
+  longdatetimeformat = "%Y-%m-%d %-I:%M%P"
   firstweekday = 0
-  local_timezone = America/Argentina/Buenos_Aires
-  default_timezone = America/Argentina/Buenos_Aires
+  local_timezone = America/New_York
+  default_timezone = America/New_York

@@ -14,9 +14,15 @@ set use_threads = threads
 
 set wait_key = no
 
-set index_format = "%4C %Z %{%b %d} %-20.20L %s"
+set index_format = "%4C %Z %[%b %d %l:%M%P] %-20.20L %s"
 set sort = reverse-date
 set markers = no
+
+# The raw Date header is in the sender's timezone (usually +0000) and neomutt
+# can't rewrite it, so hide it and put a local-time date in the pager status
+# line instead -- %[...] is local, unlike %{...}. Press 'h' for raw headers.
+ignore date
+set pager_format = "-%Z- %C/%m: %-20.20n  %[%a %b %d %l:%M%P]  %s%*  -- (%P)"
 
 set sidebar_visible = yes
 set sidebar_width = 20
