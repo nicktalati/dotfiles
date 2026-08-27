@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly server_dir="$HOME/.local/opt/lua-language-server"
+readonly state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/lua-language-server"
+
+mkdir -p "$state_dir/log" "$state_dir/meta"
+
+exec "$server_dir/bin/lua-language-server" "$server_dir/main.lua" \
+    --logpath="$state_dir/log" \
+    --metapath="$state_dir/meta" \
+    "$@"

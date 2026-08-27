@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-exec "$HOME/.local/opt/dbmate-2.35.0/dbmate" "$@"

@@ -1,4 +1,13 @@
-- macOS notification and open-file bridge for the work guest
-- choose a distinct rclone/S3 location and retention policy for the work vault
-- migrate the physical Arch installer to the host/guest package boundaries
-- exercise fedora-work-guest from a real Apple Silicon Lima VM
+- exercise mac-host + fedora-vm on a real Apple Silicon Mac
+- test explicit host/guest copies before adding any narrowly scoped shared mount
+- implement constrained macOS notification and open-file bridges after testing
+- run the same Fedora VM on the physical Arch host
+- thin arch-host only after the Fedora VM is proven on both hosts
+- remove arch-vm after the Fedora x86-64 migration has a stable rollback point
+- migrate static secrets and SSH private keys from the Arch vault to Bitwarden
+- purge obsolete Quantworks/Vaiil OAuth material and recovery data after review
+- document repeatable OAuth enrollment without putting client secrets in shell history
+- replace rclone sync backups with an encrypted snapshot/retention design
+- decide from measurements whether Apple vz rebuilds or QEMU snapshots are preferable
+- review the remaining Arch package manifest against actual command usage
+- consider an automated update/check command for machines/fedora-vm/tools.lock.json

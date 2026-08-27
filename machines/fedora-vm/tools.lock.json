@@ -1,0 +1,58 @@
+{
+  "dbmate": {
+    "version": "2.35.0",
+    "assets": {
+      "aarch64": {
+        "name": "dbmate-linux-arm64",
+        "sha256": "9aac97323334c252bc1ea7d49f3fcb67ae54636b4af6f9045b8d229027c564d6"
+      },
+      "x86_64": {
+        "name": "dbmate-linux-amd64",
+        "sha256": "f60fd6c6dbed316de116a701945a3fb21d365a25a7e6a9b28ba3a50f49818d8f"
+      }
+    }
+  },
+  "fnm": {
+    "version": "1.39.0",
+    "assets": {
+      "aarch64": {
+        "name": "fnm-arm64.zip",
+        "sha256": "4eaff58b2c5bf30d0934027572dd0b5bbb60d2a1af309230b53662d4b1d45599"
+      },
+      "x86_64": {
+        "name": "fnm-linux.zip",
+        "sha256": "7807664f39d39fc518da1c35ba0181e4b3267603c4b1dedeb4b5fc6ae440a224"
+      }
+    }
+  },
+  "lua-language-server": {
+    "version": "3.19.1",
+    "assets": {
+      "aarch64": {
+        "name": "lua-language-server-3.19.1-linux-arm64.tar.gz",
+        "sha256": "abd2572e8fc929dc838a81ffb8473c5bce0bf39bfe8edb4b120b3b623176ce83"
+      },
+      "x86_64": {
+        "name": "lua-language-server-3.19.1-linux-x64.tar.gz",
+        "sha256": "e9235d2d72ef55bc41cf8c99cda2ed64777682024b4bb81f5dea425060c5cbb8"
+      }
+    }
+  },
+  "goimapnotify": {
+    "version": "2.5.8",
+    "sha256": "616aae1f48fbe4e2afffd968e7c393d32075365a0a94aa7654ab7abe4b4ac1c6"
+  },
+  "session-manager-plugin": {
+    "version": "1.2.835.0",
+    "assets": {
+      "aarch64": {
+        "name": "linux_arm64",
+        "sha256": "f2b06a6627563bd9af1a5494c750affc72907ced1f982ceacee54d1e3b8c3eb1"
+      },
+      "x86_64": {
+        "name": "linux_64bit",
+        "sha256": "1dcade7435709cce65a05eba87f2a96e8aaf7318c78a21d7a2ae648ce2f2ad81"
+      }
+    }
+  }
+}

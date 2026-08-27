@@ -1,0 +1,24 @@
+named-mailboxes "=== CULTIVATE ===" "+.header-cultivate"
+named-mailboxes "  Inbox" "+cultivate/Inbox"
+named-mailboxes "  product" "+cultivate/product"
+named-mailboxes "  infra" "+cultivate/infra"
+named-mailboxes "  hiring" "+cultivate/hiring"
+named-mailboxes "  financial" "+cultivate/financial"
+named-mailboxes "  hr and legal" "+cultivate/hr and legal"
+named-mailboxes "  filene" "+cultivate/filene"
+named-mailboxes "  receipts" "+cultivate/receipts"
+named-mailboxes "  DMARC" "+cultivate/DMARC"
+named-mailboxes "  sent" "+cultivate/[Gmail]/Sent Mail"
+named-mailboxes "  drafts" "+cultivate/[Gmail]/Drafts"
+named-mailboxes "  spam" "+cultivate/[Gmail]/Spam"
+named-mailboxes "  all" "+cultivate/[Gmail]/All Mail"
+
+sidebar_pin "+.header-cultivate"
+sidebar_pin "+cultivate/Inbox"
+
+folder-hook ~/mail/cultivate/* 'set from="talati@getcultivate.ai"'
+folder-hook ~/mail/cultivate/* 'set sendmail="msmtp --file ~/.config/msmtp/accounts/cultivate.conf --account cultivate"'
+folder-hook ~/mail/cultivate/* 'set trash="+cultivate/[Gmail]/Trash"'
+folder-hook ~/mail/cultivate/* 'set postponed="+cultivate/[Gmail]/Drafts"'
+folder-hook ~/mail/cultivate/* 'unset record'
+folder-hook ~/mail/cultivate/* 'macro index,pager A "<save-message>=cultivate/[Gmail]/All Mail<enter>" "archive"'

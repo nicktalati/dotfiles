@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -euo pipefail
+
+readonly backup_conf="$XDG_CONFIG_HOME/backup/config"
+
+if ! [[ -f "$backup_conf" ]]; then
+    echo "backup config not found at $backup_conf"
+    exit 1
+fi
+
+# shellcheck source=/dev/null
+source "$backup_conf"
+
+if ! mountpoint -q "$BACKUP_MOUNT"; then
+    echo "Nothing mounted at $BACKUP_MOUNT"
+    exit 0
+fi
+
+echo "Syncing buffers..."
+sync
+
+echo "Unmounting..."
+if sudo umount "$BACKUP_MOUNT"; then
+    echo "Drive safe to remove."
+else
+    echo "Unmount failed. Do not remove drive."
+    exit 1
+fi

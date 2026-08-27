@@ -1,0 +1,8 @@
+[Unit]
+Description=Synchronize mail account %i
+ConditionPathExists=%h/.config/isync/accounts/%i.conf
+ConditionPathExists=%h/.local/share/mail/oauth/%i
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/mail-sync %i

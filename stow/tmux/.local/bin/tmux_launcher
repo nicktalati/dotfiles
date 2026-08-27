@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+shopt -s nullglob
+
+readonly dirs=(
+    "$HOME"
+    "$HOME/code"
+    "$HOME/code/personal"
+    "$HOME/code/cultivate"
+)
+
+if ! command -v tmux &>/dev/null; then
+    echo "tmux is not installed."
+    exit 1
+fi
+if ! command -v fzf &>/dev/null; then
+    echo "fzf is not installed."
+    exit 1
+fi
+
+session_dir=$(
+    for d in "${dirs[@]}"; do
+        [[ -d "$d" ]] || continue
+        printf '%s\n' "$d"
+        printf '%s\n' "$d"/*/
+    done  | sed 's|/$||' | fzf --no-scrollbar
+)
+readonly session_dir
+[[ -z "$session_dir" ]] && exit 1
+session_name=$(basename "$session_dir" | tr '.:"' '-')
+readonly session_name
+
+tmux has-session -t "$session_name" &>/dev/null || tmux new-session -ds "$session_name" -c "$session_dir"
+
+if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -t "$session_name"
+else
+    tmux attach-session -t "$session_name"
+fi

@@ -7,12 +7,12 @@ case "$1" in
         if [[ -f "$FAKE_LIMA_CREATED" ]]; then
             if [[ "$*" == *Status* ]]; then
                 if [[ -f "$FAKE_LIMA_RUNNING" ]]; then
-                    printf 'work Running\n'
+                    printf 'dev Running\n'
                 else
-                    printf 'work Stopped\n'
+                    printf 'dev Stopped\n'
                 fi
             else
-                printf 'work\n'
+                printf 'dev\n'
             fi
         fi
         ;;

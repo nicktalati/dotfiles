@@ -1,0 +1,90 @@
+set folder = "~/mail"
+set mailcap_path = ~/.config/neomutt/mailcap
+
+set realname = "Nick Talati"
+set from = "UNCONFIGURED"
+set sendmail = "/bin/false"
+
+set mail_check = 5
+set mail_check_stats = yes
+set mail_check_stats_interval = 5
+
+set use_threads = threads
+
+set wait_key = no
+
+set index_format = "%4C %Z %[%b %d %l:%M%P] %-20.20L %s"
+set sort = reverse-date
+set markers = no
+
+# The raw Date header is in the sender's timezone (usually +0000) and neomutt
+# can't rewrite it, so hide it and put a local-time date in the pager status
+# line instead -- %[...] is local, unlike %{...}. Press 'h' for raw headers.
+ignore date
+set pager_format = "-%Z- %C/%m: %-20.20n  %[%a %b %d %l:%M%P]  %s%*  -- (%P)"
+
+set sidebar_visible = yes
+set sidebar_width = 20
+set sidebar_format = "%D%* %?N?%N?"
+set sidebar_non_empty_mailbox_only = yes
+
+set mime_forward = yes
+set mime_forward_rest = yes
+
+set query_command = "echo && notmuch address '%s*' | grep -i %s"
+bind editor <Tab> complete-query
+
+auto_view text/html
+alternative_order text/plain text/html
+
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cj sidebar-next
+bind index,pager \Co sidebar-open
+bind index T tag-thread
+bind index \Ct tag-pattern
+
+# Allow literal spaces in mailbox path prompts (default binds <space> to
+# mailbox-cycle).
+bind editor <space> noop
+
+bind pager j next-line
+bind pager k previous-line
+
+set pipe_decode = yes
+macro pager V "<pipe-message>nvim -R -<enter>"
+macro attach B "<pipe-entry>cat > /tmp/mail.html && xdg-open /tmp/mail.html<enter>"
+macro index,pager U "<pipe-message>urlscan<enter>"
+macro index S "<sync-mailbox><shell-escape>mail-sync &>/dev/null &<enter>"
+
+# Carbonfox theme.
+color normal        default default
+color error         color204 default
+color message       color117 default
+color status        color249 color236
+color indicator     standout default default
+
+color sidebar_indicator standout default default
+color sidebar_highlight bold default color239
+color sidebar_unread    color114 default
+color sidebar_flagged   color141 default
+
+color index         color249 default "~R"
+color index         color114 default "~U"
+color index         color204 default "~D"
+color index         color141 default "~F"
+
+color hdrdefault    color141 default
+color header        color117 default "^From:"
+color header        color117 default "^To:"
+color header        color117 default "^Subject:"
+color header        color249 default "^Date:"
+
+color quoted        color141 default
+color quoted1       color117 default
+color quoted2       color114 default
+color signature     color243 default
+color attachment    color215 default
+color tilde         color236 default
+
+color body          color111 default "(https?|ftp)://[^ ]+"
+color body          color111 default "\\[[0-9]+\\]"

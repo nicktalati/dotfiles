@@ -1,0 +1,16 @@
+[merge]
+	tool = nvimdiff
+[init]
+	defaultBranch = main
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[includeIf "gitdir:~/dotfiles/"]
+	path = ~/.config/git/accounts/personal
+[includeIf "gitdir:~/code/"]
+	path = ~/.config/git/accounts/personal
+[includeIf "gitdir:~/code/cultivate/"]
+	path = ~/.config/git/accounts/cultivate

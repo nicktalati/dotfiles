@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
+readonly machine_file="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/machine"
+
+machine=""
+[[ -f "$machine_file" ]] && machine=$(<"$machine_file")
+readonly machine
+
+case "$machine" in
+    arch-host|arch-vm|fedora-vm)
+        package_list="$dotfiles_dir/machines/$machine/packages.txt"
+        ;;
+    *)
+        package_list="$dotfiles_dir/machines/arch-host/packages.txt"
+        ;;
+esac
+readonly package_list
+
+[[ -f "$package_list" ]] || { printf 'error: missing %s\n' "$package_list" >&2; exit 1; }
+
+case "${1:-}" in
+    sync)
+        if [[ "$machine" == arch-vm || "$machine" == fedora-vm ]]; then
+            exec "$dotfiles_dir/scripts/install-vm"
+        fi
+        yay -S --needed - < "$package_list"
+        ;;
+    diff)
+        printf '%s\n' 'installed but not declared:'
+        if [[ "$machine" == fedora-vm ]]; then
+            comm -23 \
+                <(dnf repoquery --userinstalled --queryformat '%{name}' | sort -u) \
+                <(sort -u "$package_list")
+        else
+            comm -23 <(pacman -Qqe | sort) <(sort -u "$package_list")
+        fi
+
+        printf '\ndeclared but not installed:\n'
+        if [[ "$machine" == fedora-vm ]]; then
+            comm -23 \
+                <(sort -u "$package_list") \
+                <(rpm -qa --queryformat '%{NAME}\n' | sort -u)
+        else
+            comm -23 <(sort -u "$package_list") <(pacman -Qq | sort)
+        fi
+        ;;
+    path)
+        printf '%s\n' "$package_list"
+        ;;
+    *)
+        printf 'usage: pkgsync {sync|diff|path}\n' >&2
+        exit 2
+        ;;
+esac

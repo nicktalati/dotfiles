@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-exec "$HOME/.local/opt/fnm-1.39.0/fnm" "$@"

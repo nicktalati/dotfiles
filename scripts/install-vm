@@ -1,0 +1,269 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
+readonly stow_dir="$dotfiles_dir/stow"
+readonly xdg_config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+readonly xdg_state_home="${XDG_STATE_HOME:-$HOME/.local/state}"
+readonly accounts_file="$xdg_config_home/dotfiles/accounts"
+readonly oauth_dir="$HOME/.local/share/mail/oauth"
+
+configure_only=false
+accounts_explicit=false
+declare -a accounts=()
+declare -a previous_accounts=()
+
+usage() {
+    cat <<'EOF'
+Usage: install-vm [--configure-only] [--account NAME]...
+
+  --account NAME    Enable cultivate, personal, or paypal. Repeat for more than
+                    one account.
+  --configure-only  Restow user configuration without installing packages,
+                    changing the login shell, or enabling services.
+
+On later runs, omitting --account preserves the current account selection.
+EOF
+}
+
+die() {
+    printf 'error: %s\n' "$*" >&2
+    exit 1
+}
+
+info() {
+    printf '==> %s\n' "$*"
+}
+
+warn() {
+    printf 'warning: %s\n' "$*" >&2
+}
+
+while (($#)); do
+    case "$1" in
+        --account)
+            shift
+            (($#)) || die "--account requires a name"
+            accounts+=("$1")
+            accounts_explicit=true
+            ;;
+        --configure-only)
+            configure_only=true
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            die "unknown argument: $1"
+            ;;
+    esac
+    shift
+done
+
+[[ "$EUID" -ne 0 ]] || die "do not run this script as root"
+[[ -d "$dotfiles_dir/.git" ]] || die "dotfiles repository not found at $dotfiles_dir"
+[[ -d "$stow_dir" ]] || die "Stow packages not found at $stow_dir"
+[[ -r /etc/os-release ]] || die "cannot identify this operating system"
+
+# shellcheck source=/dev/null
+source /etc/os-release
+case "$ID" in
+    arch|archarm) readonly machine=arch-vm ;;
+    fedora) readonly machine=fedora-vm ;;
+    *) die "unsupported VM operating system: $ID" ;;
+esac
+
+readonly machine_dir="$dotfiles_dir/machines/$machine"
+readonly package_list="$machine_dir/packages.txt"
+[[ -f "$package_list" ]] || die "package list not found at $package_list"
+
+if [[ -f "$accounts_file" ]]; then
+    mapfile -t previous_accounts < <(sed '/^[[:space:]]*$/d' "$accounts_file")
+fi
+if ! $accounts_explicit; then
+    accounts=("${previous_accounts[@]}")
+fi
+
+declare -A selected_accounts=()
+declare -a unique_accounts=()
+for account in "${accounts[@]}"; do
+    [[ -d "$stow_dir/account-$account" ]] || die "unknown account: $account"
+    [[ -v "selected_accounts[$account]" ]] && continue
+    selected_accounts[$account]=1
+    unique_accounts+=("$account")
+done
+accounts=("${unique_accounts[@]}")
+
+account_details() {
+    case "$1" in
+        cultivate)
+            account_email=talati@getcultivate.ai
+            account_maildir=cultivate
+            ;;
+        personal)
+            account_email=nicktalati@gmail.com
+            account_maildir=nicktalati
+            ;;
+        paypal)
+            account_email=nicktalatipaypal@gmail.com
+            account_maildir=nicktalatipaypal
+            ;;
+        *) die "unknown account: $1" ;;
+    esac
+}
+
+prepare_directories() {
+    mkdir -p \
+        "$xdg_config_home/dotfiles" \
+        "$xdg_config_home/neomutt" \
+        "$xdg_config_home/notmuch/default" \
+        "$xdg_state_home/msmtp" \
+        "$xdg_state_home/node" \
+        "$xdg_state_home/nvim/undo" \
+        "$xdg_state_home/notify-mail" \
+        "$xdg_state_home/psql" \
+        "$xdg_state_home/python" \
+        "$xdg_state_home/zsh" \
+        "$HOME/.ssh/config.d" \
+        "$HOME/code/cultivate" \
+        "$HOME/code/personal" \
+        "$HOME/downloads" \
+        "$HOME/mail" \
+        "$oauth_dir"
+
+    chmod 700 "$oauth_dir"
+    printf '%s\n' "$machine" > "$xdg_config_home/dotfiles/machine"
+}
+
+stow_configuration() {
+    local -a options=(--no-folding --dir "$stow_dir" --target "$HOME")
+    local account
+
+    info "Stowing shared Linux configuration"
+    stow --restow "${options[@]}" shell nvim tmux git mail psql task
+
+    for account in "${previous_accounts[@]}"; do
+        if [[ ! -v "selected_accounts[$account]" && -d "$stow_dir/account-$account" ]]; then
+            stow --delete "${options[@]}" "account-$account"
+        fi
+    done
+    for account in "${accounts[@]}"; do
+        stow --restow "${options[@]}" "account-$account"
+    done
+}
+
+write_account_aggregates() {
+    local accounts_rc="$xdg_config_home/neomutt/accounts.rc"
+    local notmuch_config="$xdg_config_home/notmuch/default/config"
+    local account mailbox primary_email other_emails=""
+
+    : > "$accounts_rc"
+    if ((${#accounts[@]})); then
+        account_details "${accounts[0]}"
+        primary_email=$account_email
+        printf 'set spoolfile = "+%s/Inbox"\n' "$account_maildir" >> "$accounts_rc"
+    else
+        primary_email=UNCONFIGURED
+    fi
+
+    for account in "${accounts[@]}"; do
+        account_details "$account"
+        printf 'source ~/.config/neomutt/accounts/%s.rc\n' "$account" >> "$accounts_rc"
+        while IFS= read -r mailbox; do
+            mkdir -p "$HOME/mail/$mailbox"/{cur,new,tmp}
+        done < <(
+            sed -n 's/^named-mailboxes "[^"]*" "+\([^"]*\)"$/\1/p' \
+                "$xdg_config_home/neomutt/accounts/$account.rc"
+        )
+        if [[ "$account_email" != "$primary_email" ]]; then
+            other_emails+="${other_emails:+;}$account_email"
+        fi
+    done
+
+    {
+        printf '[database]\npath=%s/mail\n\n' "$HOME"
+        printf '[user]\nname=Nick Talati\nprimary_email=%s\n' "$primary_email"
+        [[ -z "$other_emails" ]] || printf 'other_email=%s\n' "$other_emails"
+        printf '\n[new]\ntags=\nignore=.mbsyncstate;.uidvalidity\n\n[search]\n\n[maildir]\n'
+    } > "$notmuch_config"
+    printf '%s\n' "${accounts[@]}" > "$accounts_file"
+}
+
+configure_services() {
+    info "Configuring Docker and user services"
+    sudo loginctl enable-linger "$USER"
+
+    if ! id -nG "$USER" | tr ' ' '\n' | grep -Fxq docker; then
+        sudo usermod -aG docker "$USER"
+        warn "Docker group membership takes effect in a new login session"
+    fi
+    sudo systemctl enable --now docker.service
+
+    systemctl --user daemon-reload
+    if [[ -S /run/host-services/ssh-auth.sock ]]; then
+        info "Using the SSH agent forwarded by Lima"
+    else
+        systemctl --user enable --now ssh-agent.service
+    fi
+    systemctl --user enable --now zsh-hist-backup.timer
+
+    local previous account
+    for previous in "${previous_accounts[@]}"; do
+        if [[ ! -v "selected_accounts[$previous]" ]]; then
+            systemctl --user disable --now \
+                "mbsync@$previous.timer" "goimapnotify@$previous.service" 2>/dev/null || true
+        fi
+    done
+
+    for account in "${accounts[@]}"; do
+        if [[ -f "$oauth_dir/$account" ]]; then
+            systemctl --user enable --now "mbsync@$account.timer" "goimapnotify@$account.service"
+        else
+            warn "$account OAuth token is unavailable; its mail services remain disabled"
+        fi
+    done
+}
+
+change_login_shell() {
+    local zsh_path current_shell
+    zsh_path=$(command -v zsh)
+    current_shell=$(getent passwd "$USER" | cut -d: -f7)
+    if [[ "$current_shell" != "$zsh_path" ]]; then
+        sudo usermod --shell "$zsh_path" "$USER"
+        warn "the zsh login shell takes effect in a new login session"
+    fi
+}
+
+if ! $configure_only; then
+    info "Updating $machine and installing declared packages"
+    "$machine_dir/install-packages.sh"
+fi
+
+command -v stow &>/dev/null || die "stow is required; install it or omit --configure-only"
+
+prepare_directories
+stow_configuration
+write_account_aggregates
+
+if ! $configure_only; then
+    change_login_shell
+    configure_services
+fi
+
+cat <<EOF
+
+$machine provisioning complete.
+
+Enabled accounts: ${accounts[*]:-(none)}
+
+OAuth tokens are local, writable files under:
+
+    $oauth_dir
+
+After enrolling a missing token, rerun this script to enable that account's
+mail services. Put repositories under ~/code/personal or ~/code/cultivate so
+Git selects the corresponding identity.
+EOF

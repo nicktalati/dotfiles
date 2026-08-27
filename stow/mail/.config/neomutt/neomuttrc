@@ -1,0 +1,2 @@
+source ~/.config/neomutt/common.rc
+source ~/.config/neomutt/accounts.rc

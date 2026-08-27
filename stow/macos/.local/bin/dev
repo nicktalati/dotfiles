@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly instance="${LIMA_INSTANCE:-dev}"
+
+die() {
+    printf 'error: %s\n' "$*" >&2
+    exit 1
+}
+
+command -v limactl &>/dev/null || die "limactl is not installed"
+
+instance_status=$(limactl list --format '{{.Name}} {{.Status}}' | \
+    awk -v name="$instance" '$1 == name { print $2 }')
+readonly instance_status
+[[ -n "$instance_status" ]] || die "Lima instance '$instance' does not exist"
+
+if [[ "$instance_status" != Running ]]; then
+    limactl start "$instance"
+fi
+
+exec limactl shell "$instance" -- tmux new-session -A -s dev

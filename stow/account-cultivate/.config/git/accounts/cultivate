@@ -1,0 +1,4 @@
+[user]
+	email = talati@getcultivate.ai
+	name = Nick Talati
+	signingkey = ~/.ssh/id_rsa_work_github.pub

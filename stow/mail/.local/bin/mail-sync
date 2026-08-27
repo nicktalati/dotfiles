@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/isync/accounts"
+
+sync_account() {
+    local account=$1
+    local mailbox=${2:-}
+    local config="$config_dir/$account.conf"
+
+    [[ -f "$config" ]] || {
+        printf 'error: mail account is not configured: %s\n' "$account" >&2
+        return 1
+    }
+
+    if [[ -n "$mailbox" ]]; then
+        mbsync --config "$config" "$account:$mailbox"
+    else
+        mbsync --config "$config" --all
+    fi
+}
+
+if (($#)); then
+    [[ "$#" -le 2 ]] || {
+        printf 'usage: mail-sync [ACCOUNT [MAILBOX]]\n' >&2
+        exit 2
+    }
+    sync_account "$@"
+else
+    shopt -s nullglob
+    configs=("$config_dir"/*.conf)
+    ((${#configs[@]})) || {
+        printf 'error: no mail accounts are configured in %s\n' "$config_dir" >&2
+        exit 1
+    }
+    for config in "${configs[@]}"; do
+        account=$(basename "$config" .conf)
+        sync_account "$account"
+    done
+fi
+
+notmuch new

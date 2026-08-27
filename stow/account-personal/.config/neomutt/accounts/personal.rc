@@ -1,0 +1,19 @@
+named-mailboxes "=== PERSONAL ===" "+.header-nicktalati"
+named-mailboxes "  Inbox" "+nicktalati/Inbox"
+named-mailboxes "  receipts" "+nicktalati/receipts"
+named-mailboxes "  van alen" "+nicktalati/van alen"
+named-mailboxes "  travel" "+nicktalati/travel"
+named-mailboxes "  sent" "+nicktalati/[Gmail]/Sent Mail"
+named-mailboxes "  drafts" "+nicktalati/[Gmail]/Drafts"
+named-mailboxes "  spam" "+nicktalati/[Gmail]/Spam"
+named-mailboxes "  all" "+nicktalati/[Gmail]/All Mail"
+
+sidebar_pin "+.header-nicktalati"
+sidebar_pin "+nicktalati/Inbox"
+
+folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"'
+folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp --file ~/.config/msmtp/accounts/personal.conf --account personal"'
+folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
+folder-hook ~/mail/nicktalati/* 'set postponed="+nicktalati/[Gmail]/Drafts"'
+folder-hook ~/mail/nicktalati/* 'unset record'
+folder-hook ~/mail/nicktalati/* 'macro index,pager A "<save-message>=nicktalati/[Gmail]/All Mail<enter>" "archive"'

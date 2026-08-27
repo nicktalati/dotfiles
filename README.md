@@ -1,124 +1,153 @@
-# NT's Dotfiles
+# Dotfiles
 
-This repository manages a physical Arch desktop and an isolated Linux work
-environment that can run as a VM on macOS or Linux.
+Dotfiles and machine definitions for thin Arch and macOS hosts plus a shared,
+disposable Fedora development VM.
 
-The physical Arch setup remains the existing combined personal/work machine.
-The work guest is work-only: it owns terminal development and mail while a thin
-physical host owns hardware, the graphical session, browsers, and the VM
-runtime. Apple Silicon uses Fedora; x86-64 hosts can use Arch.
+The repository does not model personal and work as separate tool environments.
+Home configuration is shared; independently selected account packages provide
+Git, SSH, and mail identities.
 
-Stow symlinks user configuration and systemd user units. Rclone downloads
-gocryptfs ciphertext, and gocryptfs mounts the selected secret vault at
-`~/decrypt`.
+See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the boundary rationale.
 
-## Stack
+## Repository layout
 
-**OS:** Arch desktop; Fedora work VM on Apple Silicon
-
-**WM:** Sway
-
-**Shell:** Zsh
-
-**Secrets:** Gocryptfs
-
-**Cloud:** Rclone + S3
-
-**Management:** Stow
-
-**Email:** Goimapnotify + mbsync + neomutt
-
-## Work VM
-
-The work VM is currently the migration path for the MacBook. It is also usable
-from a Linux host, but the existing physical Arch environment will remain the
-default until the VM workflow has been exercised in practice.
-
-Install Lima on the host, clone this repository, and run:
-
-```bash
-./machines/fedora-work-guest/create-lima.sh
+```text
+bin/        repository maintenance commands available on PATH
+stow/       application and account GNU Stow packages
+machines/   physical-host targets and Linux VM targets
+scripts/    VM provisioning and repository bootstrap helpers
+tests/      focused smoke tests with isolated temporary homes and fake Lima
 ```
 
-Then enter the VM and provision it:
+## Apple Silicon Mac
 
-```bash
-limactl shell work
-~/dotfiles/install_work_guest.sh
+The Mac remains thin: FileVault, Safari, Bitwarden, other native graphical
+applications, Homebrew, Stow, and Lima live on macOS. Development tools, tmux,
+Neovim, and terminal mail live in the Fedora VM.
+
+After enabling FileVault and installing Homebrew, install Bitwarden first so its
+SSH agent can authenticate the private repository clone:
+
+```sh
+brew install --cask bitwarden
+export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+ssh-add -L
+git clone git@github.com:nicktalati/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ```
 
-The guest has no host-home mount. Repositories and mutable state live on its
-own disk. See [`machines/work-guest/README.md`](machines/work-guest/README.md)
-for the `vz` versus QEMU rollback tradeoff, work-secret enrollment, mail
-behavior, and validation. The Fedora-specific image and package boundary is in
-[`machines/fedora-work-guest`](machines/fedora-work-guest/README.md).
+Then run on macOS:
 
-For a new Mac, [`machines/mac-work-host`](machines/mac-work-host/README.md)
-contains the deliberately small Homebrew/Stow host bootstrap.
-
-[`ARCHITECTURE.md`](ARCHITECTURE.md) records the target boundaries, invariants,
-and why package-role composition is intentionally deferred.
-
-## New Physical Arch Machines
-
-Visit [https://archlinux.org/download](https://archlinux.org/download) and
-retrieve the .iso and .iso.sig files.
-
-Run
-
-```bash
-gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig archlinux-version-x86_64.iso
+```sh
+./machines/mac-host/bootstrap.sh
 ```
 
-Verify the fingerprint at
-[https://archlinux.org/people/developers](https://archlinux.org/people/developers).
+The bootstrap installs Lima and Stow and records Bitwarden in its Brewfile. Open
+a new terminal and verify that the installed shell profile still sees the
+Bitwarden keys:
 
-Plug in an (unused!) usb drive and run
-
-```bash
-cp archlinux-version-x86_64.iso /dev/drive
+```sh
+ssh-add -L
 ```
 
-And finish with `sync`.
+Then create and enter the VM:
 
-Plug the drive into the new machine and boot into it (hold
-f12/machine-specific-key during boot).
-
-Identify the main disk and create EFI (512M) and Linux partitions with `fdisk`.
-
-Create filesystems with `mkfs.ext4` (Linux) and `mkfs.fat -F 32` (EFI).
-
-Mount the Linux partition to `/mnt` and the EFI partition to `/mnt/boot`.
-
-Connect to internet with `iwctl` and run:
-
-```bash
-pacstrap -K /mnt base linux linux-firmware grub efibootmgr neovim sudo iwd git # install essentials
-genfstab -U /mnt >> /mnt/etc/fstab # so partitions mount automatically
-arch-chroot /mnt # chroot
-passwd # create password
-grub-install --efi-directory=/boot # install grub
-grub-mkconfig -o /boot/grub/grub.cfg # make grub config
-useradd -m -G wheel talati # create non-root user
-passwd talati # create password
-EDITOR=nvim visudo # uncomment # %wheel ALL=(ALL:ALL) ALL to grant wheel sudo privs
+```sh
+./machines/fedora-vm/create-lima.sh
+limactl shell dev
 ```
 
-Reboot into the new install. Log in as talati, connect to internet and run
+Inside the VM, provision the shared environment and choose accounts:
 
-```bash
-git clone https://github.com/nicktalati/dotfiles $HOME/dotfiles && cd $HOME/dotfiles
-./install_arch.sh
+```sh
+~/dotfiles/scripts/install-vm --account cultivate
 ```
 
-Then update `~/.config/rclone/rclone.conf` and run:
+Repeat `--account` to select more than one:
 
-```bash
-rclone sync crypt:talati-crypt/crypt ~/crypt
+```sh
+~/dotfiles/scripts/install-vm \
+    --account cultivate \
+    --account personal
 ```
 
-And reboot.
+The selection is preserved on later runs. Open a new macOS shell and run `dev`
+to start the VM if necessary and attach to its persistent tmux session.
 
-Firefox profiles, extensions, and policies are managed by `firefox/setup.sh`
-(called by `install_arch.sh`). After install, launch each profile and sign into
-the corresponding Mozilla account to restore bookmarks, passwords, etc. via Sync.
+### Mail enrollment
+
+Each selected account has a writable OAuth token at:
+
+```text
+~/.local/share/mail/oauth/cultivate
+~/.local/share/mail/oauth/personal
+~/.local/share/mail/oauth/paypal
+```
+
+Authorize a missing token with NeoMutt's `mutt_oauth2.py`, using the Google OAuth
+client ID and secret stored in Bitwarden. Pass `--encryption-pipe cat` and
+`--decryption-pipe cat`; FileVault protects the VM disk. Then restrict the file
+and rerun the installer:
+
+```sh
+chmod 600 ~/.local/share/mail/oauth/cultivate
+~/dotfiles/scripts/install-vm
+```
+
+The installer enables mail services only for accounts whose token file exists.
+There are no launchd mail services: NeoMutt, mbsync, and goimapnotify run as
+systemd user services inside the Linux VM.
+
+## Physical Arch host
+
+The existing desktop is represented by `machines/arch-host` and currently
+enables all three accounts:
+
+```sh
+./machines/arch-host/install.sh
+```
+
+This is a transitional full-system installer. It installs packages, writes the
+two declared `/etc` files, configures the existing Firefox profiles, enables
+services, and changes the login shell. It deliberately preserves the current
+development, mail, and gocryptfs/rclone behavior while the Fedora VM is proven
+on the Mac. After the same Fedora VM is validated on Arch, the host will be
+reduced to hardware, desktop, native applications, Lima, and minimal host
+operation.
+
+## Temporary x86-64 Arch VM fallback
+
+An Arch guest remains available as a migration fallback:
+
+```sh
+./machines/arch-vm/create-lima.sh
+limactl shell dev
+~/dotfiles/scripts/install-vm --account cultivate
+```
+
+The Arch VM is intentionally rejected on ARM hosts. It is not the intended
+second guest platform; the Fedora definition already pins both ARM64 and x86-64
+images and is the target on both physical hosts.
+
+## Accounts
+
+The account packages are:
+
+- `account-cultivate`: Cultivate Git, SSH, and Google Workspace mail
+- `account-personal`: personal Git, SSH, and Gmail
+- `account-paypal`: the separate PayPal Gmail account
+
+They contain ordinary application configuration and public SSH keys, never
+private keys or OAuth tokens. Put repositories under `~/code/cultivate` or
+`~/code/personal`; Git conditional includes select the corresponding identity.
+
+## Package maintenance and validation
+
+Use `pkgsync diff` to compare the active machine manifest with explicitly
+installed packages, and `pkgsync sync` to install the declared packages.
+
+Run the smoke suite with:
+
+```sh
+./tests/run.sh
+```

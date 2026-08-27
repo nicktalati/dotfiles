@@ -1,0 +1,15 @@
+configurations:
+  - host: imap.gmail.com
+    port: 993
+    tls: true
+    tlsOptions:
+      rejectUnauthorized: true
+    username: "talati@getcultivate.ai"
+    passwordCMD: "python /usr/share/neomutt/oauth2/mutt_oauth2.py --encryption-pipe 'cat' --decryption-pipe 'cat' ~/.local/share/mail/oauth/cultivate"
+    xoAuth2: true
+    wait: 5
+    idleLogoutTimeout: 10
+    boxes:
+      - mailbox: "INBOX"
+        onNewMail: "mail-sync cultivate INBOX"
+        onNewMailPost: "notify-mail ~/mail/cultivate/Inbox"

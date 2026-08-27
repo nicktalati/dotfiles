@@ -1,0 +1,4 @@
+[user]
+	email = nicktalati@gmail.com
+	name = Nick Talati
+	signingkey = ~/.ssh/id_rsa_personal.pub

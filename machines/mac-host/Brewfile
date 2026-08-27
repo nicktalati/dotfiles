@@ -1,0 +1,4 @@
+cask "bitwarden"
+
+brew "lima"
+brew "stow"
