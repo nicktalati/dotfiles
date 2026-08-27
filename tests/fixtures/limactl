@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+case "$1" in
+    list)
+        if [[ -f "$FAKE_LIMA_CREATED" ]]; then
+            if [[ "$*" == *Status* ]]; then
+                if [[ -f "$FAKE_LIMA_RUNNING" ]]; then
+                    printf 'work Running\n'
+                else
+                    printf 'work Stopped\n'
+                fi
+            else
+                printf 'work\n'
+            fi
+        fi
+        ;;
+    create)
+        printf 'create %s\n' "${*:2}" >> "$FAKE_LIMA_LOG"
+        touch "$FAKE_LIMA_CREATED"
+        ;;
+    start)
+        printf 'start %s\n' "${*:2}" >> "$FAKE_LIMA_LOG"
+        touch "$FAKE_LIMA_RUNNING"
+        ;;
+    shell)
+        printf 'shell %s\n' "${*:2}" >> "$FAKE_LIMA_LOG"
+        ;;
+    *)
+        exit 2
+        ;;
+esac

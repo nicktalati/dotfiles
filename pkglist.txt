@@ -1,5 +1,7 @@
 alsa-utils
 aria2
+aws-cli-v2
+aws-session-manager-plugin
 base
 base-devel
 bat
@@ -8,12 +10,14 @@ bluez
 bluez-utils
 brightnessctl
 cmake
-cyrus-sasl-xoauth2-git
+cups
 cyme
+cyrus-sasl-xoauth2-git
+d2
 dbmate
 docker
-docker-compose
 docker-buildx
+docker-compose
 earlyoom
 edk2-ovmf
 efibootmgr
@@ -24,10 +28,11 @@ fnm
 foot
 fzf
 git
+github-cli
 glow
-google-chrome
 gocryptfs
 goimapnotify
+google-chrome
 grim
 grub
 htop
@@ -65,6 +70,7 @@ openssh
 opentofu
 os-prober
 pacman-contrib
+pandoc-bin
 parted
 pipewire
 pipewire-alsa
@@ -75,8 +81,8 @@ qemu-desktop
 rclone
 ripgrep
 rsync
-slurp
 shellcheck-bin
+slurp
 socat
 sof-firmware
 stockfish

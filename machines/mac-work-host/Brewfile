@@ -1,0 +1,4 @@
+brew "lima"
+brew "stow"
+
+cask "firefox"

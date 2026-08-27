@@ -1,14 +1,20 @@
 # NT's Dotfiles
 
-This more or less contains my entire Arch Linux config.
+This repository manages a physical Arch desktop and an isolated Linux work
+environment that can run as a VM on macOS or Linux.
 
-`pkglist.txt` contains all packages to be installed. Stow symlinks all configs
-and systemd units. Rclone downloads encrypted personal files from S3, and
-gocryptfs decrypts them to `~/decrypt`.
+The physical Arch setup remains the existing combined personal/work machine.
+The work guest is work-only: it owns terminal development and mail while a thin
+physical host owns hardware, the graphical session, browsers, and the VM
+runtime. Apple Silicon uses Fedora; x86-64 hosts can use Arch.
+
+Stow symlinks user configuration and systemd user units. Rclone downloads
+gocryptfs ciphertext, and gocryptfs mounts the selected secret vault at
+`~/decrypt`.
 
 ## Stack
 
-**OS:** Arch
+**OS:** Arch desktop; Fedora work VM on Apple Silicon
 
 **WM:** Sway
 
@@ -22,7 +28,38 @@ gocryptfs decrypts them to `~/decrypt`.
 
 **Email:** Goimapnotify + mbsync + neomutt
 
-## New Machines
+## Work VM
+
+The work VM is currently the migration path for the MacBook. It is also usable
+from a Linux host, but the existing physical Arch environment will remain the
+default until the VM workflow has been exercised in practice.
+
+Install Lima on the host, clone this repository, and run:
+
+```bash
+./machines/fedora-work-guest/create-lima.sh
+```
+
+Then enter the VM and provision it:
+
+```bash
+limactl shell work
+~/dotfiles/install_work_guest.sh
+```
+
+The guest has no host-home mount. Repositories and mutable state live on its
+own disk. See [`machines/work-guest/README.md`](machines/work-guest/README.md)
+for the `vz` versus QEMU rollback tradeoff, work-secret enrollment, mail
+behavior, and validation. The Fedora-specific image and package boundary is in
+[`machines/fedora-work-guest`](machines/fedora-work-guest/README.md).
+
+For a new Mac, [`machines/mac-work-host`](machines/mac-work-host/README.md)
+contains the deliberately small Homebrew/Stow host bootstrap.
+
+[`ARCHITECTURE.md`](ARCHITECTURE.md) records the target boundaries, invariants,
+and why package-role composition is intentionally deferred.
+
+## New Physical Arch Machines
 
 Visit [https://archlinux.org/download](https://archlinux.org/download) and
 retrieve the .iso and .iso.sig files.

@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+readonly dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
+readonly machine_file="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/machine"
+
+machine=""
+[[ -f "$machine_file" ]] && machine=$(<"$machine_file")
+readonly machine
+readonly package_list="$dotfiles_dir/machines/$machine/packages.txt"
+
+failures=0
+warnings=0
+
+ok() {
+    printf 'ok: %s\n' "$*"
+}
+
+fail() {
+    printf 'FAIL: %s\n' "$*" >&2
+    ((failures += 1))
+}
+
+warn() {
+    printf 'warning: %s\n' "$*" >&2
+    ((warnings += 1))
+}
+
+check_command() {
+    if command -v "$1" &>/dev/null; then
+        ok "$1 is installed"
+    else
+        fail "$1 is not installed"
+    fi
+}
+
+case "$machine" in
+    arch-work-guest|fedora-work-guest)
+        ok "machine identity is $machine"
+        ;;
+    *)
+        fail "machine identity is missing or incorrect: $machine_file"
+        ;;
+esac
+
+for command_name in aws d2 dbmate docker fnm gh git goimapnotify lua-language-server \
+    mbsync msmtp neomutt notmuch nvim pandoc rclone session-manager-plugin stow \
+    tmux uv zsh; do
+    check_command "$command_name"
+done
+
+if [[ "$machine" == fedora-work-guest ]]; then
+    for installed_tool in \
+        "$HOME/.local/opt/dbmate-2.35.0/dbmate" \
+        "$HOME/.local/opt/fnm-1.39.0/fnm" \
+        "$HOME/.local/opt/goimapnotify-2.5.8/goimapnotify" \
+        "$HOME/.local/opt/lua-language-server-3.19.1/bin/lua-language-server"; do
+        if [[ -x "$installed_tool" ]]; then
+            ok "pinned tool payload is installed: $installed_tool"
+        else
+            fail "pinned tool payload is missing: $installed_tool"
+        fi
+    done
+fi
+
+if [[ -f "$package_list" ]]; then
+    missing_packages=""
+    case "$machine" in
+        arch-work-guest)
+            missing_packages=$(comm -23 \
+                <(sed '/^[[:space:]]*$/d' "$package_list" | sort -u) \
+                <(pacman -Qq 2>/dev/null | sort -u))
+            ;;
+        fedora-work-guest)
+            while IFS= read -r package; do
+                rpm -q --quiet "$package" 2>/dev/null || missing_packages+="$package"$'\n'
+            done < "$package_list"
+            ;;
+    esac
+    if [[ -z "$missing_packages" ]]; then
+        ok "all declared guest packages are installed"
+    else
+        fail "declared packages are missing: $(tr '\n' ' ' <<<"$missing_packages")"
+    fi
+else
+    fail "guest package list is missing"
+fi
+
+if [[ "$(git config --global user.email 2>/dev/null)" == talati@getcultivate.ai ]]; then
+    ok "Git uses the Cultivate identity"
+else
+    fail "Git global email is not talati@getcultivate.ai"
+fi
+
+expected_signing_key=$(git config --file "$dotfiles_dir/work-guest/.config/git/config" user.signingkey 2>/dev/null)
+readonly expected_signing_key
+if [[ "$(git config --global user.signingkey 2>/dev/null)" == "$expected_signing_key" ]]; then
+    ok "Git uses the work signing key"
+else
+    fail "Git signing key is not the work key"
+fi
+
+notmuch_path=$(notmuch config get database.path 2>/dev/null || true)
+if [[ "$notmuch_path" == "$HOME/mail" ]]; then
+    ok "notmuch database path follows the guest home"
+else
+    fail "notmuch database path is '$notmuch_path', expected '$HOME/mail'"
+fi
+
+mail_configs=(
+    "$HOME/.config/isyncrc"
+    "$HOME/.config/msmtp/config"
+    "$HOME/.config/goimapnotify/work.yaml"
+    "$HOME/.config/neomutt/neomuttrc"
+)
+if rg -n 'nicktalati@gmail\.com|nicktalatipaypal|quantworks' "${mail_configs[@]}" &>/dev/null; then
+    fail "personal or former-work accounts leaked into work mail configuration"
+else
+    ok "work mail configuration contains no known personal accounts"
+fi
+
+for secret_path in \
+    "$HOME/.ssh/id_rsa_work_github" \
+    "$HOME/.ssh/id_rsa_work_github.pub" \
+    "$HOME/decrypt/secrets/oauth/cultivate.oauth2"; do
+    if [[ -e "$secret_path" ]]; then
+        ok "secret is enrolled: $secret_path"
+    else
+        warn "secret is not enrolled: $secret_path"
+    fi
+done
+
+if systemctl --user is-active --quiet ssh-agent.service 2>/dev/null; then
+    ok "SSH agent service is active"
+else
+    warn "SSH agent service is not active"
+fi
+
+if [[ "$(loginctl show-user "$USER" --property=Linger --value 2>/dev/null)" == yes ]]; then
+    ok "systemd user services persist without an open guest shell"
+else
+    fail "systemd user lingering is disabled; mail will stop after logout"
+fi
+
+printf '\n%d failure(s), %d warning(s)\n' "$failures" "$warnings"
+((failures == 0))

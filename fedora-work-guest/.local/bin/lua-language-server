@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly luals_dir="$HOME/.local/opt/lua-language-server-3.19.1"
+readonly instance_dir="${XDG_STATE_HOME:-$HOME/.local/state}/lua-language-server"
+
+mkdir -p "$instance_dir/log" "$instance_dir/meta"
+
+exec "$luals_dir/bin/lua-language-server" "$luals_dir/main.lua" \
+    --logpath="$instance_dir/log" \
+    --metapath="$instance_dir/meta" \
+    "$@"

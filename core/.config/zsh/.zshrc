@@ -106,14 +106,18 @@ alias ta="task add"
 alias tm="task modify"
 alias td="task done"
 
-alias pe="$EDITOR $HOME/dotfiles/pkglist.txt"
+function pe() { "$EDITOR" "$(pkgsync path)"; }
 
 # fast nvm
 command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
 
 # fzf
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+    source /usr/share/fzf/key-bindings.zsh
+    [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+elif [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
+    source /usr/share/fzf/shell/key-bindings.zsh
+fi
 
 function commandsearch() { print -rz "$(print -l ${(k)commands} | fzf)" }
 

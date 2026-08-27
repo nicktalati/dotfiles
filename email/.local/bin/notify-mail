@@ -24,7 +24,9 @@ notify() {
     subject=$(grep -i '^Subject: ' "$file" | head -n 1)
     if ! grep -Fxq "$file" "$nm_notified"; then
         echo "$file" >> "$nm_notified"
-        notify-send -a "$to" "$from" "$subject"
+        if ! command -v notify-send &>/dev/null || ! notify-send -a "$to" "$from" "$subject"; then
+            printf 'new mail: %s | %s | %s\n' "$to" "$from" "$subject"
+        fi
     fi
 }
 

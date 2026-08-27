@@ -1,2 +1,4 @@
-- smoketest validation
-- vm script
+- macOS notification and open-file bridge for the work guest
+- choose a distinct rclone/S3 location and retention policy for the work vault
+- migrate the physical Arch installer to the host/guest package boundaries
+- exercise fedora-work-guest from a real Apple Silicon Lima VM

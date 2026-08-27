@@ -1,0 +1,14 @@
+[database]
+path=@MAIL_DIR@
+
+[user]
+name=Nick Talati
+primary_email=talati@getcultivate.ai
+
+[new]
+tags=
+ignore=.mbsyncstate;.uidvalidity
+
+[search]
+
+[maildir]
