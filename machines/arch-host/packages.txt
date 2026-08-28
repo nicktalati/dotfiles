@@ -30,7 +30,6 @@ fzf
 git
 github-cli
 glow
-gocryptfs
 goimapnotify
 google-chrome
 grim
@@ -78,7 +77,7 @@ postgresql
 powertop
 python
 qemu-desktop
-rclone
+restic
 ripgrep
 rsync
 shellcheck-bin

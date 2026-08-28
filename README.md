@@ -68,7 +68,6 @@ Each mail account has a writable OAuth-token location:
 ```text
 ~/.local/share/mail/oauth/cultivate
 ~/.local/share/mail/oauth/personal
-~/.local/share/mail/oauth/paypal
 ```
 
 The token file contains the registration values, refresh token, and mutable
@@ -99,7 +98,7 @@ the Linux VM.
 ## Physical Arch host
 
 The existing desktop is represented by `machines/arch-host` and currently
-enables all three accounts:
+enables every account:
 
 ```sh
 ./machines/arch-host/install.sh
@@ -108,8 +107,8 @@ enables all three accounts:
 This is a transitional full-system installer. It installs packages, writes the
 two declared `/etc` files, configures the existing Firefox profiles, enables
 services, and changes the login shell. It deliberately preserves the current
-development, mail, and gocryptfs/rclone behavior while the Fedora VM is proven
-on the Mac. After the same Fedora VM is validated on Arch, the host will be
+development, mail, and backup behavior while the Fedora VM is proven on the
+Mac. After the same Fedora VM is validated on Arch, the host will be
 reduced to hardware, desktop, native applications, Lima, and minimal host
 operation.
 
@@ -117,13 +116,33 @@ operation.
 
 The account packages are:
 
-- `account-cultivate`: Cultivate Git, SSH, and Google Workspace mail
-- `account-personal`: personal Git, SSH, and Gmail
-- `account-paypal`: the separate PayPal Gmail account
+- `account-cultivate`: the Cultivate Git identity and Google Workspace mail
+- `account-personal`: the personal Git identity and Gmail
 
 They contain ordinary application configuration only; SSH keys and OAuth tokens
 are machine state. Put repositories under `~/code/cultivate` or
 `~/code/personal`; Git conditional includes select the corresponding identity.
+
+## Backups
+
+restic snapshots `~/docs`, `~/photos`, `~/reading`, `~/dotfiles`, and the Zsh
+history to S3 daily, and to the offline USB drive with `mount_drive` followed
+by `backup usb`. The service conditions on machine credentials, so enrolling a
+machine is one file created from the Bitwarden "restic backup" item:
+
+```sh
+mkdir -p ~/.config/restic
+nvim ~/.config/restic/env    # the three export lines from Bitwarden
+chmod 600 ~/.config/restic/env
+```
+
+```sh
+export RESTIC_PASSWORD='...'
+export AWS_ACCESS_KEY_ID='...'
+export AWS_SECRET_ACCESS_KEY='...'
+```
+
+Restore by sourcing that file, then `restic snapshots` and `restic restore`.
 
 ## Package maintenance and validation
 

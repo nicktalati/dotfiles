@@ -40,6 +40,7 @@ poppler-utils
 postgresql
 python-unversioned-command
 python3-devel
+restic
 ripgrep
 rsync
 sasl-xoauth2

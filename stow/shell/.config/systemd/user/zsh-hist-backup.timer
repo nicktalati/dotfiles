@@ -1,9 +1,0 @@
-[Unit]
-Description=Zsh History Backup Timer
-
-[Timer]
-OnCalendar=hourly
-Persistent=true
-
-[Install]
-WantedBy=timers.target

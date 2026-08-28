@@ -1,0 +1,14 @@
+RESTIC_REPOSITORY="s3:s3.us-east-1.amazonaws.com/talati-crypt/restic"
+
+BACKUP_SOURCES=(
+    "$HOME/docs"
+    "$HOME/photos"
+    "$HOME/reading"
+    "$HOME/dotfiles"
+    "$HOME/.local/state/zsh/history"
+)
+
+BACKUP_KEEP=(--keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 10)
+
+BACKUP_LABEL="backup"
+BACKUP_MOUNT="/mnt/backup"

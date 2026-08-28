@@ -26,8 +26,8 @@ test_configuration() {
     # Recreate the home it produces: the fedora-vm Stow composition plus the
     # machine marker pkgsync reads.
     stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$HOME" \
-        shell nvim tmux git mail psql task \
-        account-cultivate account-personal account-paypal
+        shell nvim tmux git mail psql task backup \
+        account-cultivate account-personal
     mkdir -p "$XDG_CONFIG_HOME/dotfiles"
     printf '%s\n' fedora-vm > "$XDG_CONFIG_HOME/dotfiles/machine"
 
@@ -102,7 +102,7 @@ test_configuration() {
         "$dotfiles_dir/stow/mail/.config/notmuch/default/config" ]] || \
         fail "Notmuch configuration was generated instead of Stowed"
 
-    for account in cultivate personal paypal; do
+    for account in cultivate personal; do
         [[ -L "$HOME/.config/isync/accounts/$account.conf" ]] || \
             fail "$account native configuration was not Stowed"
         rg -q "\\.local/share/mail/oauth/$account" \
@@ -113,6 +113,10 @@ test_configuration() {
         fail "per-account mbsync unit was not Stowed"
     [[ -x "$HOME/.local/bin/mail-sync" ]] || fail "mail-sync was not Stowed"
     [[ -x "$HOME/.local/bin/mail-enroll" ]] || fail "mail-enroll was not Stowed"
+    [[ -x "$HOME/.local/bin/backup" ]] || fail "backup was not Stowed"
+    rg -q 'ConditionPathExists=%h/.config/restic/env' \
+        "$HOME/.config/systemd/user/backup.service" || \
+        fail "backup service does not gate on restic credentials"
     [[ -x "$HOME/.local/bin/pkgsync" ]] || fail "pkgsync was not Stowed"
     [[ "$("$HOME/.local/bin/pkgsync" path)" == \
         "$dotfiles_dir/machines/fedora-vm/packages.txt" ]] || \
@@ -126,7 +130,7 @@ test_configuration() {
         "$HOME/.config/systemd/user/mbsync@.service" || \
         fail "mail service does not wait for its local OAuth token"
 
-    if rg -n 'claude-mail|khal|vdirsyncer|quantworks' "$HOME/.config" &>/dev/null; then
+    if rg -n 'claude-mail|khal|vdirsyncer|quantworks|nicktalatipaypal' "$HOME/.config" &>/dev/null; then
         fail "removed mail or calendar configuration leaked into the VM"
     fi
 }

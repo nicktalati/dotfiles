@@ -36,15 +36,14 @@ ownership is useful to inspect directly:
 - `mail`: account-independent NeoMutt and mail-service configuration
 - `psql`: PostgreSQL client configuration
 - `task`: Taskwarrior
-- `arch-backup`: physical-Arch-host backup commands and timer
+- `backup`: restic snapshots to S3 and the offline USB drive
 - `arch-desktop`: Sway, Foot, and the Arch graphical environment
-- `arch-vault`: the Arch host's legacy gocryptfs and rclone integration
 - `macos`: Homebrew setup, native macOS SSH configuration, and the VM launcher
 
-`account-cultivate`, `account-personal`, and `account-paypal` contain the native
-configuration files for those identities. Repeated facts are kept in the
-formats that consume them. Three stable accounts do not justify a private
-schema or configuration renderer.
+`account-cultivate` and `account-personal` contain the native configuration
+files for those identities. Repeated facts are kept in the formats that consume
+them. Two stable accounts do not justify a private schema or configuration
+renderer.
 
 ## Target composition
 
@@ -62,13 +61,12 @@ manager, Lima, and only enough shell configuration to operate the host. The
 Fedora VM owns development tools, terminal mail, and account configuration.
 
 The current `arch-host` implementation is deliberately transitional. It still
-composes `linux-home`, all account packages, `arch-backup`, `arch-desktop`, and
-`arch-vault` so this live machine remains functional while the Mac environment
-is validated. It must not be pruned until the Fedora VM works in real use on
+composes `linux-home`, all account packages, `backup`, and `arch-desktop` so
+this live machine remains functional while the Mac environment is validated. It must not be pruned until the Fedora VM works in real use on
 both hosts. The still-functional physical Arch environment is the rollback path
 during this migration; a second guest distribution is unnecessary.
 
-All three account packages are Stowed because they contain no secrets. NeoMutt's
+Both account packages are Stowed because they contain no secrets. NeoMutt's
 account composition and Notmuch's identity list are ordinary static
 configuration in the `mail` package. OAuth-token presence controls mail
 services, and the keys loaded in the host agent control SSH access.
@@ -115,11 +113,12 @@ refresh. On every Linux target they live as mode-0600 files under
 recreated with `mail-enroll`, which prompts for the registration values kept in
 Bitwarden. FileVault protects the VM disk at rest.
 
-The Arch root filesystem is not currently encrypted. The gocryptfs vault now
-holds only personal documents; no machine secret lives in it.
-
-The VM does not install gocryptfs or rclone and does not create `~/crypt` or
-`~/decrypt`.
+Personal documents live in plain directories and are protected off-machine by
+restic, which encrypts client-side before writing to S3 or the offline USB
+drive. The backup service conditions on `~/.config/restic/env`, so machines
+without the Bitwarden-held credentials silently skip it; the restic password
+exists only in Bitwarden and on enrolled machines. The Arch root filesystem is
+not currently encrypted.
 
 ## Invariants
 

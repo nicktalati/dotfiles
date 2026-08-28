@@ -1,0 +1,7 @@
+[Unit]
+Description=Restic snapshot backup
+ConditionPathExists=%h/.config/restic/env
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/backup s3

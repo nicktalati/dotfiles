@@ -29,12 +29,12 @@ mkdir -p "$xdg_config_home/dotfiles" "$HOME/mail" "$oauth_dir"
 chmod 700 "$oauth_dir"
 # NeoMutt's sidebar section headers are local-only pseudo-Maildirs no program
 # creates: mbsync only creates mailboxes that exist remotely.
-mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati,nicktalatipaypal}/{cur,new,tmp}
+mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati}/{cur,new,tmp}
 printf '%s\n' fedora-vm > "$xdg_config_home/dotfiles/machine"
 
 stow --restow --no-folding --dir "$stow_dir" --target "$HOME" \
-    shell nvim tmux git mail psql task \
-    account-cultivate account-personal account-paypal
+    shell nvim tmux git mail psql task backup \
+    account-cultivate account-personal
 
 zsh_path=$(command -v zsh)
 current_shell=$(getent passwd "$USER" | cut -d: -f7)
@@ -61,14 +61,14 @@ if [[ -S /run/host-services/ssh-auth.sock ]]; then
 else
     systemctl --user enable --now ssh-agent.service
 fi
-systemctl --user enable --now zsh-hist-backup.timer
+systemctl --user enable --now backup.timer
 
 # The mail units gate themselves on OAuth-token presence through
 # ConditionPathExists, so every account is enabled unconditionally; a unit
 # whose token is absent is skipped, not failed.
 systemctl --user enable --now \
-    mbsync@{cultivate,personal,paypal}.timer \
-    goimapnotify@{cultivate,personal,paypal}.service
+    mbsync@{cultivate,personal}.timer \
+    goimapnotify@{cultivate,personal}.service
 
 cat <<EOF
 

@@ -1,3 +1,0 @@
-BACKUP_LABEL="backup"
-BACKUP_MOUNT="/mnt/backup"
-BACKUP_SOURCES=("$HOME/dotfiles" "$HOME/crypt" "$HOME/reading" "$HOME/photos")

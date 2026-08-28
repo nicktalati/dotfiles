@@ -24,9 +24,7 @@ copying until a narrower exchange directory proves necessary.
 
 The host's native SSH agent is forwarded into the guest, so the VM receives
 signing and authentication operations but no SSH private keys. Mutable OAuth
-tokens remain local to the VM under
-`~/.local/share/mail/oauth`; the VM does not install or mount the Arch gocryptfs
-vault.
+tokens remain local to the VM under `~/.local/share/mail/oauth`.
 
 The package manifest was checked against Fedora's ARM64 release metadata. Tools
 not available from Fedora repositories are declared once in `tools.lock.json`.

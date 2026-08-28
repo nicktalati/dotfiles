@@ -1,8 +1,8 @@
 [Unit]
-Description=Crypt Backup Timer
+Description=Daily restic backup
 
 [Timer]
-OnCalendar=hourly
+OnCalendar=daily
 Persistent=true
 
 [Install]

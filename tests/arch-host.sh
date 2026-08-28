@@ -28,9 +28,9 @@ export DOTFILES_DIR="$dotfiles_dir"
 [[ -L "$HOME/.config/sway/config" ]] || fail "Arch desktop layer was not Stowed"
 [[ -L "$HOME/.config/zsh/profile.d/wayland.zsh" ]] || \
     fail "Arch desktop environment fragment was not Stowed"
-[[ -L "$HOME/.config/systemd/user/crypt-backup.timer" ]] || \
-    fail "Arch backup package was not Stowed"
-for account in cultivate personal paypal; do
+[[ -L "$HOME/.config/systemd/user/backup.timer" ]] || \
+    fail "backup package was not Stowed"
+for account in cultivate personal; do
     [[ -L "$HOME/.config/isync/accounts/$account.conf" ]] || \
         fail "$account account package was not Stowed"
 done
@@ -61,7 +61,7 @@ neomutt_output=$(neomutt \
     -Q folder -Q spoolfile -Q from -Q sendmail 2>&1)
 grep -q 'errors in' <<<"$neomutt_output" && fail "NeoMutt configuration did not parse"
 
-if rg -n 'claude-mail|khal|vdirsyncer|quantworks' "$HOME/.config" &>/dev/null; then
+if rg -n 'claude-mail|khal|vdirsyncer|quantworks|nicktalatipaypal' "$HOME/.config" &>/dev/null; then
     fail "removed configuration leaked into the Arch host"
 fi
 

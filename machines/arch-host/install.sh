@@ -11,10 +11,6 @@ readonly pkglist="$machine_dir/packages.txt"
 readonly xdg_conf="$HOME/.config"
 readonly oauth_dir="$HOME/.local/share/mail/oauth"
 
-readonly rclone_tmpl="$stow_dir/arch-vault/.config/rclone/rclone.conf.template"
-readonly rclone_conf="$xdg_conf/rclone/rclone.conf"
-readonly gcfs_conf="$xdg_conf/gocryptfs/secrets"
-
 red="\033[31m"
 yellow="\033[33m"
 reset="\033[0m"
@@ -80,7 +76,7 @@ mkdir -p "$HOME/mail" "$HOME/downloads" "$oauth_dir"
 chmod 700 "$oauth_dir"
 # NeoMutt's sidebar section headers are local-only pseudo-Maildirs no program
 # creates: mbsync only creates mailboxes that exist remotely.
-mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati,nicktalatipaypal}/{cur,new,tmp}
+mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati}/{cur,new,tmp}
 
 if ! $configure_only; then
     # bootstrap yay
@@ -97,26 +93,11 @@ fi
 
 info "Stowing dotfiles..."
 stow -v -R --no-folding -d "$stow_dir" -t "$HOME" \
-    shell nvim tmux git mail psql task arch-vault arch-backup arch-desktop \
-    account-cultivate account-personal account-paypal
+    shell nvim tmux git mail psql task backup arch-desktop \
+    account-cultivate account-personal
 
 mkdir -p "$xdg_conf/dotfiles"
 printf '%s\n' arch-host > "$xdg_conf/dotfiles/machine"
-if ! $configure_only; then
-    info "Setting up secrets..."
-    mkdir -p "$xdg_conf"/{rclone,gocryptfs}
-    if [[ ! -f "$gcfs_conf" ]]; then
-        echo -n "Gocryptfs password: "
-        read -rs gcfs_pass
-        echo
-        echo "$gcfs_pass" > "$gcfs_conf"
-        chmod 600 "$gcfs_conf"
-    fi
-
-    [[ -f "$rclone_tmpl" ]] || error "Template missing: $rclone_tmpl"
-    [[ -f "$rclone_conf" ]] || install -m 600 "$rclone_tmpl" "$rclone_conf"
-fi
-
 if $configure_only; then
     "$machine_dir/firefox/setup.sh" --user-only
     info "Arch host configuration complete."
@@ -144,13 +125,11 @@ info "Enabling Systemd Units..."
 
 systemctl --user daemon-reload
 systemctl --user disable mbsync.timer goimapnotify@goimapnotify.service 2>/dev/null || true
-for account in cultivate personal paypal; do
+for account in cultivate personal; do
     systemctl --user enable "mbsync@$account.timer"
     systemctl --user enable "goimapnotify@$account.service"
 done
-systemctl --user enable zsh-hist-backup.timer
-systemctl --user enable crypt-backup.timer
-systemctl --user enable crypt-mount.service
+systemctl --user enable backup.timer
 systemctl --user enable ssh-agent.service
 
 sudo systemctl daemon-reload
@@ -165,8 +144,7 @@ cat <<'EOF'
 =========================================================
                   INSTALLATION COMPLETE
 =========================================================
-  1. Update ~/.config/rclone/rclone.conf
-  2. Run 'rclone sync crypt:talati-crypt/crypt ~/crypt'
-  3. Reboot
+  1. Create ~/.config/restic/env from Bitwarden (see README)
+  2. Reboot
 =========================================================
 EOF
