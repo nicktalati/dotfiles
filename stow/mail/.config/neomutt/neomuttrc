@@ -1,2 +1,6 @@
 source ~/.config/neomutt/common.rc
-source ~/.config/neomutt/accounts.rc
+
+set spoolfile = "+cultivate/Inbox"
+source ~/.config/neomutt/accounts/cultivate.rc
+source ~/.config/neomutt/accounts/personal.rc
+source ~/.config/neomutt/accounts/paypal.rc

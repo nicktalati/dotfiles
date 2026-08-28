@@ -23,8 +23,8 @@ export DOTFILES_DIR="$dotfiles_dir"
 
 [[ "$(<"$HOME/.config/dotfiles/machine")" == arch-host ]] || \
     fail "wrong Arch host marker"
-[[ "$(paste -sd, "$HOME/.config/dotfiles/accounts")" == cultivate,personal,paypal ]] || \
-    fail "Arch host did not select all accounts"
+[[ ! -e "$HOME/.config/dotfiles/accounts" ]] || \
+    fail "obsolete account-selection state was created"
 [[ -L "$HOME/.config/sway/config" ]] || fail "Arch desktop layer was not Stowed"
 [[ -L "$HOME/.config/zsh/profile.d/wayland.zsh" ]] || \
     fail "Arch desktop environment fragment was not Stowed"
@@ -34,10 +34,27 @@ for account in cultivate personal paypal; do
     [[ -L "$HOME/.config/isync/accounts/$account.conf" ]] || \
         fail "$account account package was not Stowed"
 done
-[[ -L "$HOME/.config/systemd/user/mbsync@.service.d/vault.conf" ]] || \
-    fail "Arch mail does not wait for the legacy vault"
-[[ -L "$HOME/.local/share/mail/oauth/cultivate" ]] || \
-    fail "Arch OAuth compatibility link was not created"
+[[ ! -e "$HOME/.config/neomutt/accounts.rc" ]] || \
+    fail "obsolete generated NeoMutt account list was created"
+rg -q 'accounts/cultivate.rc' "$HOME/.config/neomutt/neomuttrc" || \
+    fail "NeoMutt account composition is missing"
+[[ -L "$HOME/.config/notmuch/default/config" ]] || \
+    fail "Notmuch configuration was not Stowed"
+[[ ! -e "$HOME/.config/systemd/user/mbsync@.service.d/vault.conf" ]] || \
+    fail "Arch mail still waits for the legacy vault"
+[[ -d "$HOME/.local/share/mail/oauth" ]] || \
+    fail "local OAuth directory was not created"
+[[ ! -L "$HOME/.local/share/mail/oauth/cultivate" ]] || \
+    fail "OAuth token is still a vault symlink"
+
+# Fabricate the Maildirs mbsync (Create Both) creates on first sync; NeoMutt
+# reports named-mailboxes whose directories are missing as errors.
+while IFS= read -r mailbox; do
+    mkdir -p "$HOME/mail/$mailbox"/{cur,new,tmp}
+done < <(
+    sed -n 's/^named-mailboxes "[^"]*" "+\([^"]*\)"$/\1/p' \
+        "$HOME/.config/neomutt/accounts/"*.rc
+)
 
 neomutt_output=$(neomutt \
     -F "$HOME/.config/neomutt/neomuttrc" \

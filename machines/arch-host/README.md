@@ -11,6 +11,7 @@ Run the installer only after inspecting it:
 ./machines/arch-host/install.sh
 ```
 
-Unlike `scripts/install-vm`, this is intentionally a complete physical-machine
-installer and is not isolated from the host. The existing gocryptfs and rclone
-behavior is preserved pending a separate secret and backup redesign.
+Unlike `machines/fedora-vm/install.sh`, this is intentionally a complete
+physical-machine installer and is not isolated from the host. The existing
+gocryptfs and rclone behavior is preserved pending a separate secret and backup
+redesign.

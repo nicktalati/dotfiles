@@ -10,8 +10,6 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 
 export PYTHON_HISTORY="$XDG_STATE_HOME/python/history"
 
-export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
-
 export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 
@@ -36,7 +34,6 @@ export TASKDATA="$XDG_DATA_HOME/task"
 
 typeset -U path PATH
 path=(
-    "$HOME/dotfiles/bin"
     "$HOME/.local/bin"
     $path
 )

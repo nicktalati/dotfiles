@@ -1,5 +1,6 @@
-# exports
-export GPG_TTY=$(tty)
+# zsh, psql, python, and node histories plus the msmtp log live under
+# XDG_STATE_HOME; none of those programs create missing parent directories.
+mkdir -p "$XDG_STATE_HOME"/{msmtp,node,psql,python,zsh}
 
 # history
 HISTFILE="$XDG_STATE_HOME/zsh/history"
@@ -119,6 +120,3 @@ function commandsearch() { print -rz "$(print -l ${(k)commands} | fzf)" }
 
 bindkey -M viins -s '^f' "commandsearch\n"
 bindkey -M vicmd -s '^f' "icommandsearch\n"
-
-# secrets
-[[ -f "$ZDOTDIR/secrets.zsh" ]] && source "$ZDOTDIR/secrets.zsh"

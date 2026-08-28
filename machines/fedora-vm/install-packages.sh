@@ -9,6 +9,5 @@ readonly external_package=session-manager-plugin
 
 mapfile -t packages < <(grep -Fvx "$external_package" "$package_list")
 
-sudo dnf --refresh -y upgrade
-sudo dnf -y install "${packages[@]}"
+sudo dnf --refresh -y install "${packages[@]}"
 "$machine_dir/install-tools.sh"

@@ -10,20 +10,21 @@ Create and provision it with:
 ```sh
 ./machines/fedora-vm/create-lima.sh
 limactl shell dev
-~/dotfiles/scripts/install-vm --account cultivate
+~/dotfiles/machines/fedora-vm/install.sh
 ```
 
-Repeat `--account` to enable additional identities. Fedora changes package names
-and exceptional installation mechanics; the narrowly scoped application and
-native account packages under `stow/` are shared with the Arch VM.
+Fedora changes package names and exceptional installation mechanics; the
+narrowly scoped application and native account packages under `stow/` are
+shared with the physical Arch host. Account packages contain no secrets;
+OAuth-token and SSH-agent contents determine which accounts are usable.
 
 The host filesystem is not mounted. Repositories and mutable development state
 live on the guest filesystem and cross the host boundary only through explicit
 copying until a narrower exchange directory proves necessary.
 
-The host SSH agent is forwarded into the guest. On the Mac that agent is
-Bitwarden, so the VM receives signing and authentication operations but no SSH
-private keys. Mutable OAuth tokens remain local to the VM under
+The host's native SSH agent is forwarded into the guest, so the VM receives
+signing and authentication operations but no SSH private keys. Mutable OAuth
+tokens remain local to the VM under
 `~/.local/share/mail/oauth`; the VM does not install or mount the Arch gocryptfs
 vault.
 

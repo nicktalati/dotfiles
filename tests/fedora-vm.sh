@@ -44,7 +44,7 @@ fi
 grep -q 'shell dev -- sudo dnf --refresh -y install git' "$FAKE_LIMA_LOG" || \
     fail "Fedora target did not bootstrap Git with DNF"
 grep -q 'DOTFILES_REPOSITORY=git@github.com:nicktalati/dotfiles.git' "$FAKE_LIMA_LOG" || \
-    fail "Fedora target did not clone through the forwarded SSH agent"
+    fail "Fedora target did not clone through the native forwarded SSH agent"
 
 for package in awscli2 d2 docker-buildx gh neomutt opentofu pandoc-cli \
     sasl-xoauth2 session-manager-plugin uv; do

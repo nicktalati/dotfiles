@@ -1,3 +1,6 @@
+[user]
+	name = Nick Talati
+	signingkey = ~/.ssh/id_ed25519.pub
 [merge]
 	tool = nvimdiff
 [init]

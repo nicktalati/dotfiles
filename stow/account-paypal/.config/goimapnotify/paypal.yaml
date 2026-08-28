@@ -13,5 +13,3 @@ configurations:
       - mailbox: "INBOX"
         onNewMail: "mail-sync paypal INBOX"
         onNewMailPost: "notify-mail ~/mail/nicktalatipaypal/Inbox"
-      - mailbox: "[Gmail]/All Mail"
-        onNewMail: "mail-sync paypal '[Gmail]/All Mail'"

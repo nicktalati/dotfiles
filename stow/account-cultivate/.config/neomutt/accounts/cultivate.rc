@@ -17,7 +17,7 @@ sidebar_pin "+.header-cultivate"
 sidebar_pin "+cultivate/Inbox"
 
 folder-hook ~/mail/cultivate/* 'set from="talati@getcultivate.ai"'
-folder-hook ~/mail/cultivate/* 'set sendmail="msmtp --file ~/.config/msmtp/accounts/cultivate.conf --account cultivate"'
+folder-hook ~/mail/cultivate/* 'set sendmail="msmtp --file $HOME/.config/msmtp/accounts/cultivate.conf --account cultivate"'
 folder-hook ~/mail/cultivate/* 'set trash="+cultivate/[Gmail]/Trash"'
 folder-hook ~/mail/cultivate/* 'set postponed="+cultivate/[Gmail]/Drafts"'
 folder-hook ~/mail/cultivate/* 'unset record'

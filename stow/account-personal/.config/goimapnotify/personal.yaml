@@ -13,5 +13,3 @@ configurations:
       - mailbox: "INBOX"
         onNewMail: "mail-sync personal INBOX"
         onNewMailPost: "notify-mail ~/mail/nicktalati/Inbox"
-      - mailbox: "[Gmail]/All Mail"
-        onNewMail: "mail-sync personal '[Gmail]/All Mail'"

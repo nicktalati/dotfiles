@@ -7,38 +7,43 @@ and terminal mail belong in a Linux VM.
 ## Bootstrap
 
 1. Update macOS and enable FileVault.
-2. Install Homebrew using its official installer.
-3. Install Bitwarden, sign in, import the personal SSH key, and enable its SSH
-   agent:
+2. Install Homebrew using its official installer. Skip its suggested
+   `~/.zprofile` edit: the Stowed `.zprofile` runs `brew shellenv`, and the
+   bootstrap's Stow step refuses to replace a real file it does not own.
+3. Generate this machine's SSH key with a passphrase and load it into macOS's
+   native agent. Private keys are machine state: generated here, never copied
+   anywhere.
 
    ```sh
-   brew install --cask bitwarden
-   export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
-   ssh-add -L
+   ssh-keygen -t ed25519
+   ssh-add --apple-use-keychain ~/.ssh/id_ed25519
    ```
 
-4. Clone this repository to `~/dotfiles` using the agent:
+4. Register `~/.ssh/id_ed25519.pub` at <https://github.com/settings/keys>
+   twice: as an authentication key and as a signing key. Commits sign with the
+   machine key; repository location selects only the account e-mail.
+
+5. Clone this repository to `~/dotfiles` using the agent:
 
    ```sh
    git clone git@github.com:nicktalati/dotfiles.git ~/dotfiles
    cd ~/dotfiles
    ```
 
-5. Run:
+6. Run:
 
    ```sh
    ./machines/mac-host/bootstrap.sh
    ```
 
-The early Bitwarden install breaks the private-repository bootstrap cycle; the
-Brewfile records it alongside Lima and Stow. The bootstrap then Stows the
-`stow/macos` package, which owns `~/.zprofile` and `~/.local/bin/dev`. It applies
-no `defaults` settings, does not configure Safari, and installs no native
-development toolchain.
+The Brewfile installs Bitwarden for web passwords, Lima, and Stow. The bootstrap
+then Stows the `stow/macos` package, which owns `~/.zprofile`, `~/.ssh/config`,
+and `~/.local/bin/dev`. It applies no `defaults` settings, does not configure
+Safari, and installs no native development toolchain.
 
-Import any remaining required SSH private keys into Bitwarden. The installed
-shell profile detects either the Homebrew-cask or App Store socket. Open a new
-terminal and verify it before creating the VM:
+The SSH configuration uses `AddKeysToAgent` and Apple's `UseKeychain` extension.
+Bitwarden has no SSH role. Open a new terminal and verify the native agent before
+creating the VM:
 
 ```sh
 ssh-add -L
@@ -47,7 +52,8 @@ ssh-add -L
 Lima forwards this agent into the guest; SSH private keys do not need to be
 copied into the VM.
 
-Use `./machines/mac-host/bootstrap.sh --check` for a read-only package check.
+Check for missing declared packages with
+`brew bundle check --file ~/dotfiles/machines/mac-host/Brewfile`.
 
 ## Development VM
 
@@ -56,7 +62,7 @@ Create and provision the default Apple Silicon VM:
 ```sh
 ./machines/fedora-vm/create-lima.sh
 limactl shell dev
-~/dotfiles/scripts/install-vm --account cultivate
+~/dotfiles/machines/fedora-vm/install.sh
 ```
 
 After provisioning, open a new macOS shell and run `dev`. The launcher starts
@@ -70,7 +76,9 @@ attachment opening, Slack, macOS defaults, or backup settings.
 The managed footprint is:
 
 - Homebrew cask `bitwarden` and formulas `lima` and `stow`
-- `~/.zprofile` and `~/.local/bin/dev` Stow links
+- `~/.zprofile`, `~/.ssh/config`, and `~/.local/bin/dev` Stow links
+- this machine's SSH key under `~/.ssh`, generated locally and not owned by
+  this repository
 - Lima instance data under its normal application-support directory
 
 Remove the configuration links with:

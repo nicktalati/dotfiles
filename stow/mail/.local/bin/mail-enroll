@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/isync/accounts"
+readonly oauth_dir="$HOME/.local/share/mail/oauth"
+
+account="${1:-}"
+[[ -n "$account" && -f "$config_dir/$account.conf" ]] || {
+    printf 'usage: mail-enroll ACCOUNT\nconfigured accounts:\n' >&2
+    basename -s .conf "$config_dir"/*.conf >&2
+    exit 2
+}
+
+mkdir -p "$oauth_dir"
+chmod 700 "$oauth_dir"
+
+# The script prompts for the client id, client secret, and e-mail address
+# (Bitwarden holds the registration values), creates the token file mode 0600,
+# and prints a Google URL. Open it in a browser; on the Mac, Lima forwards the
+# localhost redirect back into the guest.
+python /usr/share/neomutt/oauth2/mutt_oauth2.py \
+    --authorize --provider google --authflow localhostauthcode \
+    --encryption-pipe cat --decryption-pipe cat \
+    "$oauth_dir/$account"
+
+systemctl --user start --no-block "mbsync@$account.service" "goimapnotify@$account.service"
+printf '%s enrolled; initial synchronization started\n' "$account"

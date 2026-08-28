@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
 readonly dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly machine_file="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/machine"
@@ -10,11 +10,13 @@ machine=""
 readonly machine
 
 case "$machine" in
-    arch-host|arch-vm|fedora-vm)
+    arch-host|fedora-vm)
         package_list="$dotfiles_dir/machines/$machine/packages.txt"
         ;;
     *)
-        package_list="$dotfiles_dir/machines/arch-host/packages.txt"
+        printf 'error: unsupported or missing machine marker: %s\n' \
+            "${machine:-unset}" >&2
+        exit 1
         ;;
 esac
 readonly package_list
@@ -23,8 +25,8 @@ readonly package_list
 
 case "${1:-}" in
     sync)
-        if [[ "$machine" == arch-vm || "$machine" == fedora-vm ]]; then
-            exec "$dotfiles_dir/scripts/install-vm"
+        if [[ "$machine" == fedora-vm ]]; then
+            exec "$dotfiles_dir/machines/fedora-vm/install-packages.sh"
         fi
         yay -S --needed - < "$package_list"
         ;;

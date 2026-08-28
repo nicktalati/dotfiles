@@ -12,7 +12,7 @@ sidebar_pin "+.header-nicktalati"
 sidebar_pin "+nicktalati/Inbox"
 
 folder-hook ~/mail/nicktalati/* 'set from="nicktalati@gmail.com"'
-folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp --file ~/.config/msmtp/accounts/personal.conf --account personal"'
+folder-hook ~/mail/nicktalati/* 'set sendmail="msmtp --file $HOME/.config/msmtp/accounts/personal.conf --account personal"'
 folder-hook ~/mail/nicktalati/* 'set trash="+nicktalati/[Gmail]/Trash"'
 folder-hook ~/mail/nicktalati/* 'set postponed="+nicktalati/[Gmail]/Drafts"'
 folder-hook ~/mail/nicktalati/* 'unset record'

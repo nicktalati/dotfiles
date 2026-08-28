@@ -3,14 +3,21 @@
 set -Eeuo pipefail
 
 readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/isync/accounts"
+readonly oauth_dir="$HOME/.local/share/mail/oauth"
 
 sync_account() {
     local account=$1
     local mailbox=${2:-}
     local config="$config_dir/$account.conf"
+    local token="$oauth_dir/$account"
 
     [[ -f "$config" ]] || {
         printf 'error: mail account is not configured: %s\n' "$account" >&2
+        return 1
+    }
+    [[ -f "$token" ]] || {
+        printf 'error: OAuth token is unavailable: %s (run mail-enroll %s)\n' \
+            "$token" "$account" >&2
         return 1
     }
 
@@ -34,10 +41,17 @@ else
         printf 'error: no mail accounts are configured in %s\n' "$config_dir" >&2
         exit 1
     }
+    synced=false
     for config in "${configs[@]}"; do
         account=$(basename "$config" .conf)
+        [[ -f "$oauth_dir/$account" ]] || continue
         sync_account "$account"
+        synced=true
     done
+    $synced || {
+        printf 'error: no OAuth tokens are available in %s\n' "$oauth_dir" >&2
+        exit 1
+    }
 fi
 
 notmuch new

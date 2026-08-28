@@ -8,10 +8,6 @@ readonly machine_dir="$df_dir/machines/arch-host"
 readonly stow_dir="$df_dir/stow"
 readonly pkglist="$machine_dir/packages.txt"
 
-readonly decrypt_dir="$HOME/decrypt"
-readonly decrypt_secrets="$decrypt_dir/secrets"
-
-readonly xdg_state="$HOME/.local/state"
 readonly xdg_conf="$HOME/.config"
 readonly oauth_dir="$HOME/.local/share/mail/oauth"
 
@@ -79,9 +75,12 @@ if ! $configure_only; then
     while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &>/dev/null &
 fi
 
-mkdir -p "$xdg_state"/{nvim/undo,python,node,psql,zsh,msmtp}
-mkdir -p "$HOME/downloads" "$HOME/mail" "$oauth_dir"
+# ~/downloads is declared in user-dirs.dirs; Firefox and shot save there.
+mkdir -p "$HOME/mail" "$HOME/downloads" "$oauth_dir"
 chmod 700 "$oauth_dir"
+# NeoMutt's sidebar section headers are local-only pseudo-Maildirs no program
+# creates: mbsync only creates mailboxes that exist remotely.
+mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati,nicktalatipaypal}/{cur,new,tmp}
 
 if ! $configure_only; then
     # bootstrap yay
@@ -101,46 +100,8 @@ stow -v -R --no-folding -d "$stow_dir" -t "$HOME" \
     shell nvim tmux git mail psql task arch-vault arch-backup arch-desktop \
     account-cultivate account-personal account-paypal
 
-mkdir -p "$xdg_conf/dotfiles" "$xdg_conf/neomutt" \
-    "$xdg_conf/notmuch/default" "$xdg_conf/zsh"
+mkdir -p "$xdg_conf/dotfiles"
 printf '%s\n' arch-host > "$xdg_conf/dotfiles/machine"
-printf '%s\n' cultivate personal paypal > "$xdg_conf/dotfiles/accounts"
-
-cat > "$xdg_conf/neomutt/accounts.rc" <<'EOF'
-set spoolfile = "+cultivate/Inbox"
-source ~/.config/neomutt/accounts/cultivate.rc
-source ~/.config/neomutt/accounts/personal.rc
-source ~/.config/neomutt/accounts/paypal.rc
-EOF
-
-cat > "$xdg_conf/notmuch/default/config" <<EOF
-[database]
-path=$HOME/mail
-
-[user]
-name=Nick Talati
-primary_email=talati@getcultivate.ai
-other_email=nicktalati@gmail.com;nicktalatipaypal@gmail.com
-
-[new]
-tags=
-ignore=.mbsyncstate;.uidvalidity
-
-[search]
-
-[maildir]
-EOF
-
-for account in cultivate personal paypal; do
-    while IFS= read -r mailbox; do
-        mkdir -p "$HOME/mail/$mailbox"/{cur,new,tmp}
-    done < <(
-        sed -n 's/^named-mailboxes "[^"]*" "+\([^"]*\)"$/\1/p' \
-            "$xdg_conf/neomutt/accounts/$account.rc"
-    )
-done
-
-mkdir -p "$HOME/.ssh/config.d"
 if ! $configure_only; then
     info "Setting up secrets..."
     mkdir -p "$xdg_conf"/{rclone,gocryptfs}
@@ -155,18 +116,6 @@ if ! $configure_only; then
     [[ -f "$rclone_tmpl" ]] || error "Template missing: $rclone_tmpl"
     [[ -f "$rclone_conf" ]] || install -m 600 "$rclone_tmpl" "$rclone_conf"
 fi
-
-# These links are broken until decrypt is mounted by gocryptfs. Public SSH keys
-# and host configuration are ordinary account-package files; only private keys
-# remain in the legacy vault.
-ln -sfn "$decrypt_secrets/secrets.zsh" "$xdg_conf/zsh/secrets.zsh"
-ln -sfn "$decrypt_secrets/oauth/cultivate.oauth2" "$oauth_dir/cultivate"
-ln -sfn "$decrypt_secrets/oauth/nicktalati.oauth2" "$oauth_dir/personal"
-ln -sfn "$decrypt_secrets/oauth/nicktalatipaypal.oauth2" "$oauth_dir/paypal"
-ln -sfn "$decrypt_secrets/ssh/id_rsa_personal" "$HOME/.ssh/id_rsa_personal"
-ln -sfn "$decrypt_secrets/ssh/id_rsa_work_github" "$HOME/.ssh/id_rsa_work_github"
-ln -sfn "$decrypt_secrets/ssh/id_rsa_work_gitlab" "$HOME/.ssh/id_rsa_work_gitlab"
-ln -sfn "$decrypt_secrets/ssh/greenville.pem" "$HOME/.ssh/greenville.pem"
 
 if $configure_only; then
     "$machine_dir/firefox/setup.sh" --user-only

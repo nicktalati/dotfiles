@@ -4,18 +4,16 @@ Dotfiles and machine definitions for thin Arch and macOS hosts plus a shared,
 disposable Fedora development VM.
 
 The repository does not model personal and work as separate tool environments.
-Home configuration is shared; independently selected account packages provide
-Git, SSH, and mail identities.
+Home and non-secret account configuration are shared. Credentials determine
+which identities are active on a machine.
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the boundary rationale.
 
 ## Repository layout
 
 ```text
-bin/        repository maintenance commands available on PATH
 stow/       application and account GNU Stow packages
 machines/   physical-host targets and Linux VM targets
-scripts/    VM provisioning and repository bootstrap helpers
 tests/      focused smoke tests with isolated temporary homes and fake Lima
 ```
 
@@ -25,13 +23,16 @@ The Mac remains thin: FileVault, Safari, Bitwarden, other native graphical
 applications, Homebrew, Stow, and Lima live on macOS. Development tools, tmux,
 Neovim, and terminal mail live in the Fedora VM.
 
-After enabling FileVault and installing Homebrew, install Bitwarden first so its
-SSH agent can authenticate the private repository clone:
+After enabling FileVault and installing Homebrew, generate this machine's SSH
+key with a passphrase, load it into macOS's native agent, and register the
+public half at <https://github.com/settings/keys> twice — as an authentication
+key and as a signing key. Private keys are machine state: generated here, never
+copied anywhere.
 
 ```sh
-brew install --cask bitwarden
-export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
-ssh-add -L
+ssh-keygen -t ed25519
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+cat ~/.ssh/id_ed25519.pub
 git clone git@github.com:nicktalati/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
@@ -42,41 +43,27 @@ Then run on macOS:
 ./machines/mac-host/bootstrap.sh
 ```
 
-The bootstrap installs Lima and Stow and records Bitwarden in its Brewfile. Open
-a new terminal and verify that the installed shell profile still sees the
-Bitwarden keys:
-
-```sh
-ssh-add -L
-```
-
-Then create and enter the VM:
+The bootstrap installs Lima and Stow, installs Bitwarden only for web passwords,
+and configures `UseKeychain` for the native SSH agent. Open a new terminal,
+verify the agent with `ssh-add -L`, then create and enter the VM:
 
 ```sh
 ./machines/fedora-vm/create-lima.sh
 limactl shell dev
 ```
 
-Inside the VM, provision the shared environment and choose accounts:
+Inside the VM, install the shared environment:
 
 ```sh
-~/dotfiles/scripts/install-vm --account cultivate
+~/dotfiles/machines/fedora-vm/install.sh
 ```
 
-Repeat `--account` to select more than one:
-
-```sh
-~/dotfiles/scripts/install-vm \
-    --account cultivate \
-    --account personal
-```
-
-The selection is preserved on later runs. Open a new macOS shell and run `dev`
-to start the VM if necessary and attach to its persistent tmux session.
+Open a new macOS shell and run `dev` to start the VM if necessary and attach to
+its persistent tmux session.
 
 ### Mail enrollment
 
-Each selected account has a writable OAuth token at:
+Each mail account has a writable OAuth-token location:
 
 ```text
 ~/.local/share/mail/oauth/cultivate
@@ -84,19 +71,30 @@ Each selected account has a writable OAuth token at:
 ~/.local/share/mail/oauth/paypal
 ```
 
-Authorize a missing token with NeoMutt's `mutt_oauth2.py`, using the Google OAuth
-client ID and secret stored in Bitwarden. Pass `--encryption-pipe cat` and
-`--decryption-pipe cat`; FileVault protects the VM disk. Then restrict the file
-and rerun the installer:
+The token file contains the registration values, refresh token, and mutable
+access state; it is recreatable and deliberately not backed up. Enroll an
+account fresh with:
 
 ```sh
-chmod 600 ~/.local/share/mail/oauth/cultivate
-~/dotfiles/scripts/install-vm
+mail-enroll cultivate
 ```
 
-The installer enables mail services only for accounts whose token file exists.
-There are no launchd mail services: NeoMutt, mbsync, and goimapnotify run as
-systemd user services inside the Linux VM.
+The script prompts for the client id and secret (kept in Bitwarden; also
+recoverable from the Google Cloud console), runs Google's consent flow through
+a printed URL, and starts the account's mail services. Open the URL in a
+browser on the host; Lima forwards the localhost redirect into the guest.
+
+Alternatively, copy an existing token file from another machine into the same
+path, then start push notifications:
+
+```sh
+systemctl --user start goimapnotify@cultivate.service
+```
+
+Every account's mail units are always enabled and condition on the token file,
+so mbsync resumes on its next timer fire either way. There are no launchd mail
+services: NeoMutt, mbsync, and goimapnotify run as systemd user services inside
+the Linux VM.
 
 ## Physical Arch host
 
@@ -115,20 +113,6 @@ on the Mac. After the same Fedora VM is validated on Arch, the host will be
 reduced to hardware, desktop, native applications, Lima, and minimal host
 operation.
 
-## Temporary x86-64 Arch VM fallback
-
-An Arch guest remains available as a migration fallback:
-
-```sh
-./machines/arch-vm/create-lima.sh
-limactl shell dev
-~/dotfiles/scripts/install-vm --account cultivate
-```
-
-The Arch VM is intentionally rejected on ARM hosts. It is not the intended
-second guest platform; the Fedora definition already pins both ARM64 and x86-64
-images and is the target on both physical hosts.
-
 ## Accounts
 
 The account packages are:
@@ -137,14 +121,15 @@ The account packages are:
 - `account-personal`: personal Git, SSH, and Gmail
 - `account-paypal`: the separate PayPal Gmail account
 
-They contain ordinary application configuration and public SSH keys, never
-private keys or OAuth tokens. Put repositories under `~/code/cultivate` or
+They contain ordinary application configuration only; SSH keys and OAuth tokens
+are machine state. Put repositories under `~/code/cultivate` or
 `~/code/personal`; Git conditional includes select the corresponding identity.
 
 ## Package maintenance and validation
 
 Use `pkgsync diff` to compare the active machine manifest with explicitly
-installed packages, and `pkgsync sync` to install the declared packages.
+installed packages, and `pkgsync sync` to run that machine's package-only
+installer.
 
 Run the smoke suite with:
 

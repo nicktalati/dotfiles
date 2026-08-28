@@ -22,9 +22,24 @@ test_configuration() {
     export XDG_CONFIG_HOME="$home/.config"
     export XDG_STATE_HOME="$home/.local/state"
 
-    "$dotfiles_dir/scripts/install-vm" --configure-only \
-        --account cultivate --account personal >/dev/null
-    "$dotfiles_dir/scripts/install-vm" --configure-only >/dev/null
+    # The installer needs dnf, sudo, and systemd, so it cannot run here.
+    # Recreate the home it produces: the fedora-vm Stow composition plus the
+    # machine marker pkgsync reads.
+    stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$HOME" \
+        shell nvim tmux git mail psql task \
+        account-cultivate account-personal account-paypal
+    mkdir -p "$XDG_CONFIG_HOME/dotfiles"
+    printf '%s\n' fedora-vm > "$XDG_CONFIG_HOME/dotfiles/machine"
+
+    # Fabricate the Maildirs mbsync (Create Both) creates on first sync;
+    # NeoMutt reports named-mailboxes whose directories are missing as errors.
+    local mailbox
+    while IFS= read -r mailbox; do
+        mkdir -p "$HOME/mail/$mailbox"/{cur,new,tmp}
+    done < <(
+        sed -n 's/^named-mailboxes "[^"]*" "+\([^"]*\)"$/\1/p' \
+            "$XDG_CONFIG_HOME/neomutt/accounts/"*.rc
+    )
 
     local neomutt_output
     neomutt_output=$(neomutt \
@@ -32,10 +47,16 @@ test_configuration() {
         -Q folder -Q spoolfile -Q from -Q sendmail 2>&1)
     grep -q 'errors in' <<<"$neomutt_output" && fail "NeoMutt configuration did not parse"
 
-    [[ "$(<"$HOME/.config/dotfiles/machine")" == arch-vm ]] || \
-        fail "wrong machine marker"
-    [[ "$(paste -sd, "$HOME/.config/dotfiles/accounts")" == cultivate,personal ]] || \
-        fail "account selection was not persisted"
+    # -Q never fires folder-hooks; opening the spoolfile does, which is how
+    # the sendmail metacharacter regression surfaced.
+    TERM=xterm-256color timeout 15 script -qec \
+        "neomutt -F '$HOME/.config/neomutt/neomuttrc' -e 'push <quit>'" /dev/null \
+        </dev/null &>"$test_root/neomutt-open.log" || \
+        fail "NeoMutt did not open the spoolfile and quit cleanly"
+    if grep -aq 'metacharacters\|Error in' "$test_root/neomutt-open.log"; then
+        fail "opening the spoolfile produced NeoMutt errors"
+    fi
+
     [[ "$(notmuch config get database.path)" == "$HOME/mail" ]] || \
         fail "notmuch database path does not follow HOME"
     [[ "$(notmuch config get user.primary_email)" == talati@getcultivate.ai ]] || \
@@ -73,24 +94,32 @@ test_configuration() {
     rg -q 'copy-pipe.*wl-copy' "$HOME/.config/tmux/tmux.conf" || \
         fail "shared tmux config has no Wayland clipboard path"
 
-    for account in cultivate personal; do
+    [[ ! -e "$HOME/.config/neomutt/accounts.rc" ]] || \
+        fail "obsolete generated NeoMutt account list was created"
+    rg -q 'accounts/cultivate.rc' "$HOME/.config/neomutt/neomuttrc" || \
+        fail "NeoMutt account composition is missing"
+    [[ "$(readlink -f "$HOME/.config/notmuch/default/config")" == \
+        "$dotfiles_dir/stow/mail/.config/notmuch/default/config" ]] || \
+        fail "Notmuch configuration was generated instead of Stowed"
+
+    for account in cultivate personal paypal; do
         [[ -L "$HOME/.config/isync/accounts/$account.conf" ]] || \
             fail "$account native configuration was not Stowed"
         rg -q "\\.local/share/mail/oauth/$account" \
             "$HOME/.config/isync/accounts/$account.conf" || \
             fail "$account does not use the local OAuth path"
     done
-    [[ ! -e "$HOME/.config/isync/accounts/paypal.conf" ]] || \
-        fail "an unselected account was configured"
     [[ -L "$HOME/.config/systemd/user/mbsync@.service" ]] || \
         fail "per-account mbsync unit was not Stowed"
     [[ -x "$HOME/.local/bin/mail-sync" ]] || fail "mail-sync was not Stowed"
-    [[ -L "$HOME/.ssh/id_rsa_personal.pub" ]] || \
-        fail "selected personal public key was not Stowed"
-    [[ ! -e "$HOME/.ssh/id_rsa_personal" ]] || \
-        fail "VM received a private SSH key"
-    [[ -d "$HOME/.local/share/mail/oauth" ]] || \
-        fail "local OAuth directory was not created"
+    [[ -x "$HOME/.local/bin/mail-enroll" ]] || fail "mail-enroll was not Stowed"
+    [[ -x "$HOME/.local/bin/pkgsync" ]] || fail "pkgsync was not Stowed"
+    [[ "$("$HOME/.local/bin/pkgsync" path)" == \
+        "$dotfiles_dir/machines/fedora-vm/packages.txt" ]] || \
+        fail "pkgsync did not select the Fedora manifest"
+    if compgen -G "$HOME/.ssh/id_*" >/dev/null; then
+        fail "SSH key material leaked into the Stow packages"
+    fi
     [[ ! -e "$HOME/decrypt" && ! -e "$HOME/crypt" ]] || \
         fail "legacy vault directories leaked into the VM"
     rg -q 'ConditionPathExists=%h/.local/share/mail/oauth/%i' \
@@ -100,69 +129,8 @@ test_configuration() {
     if rg -n 'claude-mail|khal|vdirsyncer|quantworks' "$HOME/.config" &>/dev/null; then
         fail "removed mail or calendar configuration leaked into the VM"
     fi
-
-    "$dotfiles_dir/scripts/install-vm" --configure-only --account cultivate >/dev/null
-    [[ ! -e "$HOME/.config/isync/accounts/personal.conf" ]] || \
-        fail "deselected personal account configuration was not removed"
-    [[ ! -L "$HOME/.ssh/id_rsa_personal.pub" ]] || \
-        fail "deselected personal public key remained linked"
-    [[ "$(<"$HOME/.config/dotfiles/accounts")" == cultivate ]] || \
-        fail "replacement account selection was not persisted"
-}
-
-test_lima_wrapper() {
-    export FAKE_LIMA_LOG="$test_root/lima.log"
-    export FAKE_LIMA_CREATED="$test_root/lima.created"
-    export FAKE_LIMA_RUNNING="$test_root/lima.running"
-
-    limactl() {
-        local command=$1
-        shift
-        case "$command" in
-            list)
-                if [[ -f "$FAKE_LIMA_CREATED" ]]; then
-                    if [[ "$*" == *Status* ]]; then
-                        if [[ -f "$FAKE_LIMA_RUNNING" ]]; then
-                            printf 'dev Running\n'
-                        else
-                            printf 'dev Stopped\n'
-                        fi
-                    else
-                        printf 'dev\n'
-                    fi
-                fi
-                ;;
-            create)
-                printf 'create %s\n' "$*" >> "$FAKE_LIMA_LOG"
-                touch "$FAKE_LIMA_CREATED"
-                ;;
-            start)
-                printf 'start %s\n' "$*" >> "$FAKE_LIMA_LOG"
-                touch "$FAKE_LIMA_RUNNING"
-                ;;
-            shell)
-                printf 'shell %s\n' "$*" >> "$FAKE_LIMA_LOG"
-                ;;
-            *) return 2 ;;
-        esac
-    }
-    export -f limactl
-
-    "$dotfiles_dir/machines/arch-vm/create-lima.sh" >/dev/null
-    "$dotfiles_dir/machines/arch-vm/create-lima.sh" >/dev/null
-
-    [[ "$(grep -c '^create ' "$FAKE_LIMA_LOG")" -eq 1 ]] || \
-        fail "Lima wrapper recreated an existing VM"
-    [[ "$(grep -c '^start ' "$FAKE_LIMA_LOG")" -eq 1 ]] || \
-        fail "Lima wrapper restarted an already-running VM"
-    grep -q -- '--name dev' "$FAKE_LIMA_LOG" || fail "default instance is not named dev"
-    grep -q -- '--mount-none' "$FAKE_LIMA_LOG" || fail "Lima host mounts were not disabled"
-    grep -q -- '--containerd none' "$FAKE_LIMA_LOG" || fail "Lima containerd was not disabled"
-    grep -q -- '--tty=false' "$FAKE_LIMA_LOG" || fail "Lima creation was interactive"
-    grep -q -- 'template:archlinux' "$FAKE_LIMA_LOG" || fail "Arch template was not selected"
 }
 
 test_configuration
-test_lima_wrapper
 
-printf 'arch-vm smoke test passed\n'
+printf 'fedora-vm configuration smoke test passed\n'

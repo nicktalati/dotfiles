@@ -20,14 +20,18 @@ stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$home" macos
 
 [[ -L "$home/.zprofile" ]] || fail "macOS zprofile was not Stowed"
 [[ -L "$home/.local/bin/dev" ]] || fail "dev launcher was not Stowed"
+[[ -L "$home/.ssh/config" ]] || fail "macOS SSH config was not Stowed"
 zsh -n "$home/.zprofile"
 if rg -n 'firefox' "$dotfiles_dir/machines/mac-host/Brewfile"; then
     fail "Mac host still installs Firefox even though Safari is the selected browser"
 fi
 grep -q 'cask "bitwarden"' "$dotfiles_dir/machines/mac-host/Brewfile" || \
     fail "Mac host does not install Bitwarden"
-grep -q 'bitwarden-ssh-agent.sock' "$home/.zprofile" || \
-    fail "Mac host does not expose the Bitwarden SSH agent"
+if rg -n 'bitwarden.*ssh-agent|bitwarden-ssh-agent' "$home/.zprofile"; then
+    fail "Mac host still uses Bitwarden for SSH"
+fi
+grep -q 'UseKeychain yes' "$home/.ssh/config" || \
+    fail "Mac host does not use the native Keychain-backed SSH agent"
 
 export FAKE_LIMA_LOG="$test_root/lima.log"
 export FAKE_LIMA_CREATED="$test_root/lima.created"

@@ -64,7 +64,7 @@ Enter it with:
 
 Then provision it with:
 
-    ~/dotfiles/scripts/install-vm --account cultivate
+    ~/dotfiles/machines/fedora-vm/install.sh
 
 The VM has no host-directory mounts. Its repositories and mutable state live
 on the guest disk; commit or back up valuable work before deleting the VM.

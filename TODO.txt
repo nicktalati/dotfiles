@@ -3,11 +3,12 @@
 - implement constrained macOS notification and open-file bridges after testing
 - run the same Fedora VM on the physical Arch host
 - thin arch-host only after the Fedora VM is proven on both hosts
-- remove arch-vm after the Fedora x86-64 migration has a stable rollback point
-- migrate static secrets and SSH private keys from the Arch vault to Bitwarden
+- generate arch-host's own machine SSH key, register it on GitHub, then remove
+  the transition shims (~/.gitconfig, ~/.ssh/config.d/legacy-key), the vault
+  ssh directory, and the old "iguana" GitHub key
 - purge obsolete Quantworks/Vaiil OAuth material and recovery data after review
-- document repeatable OAuth enrollment without putting client secrets in shell history
-- replace rclone sync backups with an encrypted snapshot/retention design
+- replace rclone sync backups with an encrypted snapshot/retention design that
+  also absorbs zsh_hist_backup's local history snapshots
 - decide from measurements whether Apple vz rebuilds or QEMU snapshots are preferable
 - review the remaining Arch package manifest against actual command usage
 - consider an automated update/check command for machines/fedora-vm/tools.lock.json

@@ -1,0 +1,15 @@
+[database]
+path=mail
+
+[user]
+name=Nick Talati
+primary_email=talati@getcultivate.ai
+other_email=nicktalati@gmail.com;nicktalatipaypal@gmail.com
+
+[new]
+tags=
+ignore=.mbsyncstate;.uidvalidity
+
+[search]
+
+[maildir]

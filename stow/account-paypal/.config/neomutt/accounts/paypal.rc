@@ -9,7 +9,7 @@ sidebar_pin "+.header-nicktalatipaypal"
 sidebar_pin "+nicktalatipaypal/Inbox"
 
 folder-hook ~/mail/nicktalatipaypal/* 'set from="nicktalatipaypal@gmail.com"'
-folder-hook ~/mail/nicktalatipaypal/* 'set sendmail="msmtp --file ~/.config/msmtp/accounts/paypal.conf --account paypal"'
+folder-hook ~/mail/nicktalatipaypal/* 'set sendmail="msmtp --file $HOME/.config/msmtp/accounts/paypal.conf --account paypal"'
 folder-hook ~/mail/nicktalatipaypal/* 'set trash="+nicktalatipaypal/[Gmail]/Trash"'
 folder-hook ~/mail/nicktalatipaypal/* 'set postponed="+nicktalatipaypal/[Gmail]/Drafts"'
 folder-hook ~/mail/nicktalatipaypal/* 'unset record'
