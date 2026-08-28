@@ -3,9 +3,6 @@
 - implement constrained macOS notification and open-file bridges after testing
 - run the same Fedora VM on the physical Arch host
 - thin arch-host only after the Fedora VM is proven on both hosts
-- generate arch-host's own machine SSH key, register it on GitHub, then remove
-  the transition shims (~/.gitconfig, ~/.ssh/config.d/legacy-key), the vault
-  ssh directory, and the old "iguana" GitHub key
 - purge obsolete Quantworks/Vaiil OAuth material and recovery data after review
 - replace rclone sync backups with an encrypted snapshot/retention design that
   also absorbs zsh_hist_backup's local history snapshots
