@@ -19,9 +19,12 @@ tests/      focused smoke tests with isolated temporary homes and fake Lima
 
 ## Apple Silicon Mac
 
-The Mac remains thin: FileVault, Safari, Bitwarden, other native graphical
-applications, Homebrew, Stow, and Lima live on macOS. Development tools, tmux,
-Neovim, and terminal mail live in the Fedora VM.
+The Mac remains thin: FileVault, Safari, Bitwarden, Ghostty, other native
+graphical applications, Homebrew, Stow, and Lima live on macOS. Development
+tools, tmux, Neovim, and terminal mail live in the Fedora VM. Ghostty is the
+terminal the guest is seen through, and the one terminal choice the VM knows
+about: it exports `TERM=xterm-ghostty`, which `fedora-vm` compiles into the
+guest's terminfo database.
 
 After enabling FileVault and installing Homebrew, generate this machine's SSH
 key with a passphrase, load it into macOS's native agent, and register the
@@ -43,9 +46,12 @@ Then run on macOS:
 ./machines/mac-host/bootstrap.sh
 ```
 
-The bootstrap installs Lima and Stow, installs Bitwarden only for web passwords,
-and configures `UseKeychain` for the native SSH agent. Open a new terminal,
-verify the agent with `ssh-add -L`, then create and enter the VM:
+The bootstrap installs Ghostty, Lima, and Stow, installs Bitwarden only for web
+passwords, and configures `UseKeychain` for the native SSH agent. Open a new
+terminal and verify the agent with `ssh-add -L`: it must print the key. An
+empty agent is what a failed guest clone and an unsignable commit both look
+like, and `ssh-add --apple-load-keychain` fills it. Then create and enter the
+VM:
 
 ```sh
 ./machines/fedora-vm/create-lima.sh

@@ -23,7 +23,21 @@ source /etc/os-release
 
 "$machine_dir/install-packages.sh"
 
+# Ghostty on the Mac host exports TERM=xterm-ghostty, a name ncurses does not
+# define; without the alias every curses program in the guest fails to start.
+if ! infocmp xterm-ghostty &>/dev/null; then
+    sudo tic -x -o /usr/share/terminfo "$machine_dir/xterm-ghostty.terminfo"
+fi
+
 command -v stow &>/dev/null || die "stow is required"
+
+# Fedora's skel leaves a real ~/.bash_profile, and Stow refuses to replace a
+# file it does not own. It only sources ~/.bashrc and re-adds ~/.local/bin to
+# PATH, both of which the shell package already does; its replacement hands an
+# interactive `limactl shell` over to zsh.
+if [[ -f "$HOME/.bash_profile" && ! -L "$HOME/.bash_profile" ]]; then
+    mv "$HOME/.bash_profile" "$HOME/.bash_profile.pre-dotfiles"
+fi
 
 mkdir -p "$xdg_config_home/dotfiles" "$HOME/mail" "$oauth_dir"
 chmod 700 "$oauth_dir"

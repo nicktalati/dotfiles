@@ -1,8 +1,8 @@
 # mac-host
 
 This is intentionally a thin macOS target. It owns FileVault, Safari and other
-native graphical applications, a terminal emulator, and Lima. Development tools
-and terminal mail belong in a Linux VM.
+native graphical applications, Ghostty, and Lima. Development tools and
+terminal mail belong in a Linux VM.
 
 ## Bootstrap
 
@@ -36,14 +36,18 @@ and terminal mail belong in a Linux VM.
    ./machines/mac-host/bootstrap.sh
    ```
 
-The Brewfile installs Bitwarden for web passwords, Lima, and Stow. The bootstrap
-then Stows the `stow/macos` package, which owns `~/.zprofile`, `~/.ssh/config`,
-and `~/.local/bin/dev`. It applies no `defaults` settings, does not configure
+The Brewfile installs Bitwarden for web passwords, Ghostty and the 0xProto Nerd
+Font it renders the guest with, Lima, and Stow. The bootstrap then Stows the
+`stow/macos` package, which owns `~/.zprofile`, `~/.ssh/config`,
+`~/.config/ghostty/config`, and `~/.local/bin/dev`. It applies no `defaults` settings, does not configure
 Safari, and installs no native development toolchain.
 
-The SSH configuration uses `AddKeysToAgent` and Apple's `UseKeychain` extension.
-Bitwarden has no SSH role. Open a new terminal and verify the native agent before
-creating the VM:
+The SSH configuration uses `AddKeysToAgent` and Apple's `UseKeychain` extension,
+and `.zprofile` loads the Keychain-held identity at login: Keychain remembering
+a passphrase does not by itself put a key in the agent, and an empty agent is
+what a failed guest clone and an unsignable commit both look like. Bitwarden has
+no SSH role. Open a new terminal and verify the native agent before creating the
+VM:
 
 ```sh
 ssh-add -L
@@ -75,8 +79,10 @@ attachment opening, Slack, macOS defaults, or backup settings.
 
 The managed footprint is:
 
-- Homebrew cask `bitwarden` and formulas `lima` and `stow`
-- `~/.zprofile`, `~/.ssh/config`, and `~/.local/bin/dev` Stow links
+- Homebrew casks `bitwarden`, `ghostty`, and `font-0xproto-nerd-font`, and
+  formulas `lima` and `stow`
+- `~/.zprofile`, `~/.ssh/config`, `~/.config/ghostty/config`, and
+  `~/.local/bin/dev` Stow links
 - this machine's SSH key under `~/.ssh`, generated locally and not owned by
   this repository
 - Lima instance data under its normal application-support directory

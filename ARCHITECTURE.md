@@ -38,7 +38,8 @@ ownership is useful to inspect directly:
 - `task`: Taskwarrior
 - `backup`: restic snapshots to S3 and the offline USB drive
 - `arch-desktop`: Sway, Foot, and the Arch graphical environment
-- `macos`: Homebrew setup, native macOS SSH configuration, and the VM launcher
+- `macos`: Homebrew setup, native macOS SSH configuration, Ghostty, and the
+  VM launcher
 
 `account-cultivate` and `account-personal` contain the native configuration
 files for those identities. Repeated facts are kept in the formats that consume
@@ -99,13 +100,19 @@ configuration that should be removed.
 
 Account packages contain no secrets.
 
-Each machine generates its own passphrase-protected SSH key and registers the
-public half where it needs access; private keys never leave the machine that
-made them. Git signs with the machine key, so repository location selects only
-the account e-mail. On the Mac, the native agent holds the unlocked identity
-and Keychain may remember the passphrase. Lima forwards the agent into the
-Fedora VM at `/run/host-services/ssh-auth.sock`; private keys do not enter the
-guest.
+Each physical machine generates its own passphrase-protected SSH key and
+registers the public half where it needs access; private keys never leave the
+machine that made them. On the Mac, the native agent holds the unlocked
+identity and Keychain remembers the passphrase; `.zprofile` loads it at login
+so the agent is never empty. Lima forwards that agent into the Fedora VM at
+`/run/host-services/ssh-auth.sock`, which Lima itself creates at boot; private
+keys do not enter the guest.
+
+The VM therefore has no key of its own to name, so Git signs with whatever
+identity the agent offers (`gpg.ssh.defaultKeyCommand`) rather than a key path
+that only resolves on a physical host. Repository location still selects only
+the account e-mail. An empty agent is a signing failure, not a passphrase
+prompt: `ssh-add -L` is the check.
 
 OAuth refresh-token files are different: NeoMutt's helper rewrites them during
 refresh. On every Linux target they live as mode-0600 files under
@@ -130,6 +137,9 @@ not currently encrypted.
 - Physical hosts receive no development toolchain after migration.
 - Host home directories are not mounted into development VMs.
 - SSH private keys are forwarded to the VM through an agent, not copied.
+- The guest's terminal environment is the guest's responsibility: the host
+  terminal's terminfo and shell choices are reproduced by `fedora-vm`, not
+  carried in by hand.
 - Machine SSH keys are generated on the machine and never leave it.
 - Directly downloaded artifacts are versioned and checksummed.
 - Valuable VM state must survive VM deletion independently.

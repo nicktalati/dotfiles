@@ -1,4 +1,6 @@
 cask "bitwarden"
+cask "font-0xproto-nerd-font"
+cask "ghostty"
 
 brew "lima"
 brew "stow"

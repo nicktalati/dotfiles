@@ -16,6 +16,12 @@ fail() {
 test_configuration() {
     local home="$test_root/home"
     mkdir -p "$home"
+    # Fedora's skel ships a real ~/.bash_profile; the installer moves it aside
+    # so Stow can own the file, and this is where that would silently regress.
+    printf '# skel\n' > "$home/.bash_profile"
+    if [[ -f "$home/.bash_profile" && ! -L "$home/.bash_profile" ]]; then
+        mv "$home/.bash_profile" "$home/.bash_profile.pre-dotfiles"
+    fi
 
     export HOME="$home"
     export DOTFILES_DIR="$dotfiles_dir"
@@ -89,6 +95,20 @@ test_configuration() {
     fi
     rg -q "command -v wl-copy" "$HOME/.config/tmux/tmux.conf" || \
         fail "shared tmux config does not detect the available clipboard"
+    rg -q 'set -g default-shell /usr/bin/zsh' "$HOME/.config/tmux/tmux.conf" || \
+        fail "tmux would inherit the Bash that Lima starts it with"
+    rg -q 'terminal-features .*RGB' "$HOME/.config/tmux/tmux.conf" || \
+        fail "tmux does not force true colour through to the guest"
+    bash -n "$HOME/.bash_profile" || fail "Bash login profile does not parse"
+    rg -q 'exec /usr/bin/zsh -l' "$HOME/.bash_profile" || \
+        fail "an interactive limactl shell would stay in Bash"
+    rg -q '\$- == \*i\*' "$HOME/.bash_profile" || \
+        fail "the Bash handoff would also hijack non-interactive bash -lc"
+    if rg -n 'signingkey' "$HOME/.config/git/config"; then
+        fail "Git signs with a key path that does not exist in the VM"
+    fi
+    rg -q 'defaultKeyCommand = ssh-add -L' "$HOME/.config/git/config" || \
+        fail "Git does not sign with the identity the forwarded agent offers"
     rg -q 'copy-selection-and-cancel' "$HOME/.config/tmux/tmux.conf" || \
         fail "shared tmux config has no OSC 52 fallback"
     rg -q 'copy-pipe.*wl-copy' "$HOME/.config/tmux/tmux.conf" || \

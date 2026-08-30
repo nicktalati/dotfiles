@@ -1,0 +1,7 @@
+# Ghostty exports TERM=xterm-ghostty. ncurses ships that terminal's
+# capabilities under the name "ghostty" and no alias, so a fresh guest cannot
+# start tmux, clear, less, or any other curses program under Ghostty. The
+# alias is compiled from the ncurses entry rather than vendored so the
+# capabilities stay whatever the installed ncurses says they are.
+xterm-ghostty|Ghostty terminal emulator,
+	use=ghostty,

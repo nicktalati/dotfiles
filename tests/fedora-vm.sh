@@ -46,8 +46,18 @@ grep -q 'shell dev -- sudo dnf --refresh -y install git' "$FAKE_LIMA_LOG" || \
 grep -q 'DOTFILES_REPOSITORY=git@github.com:nicktalati/dotfiles.git' "$FAKE_LIMA_LOG" || \
     fail "Fedora target did not clone through the native forwarded SSH agent"
 
-for package in awscli2 d2 docker-buildx gh neomutt opentofu pandoc-cli \
-    sasl-xoauth2 session-manager-plugin uv; do
+grep -q 'tic -x -o /usr/share/terminfo' \
+    "$dotfiles_dir/machines/fedora-vm/install.sh" || \
+    fail "Fedora installer does not compile the Ghostty terminfo alias"
+grep -q '^xterm-ghostty|' \
+    "$dotfiles_dir/machines/fedora-vm/xterm-ghostty.terminfo" || \
+    fail "the terminfo alias does not define the name Ghostty exports"
+grep -q 'use=ghostty,' \
+    "$dotfiles_dir/machines/fedora-vm/xterm-ghostty.terminfo" || \
+    fail "the terminfo alias does not follow the ncurses entry"
+
+for package in awscli2 d2 docker-buildx gh ncurses-term neomutt opentofu \
+    pandoc-cli sasl-xoauth2 session-manager-plugin util-linux-script uv; do
     grep -Fxq "$package" "$dotfiles_dir/machines/fedora-vm/packages.txt" || \
         fail "Fedora package manifest is missing $package"
 done

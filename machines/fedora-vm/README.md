@@ -22,6 +22,16 @@ The host filesystem is not mounted. Repositories and mutable development state
 live on the guest filesystem and cross the host boundary only through explicit
 copying until a narrower exchange directory proves necessary.
 
+The guest reproduces the host terminal rather than being adjusted by hand for
+it. Ghostty exports `TERM=xterm-ghostty`, a name ncurses defines only as
+`ghostty`, so `install.sh` compiles the alias in
+`xterm-ghostty.terminfo`; without it tmux, `clear`, and every other curses
+program refuse to start. Lima records the guest login shell in the instance
+(`/bin/bash`) and runs that for `limactl shell` no matter what the guest's
+passwd entry says, so tmux sets `default-shell` explicitly and the `shell`
+package's `.bash_profile` hands an interactive Bash login to zsh. Fedora's skel
+owns that file first; the installer moves it aside once.
+
 The host's native SSH agent is forwarded into the guest, so the VM receives
 signing and authentication operations but no SSH private keys. Mutable OAuth
 tokens remain local to the VM under `~/.local/share/mail/oauth`.

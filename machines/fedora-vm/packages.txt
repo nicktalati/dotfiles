@@ -27,6 +27,7 @@ man-pages
 moby-engine
 msmtp
 ncdu
+ncurses-term
 neomutt
 neovim
 nethogs
@@ -57,6 +58,7 @@ traceroute
 tree
 unzip
 urlscan
+util-linux-script
 uv
 wireguard-tools
 xdg-utils

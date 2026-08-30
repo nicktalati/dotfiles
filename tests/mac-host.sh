@@ -32,6 +32,18 @@ if rg -n 'bitwarden.*ssh-agent|bitwarden-ssh-agent' "$home/.zprofile"; then
 fi
 grep -q 'UseKeychain yes' "$home/.ssh/config" || \
     fail "Mac host does not use the native Keychain-backed SSH agent"
+grep -q 'apple-load-keychain' "$home/.zprofile" || \
+    fail "Mac host does not populate the agent from Keychain at login"
+
+grep -q 'cask "ghostty"' "$dotfiles_dir/machines/mac-host/Brewfile" || \
+    fail "Mac host does not install the terminal the VM is seen through"
+[[ -L "$home/.config/ghostty/config" ]] || fail "Ghostty configuration was not Stowed"
+grep -q '^macos-option-as-alt = true$' "$home/.config/ghostty/config" || \
+    fail "Ghostty would compose Option instead of sending tmux its Alt bindings"
+grep -q '^window-padding-color = extend$' "$home/.config/ghostty/config" || \
+    fail "Ghostty would frame Neovim in the window background colour"
+grep -q '^clipboard-write = allow$' "$home/.config/ghostty/config" || \
+    fail "Ghostty would refuse the OSC 52 clipboard path out of the VM"
 
 export FAKE_LIMA_LOG="$test_root/lima.log"
 export FAKE_LIMA_CREATED="$test_root/lima.created"
