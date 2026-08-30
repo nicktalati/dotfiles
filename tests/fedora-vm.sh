@@ -46,6 +46,24 @@ grep -q 'shell dev -- sudo dnf --refresh -y install git' "$FAKE_LIMA_LOG" || \
 grep -q 'DOTFILES_REPOSITORY=git@github.com:nicktalati/dotfiles.git' "$FAKE_LIMA_LOG" || \
     fail "Fedora target did not clone through the native forwarded SSH agent"
 
+grep -q 'install-sasl-xoauth2.sh' "$dotfiles_dir/machines/fedora-vm/install.sh" || \
+    fail "Fedora installer does not provide an XOAUTH2 plugin mbsync can use"
+if rg -n '^sasl-xoauth2$' "$dotfiles_dir/machines/fedora-vm/packages.txt"; then
+    fail "the Postfix XOAUTH2 plugin is back and will shadow the working one"
+fi
+for package in autoconf automake cyrus-sasl-devel libtool; do
+    grep -Fxq "$package" "$dotfiles_dir/machines/fedora-vm/packages.txt" || \
+        fail "Fedora cannot build cyrus-sasl-xoauth2 without $package"
+done
+jq --exit-status '."cyrus-sasl-xoauth2".version and ."cyrus-sasl-xoauth2".source.url and ."cyrus-sasl-xoauth2".source.sha256' \
+    "$dotfiles_dir/machines/fedora-vm/tools.lock.json" >/dev/null || \
+    fail "the XOAUTH2 plugin source is not pinned and checksummed"
+rg -q 'sha256sum --check' "$dotfiles_dir/machines/fedora-vm/install-sasl-xoauth2.sh" || \
+    fail "the XOAUTH2 plugin build does not verify its source archive"
+rg -q 'moriyoshi/cyrus-sasl-xoauth2' \
+    "$dotfiles_dir/machines/fedora-vm/tools.lock.json" || \
+    fail "the pinned XOAUTH2 plugin is not the one whose password is a token"
+
 grep -q 'tic -x -o /usr/share/terminfo' \
     "$dotfiles_dir/machines/fedora-vm/install.sh" || \
     fail "Fedora installer does not compile the Ghostty terminfo alias"
@@ -56,8 +74,8 @@ grep -q 'use=ghostty,' \
     "$dotfiles_dir/machines/fedora-vm/xterm-ghostty.terminfo" || \
     fail "the terminfo alias does not follow the ncurses entry"
 
-for package in awscli2 d2 docker-buildx gh ncurses-term neomutt opentofu \
-    pandoc-cli sasl-xoauth2 session-manager-plugin util-linux-script uv; do
+for package in awscli2 d2 docker-buildx gh gnupg2-smime ncurses-term neomutt \
+    opentofu pandoc-cli session-manager-plugin util-linux-script uv; do
     grep -Fxq "$package" "$dotfiles_dir/machines/fedora-vm/packages.txt" || \
         fail "Fedora package manifest is missing $package"
 done

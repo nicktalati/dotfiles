@@ -93,6 +93,13 @@ unavailable from Fedora repositories are pinned in
 `machines/fedora-vm/tools.lock.json`; the installer verifies checksums and keeps
 versioned payloads under `~/.local/opt`.
 
+Two distributions can also package different implementations under one name.
+Arch's `cyrus-sasl-xoauth2-git` and Fedora's `sasl-xoauth2` both publish the
+XOAUTH2 SASL mechanism and disagree about whether the password is an access
+token or a path to a token file; only the former works with isync, so
+`fedora-vm` removes Fedora's and builds the other from pinned source. A shared
+application configuration is not evidence that the packages beneath it match.
+
 The Fedora cloud-image digest and directly downloaded binaries remain pinned.
 Those checksums are integrity and reproducibility boundaries, not generated
 configuration that should be removed.

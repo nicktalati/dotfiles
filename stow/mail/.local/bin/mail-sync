@@ -21,6 +21,18 @@ sync_account() {
         return 1
     }
 
+    # mbsync creates mailboxes but not the Maildir store that holds them, so on
+    # a machine that has never synced every channel fails with "cannot open
+    # store". The store directory is not named after the account, so take it
+    # from the account's own configuration.
+    local store
+    store=$(awk '$1 == "Path" { print $2; exit }' "$config")
+    [[ -n "$store" ]] || {
+        printf 'error: no Maildir store path in %s\n' "$config" >&2
+        return 1
+    }
+    mkdir -p "${store/#\~/$HOME}"
+
     if [[ -n "$mailbox" ]]; then
         mbsync --config "$config" "$account:$mailbox"
     else

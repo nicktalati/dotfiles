@@ -1,4 +1,11 @@
 {
+  "cyrus-sasl-xoauth2": {
+    "version": "36aabca54fd65c8fa7a707cb4936751599967904",
+    "source": {
+      "url": "https://github.com/moriyoshi/cyrus-sasl-xoauth2/archive/36aabca54fd65c8fa7a707cb4936751599967904.tar.gz",
+      "sha256": "07d7a77c7c27f83923b830cbdd415602d680e85f4b8a2bdaf616322aea11b8dd"
+    }
+  },
   "dbmate": {
     "version": "2.35.0",
     "assets": {
@@ -25,6 +32,10 @@
       }
     }
   },
+  "goimapnotify": {
+    "version": "2.5.8",
+    "sha256": "616aae1f48fbe4e2afffd968e7c393d32075365a0a94aa7654ab7abe4b4ac1c6"
+  },
   "lua-language-server": {
     "version": "3.19.1",
     "assets": {
@@ -37,10 +48,6 @@
         "sha256": "e9235d2d72ef55bc41cf8c99cda2ed64777682024b4bb81f5dea425060c5cbb8"
       }
     }
-  },
-  "goimapnotify": {
-    "version": "2.5.8",
-    "sha256": "616aae1f48fbe4e2afffd968e7c393d32075365a0a94aa7654ab7abe4b4ac1c6"
   },
   "session-manager-plugin": {
     "version": "1.2.835.0",

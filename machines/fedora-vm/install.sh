@@ -22,6 +22,7 @@ source /etc/os-release
 [[ "$ID" == fedora ]] || die "fedora-vm install requires Fedora"
 
 "$machine_dir/install-packages.sh"
+"$machine_dir/install-sasl-xoauth2.sh"
 
 # Ghostty on the Mac host exports TERM=xterm-ghostty, a name ncurses does not
 # define; without the alias every curses program in the guest fails to start.

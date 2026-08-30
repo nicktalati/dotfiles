@@ -1,8 +1,11 @@
 ShellCheck
+autoconf
+automake
 awscli2
 bat
 cmake
 curl
+cyrus-sasl-devel
 d2
 docker-buildx
 docker-compose
@@ -13,11 +16,13 @@ gcc-c++
 gh
 git
 glow
+gnupg2-smime
 golang
 htop
 isync
 jq
 less
+libtool
 lsof
 ltrace
 lynx
@@ -44,7 +49,6 @@ python3-devel
 restic
 ripgrep
 rsync
-sasl-xoauth2
 session-manager-plugin
 socat
 stow

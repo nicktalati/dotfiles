@@ -32,6 +32,19 @@ passwd entry says, so tmux sets `default-shell` explicitly and the `shell`
 package's `.bash_profile` hands an interactive Bash login to zsh. Fedora's skel
 owns that file first; the installer moves it aside once.
 
+Fedora and Arch disagree about one package. Gmail needs XOAUTH2, isync has no
+OAuth of its own, and two unrelated Cyrus SASL plugins publish that mechanism
+name: one takes an access token as the password, which is what the shared isync
+`PassCmd` produces, and one takes a path to a token file it refreshes itself.
+Arch packages the first as `cyrus-sasl-xoauth2-git`; Fedora packages only the
+second, which cannot authenticate through mbsync at all. `install-sasl-xoauth2.sh`
+therefore removes Fedora's and builds the other from the source archive pinned in
+`tools.lock.json`.
+
+Fedora also splits packages Arch keeps whole. Arch's `gnupg` contains `gpgsm`;
+Fedora moves it to `gnupg2-smime`, without which NeoMutt reports `GPGME: CMS
+protocol not available` at every start, so the manifest names it explicitly.
+
 The host's native SSH agent is forwarded into the guest, so the VM receives
 signing and authentication operations but no SSH private keys. Mutable OAuth
 tokens remain local to the VM under `~/.local/share/mail/oauth`.

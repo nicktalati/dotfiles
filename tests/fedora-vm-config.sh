@@ -132,6 +132,20 @@ test_configuration() {
     [[ -L "$HOME/.config/systemd/user/mbsync@.service" ]] || \
         fail "per-account mbsync unit was not Stowed"
     [[ -x "$HOME/.local/bin/mail-sync" ]] || fail "mail-sync was not Stowed"
+
+    # mbsync creates mailboxes but not the Maildir store that holds them, so a
+    # machine that has never synced fails every channel with "cannot open
+    # store". Drive mail-sync with stubs to prove it creates the store, whose
+    # name is not the account's.
+    local stub_bin="$test_root/stub-bin"
+    mkdir -p "$stub_bin" "$HOME/.local/share/mail/oauth"
+    printf '#!/bin/sh\nexit 0\n' | tee "$stub_bin/mbsync" > "$stub_bin/notmuch"
+    chmod +x "$stub_bin/mbsync" "$stub_bin/notmuch"
+    printf 'not a real token\n' > "$HOME/.local/share/mail/oauth/personal"
+    PATH="$stub_bin:$PATH" "$HOME/.local/bin/mail-sync" personal >/dev/null || \
+        fail "mail-sync failed for an account with a token"
+    [[ -d "$HOME/mail/nicktalati" ]] || \
+        fail "mail-sync did not create the Maildir store mbsync cannot create"
     [[ -x "$HOME/.local/bin/mail-enroll" ]] || fail "mail-enroll was not Stowed"
     [[ -x "$HOME/.local/bin/backup" ]] || fail "backup was not Stowed"
     rg -q 'ConditionPathExists=%h/.config/restic/env' \
