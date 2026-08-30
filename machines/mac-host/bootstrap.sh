@@ -18,7 +18,8 @@ command -v brew &>/dev/null || die "Homebrew is not installed or is not on PATH"
 
 brew bundle install --no-upgrade --file "$brewfile"
 
-stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$HOME" macos
+stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$HOME" \
+    macos wallpaper
 
 fdesetup status | grep -q 'FileVault is On' || \
     printf 'warning: FileVault is not enabled\n' >&2

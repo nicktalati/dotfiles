@@ -38,6 +38,7 @@ ownership is useful to inspect directly:
 - `task`: Taskwarrior
 - `backup`: restic snapshots to S3 and the offline USB drive
 - `arch-desktop`: Sway, Foot, and the Arch graphical environment
+- `wallpaper`: the one image Sway, swaylock, and Ghostty all draw
 - `macos`: Homebrew setup, native macOS SSH configuration, Ghostty, and the
   VM launcher
 
@@ -51,7 +52,7 @@ renderer.
 ```text
 linux-home = shell + nvim + tmux + git + mail + psql + task
 
-mac-host  = macos
+mac-host  = macos + wallpaper
 
 fedora-vm = linux-home + all account packages
 ```

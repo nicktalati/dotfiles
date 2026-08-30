@@ -31,10 +31,19 @@ palette = 13=#fd28ff
 palette = 14=#14ffff
 palette = 15=#ffffff
 
-# Foot runs at alpha 0.3 over the Sway wallpaper. The desktop behind the window
-# plays that part here; macOS blurs it rather than showing it sharp.
-background-opacity = 0.85
-background-blur = true
+# Foot runs at alpha 0.3 over the Sway wallpaper. macOS full screen has no
+# desktop behind the window to show through, so the wallpaper is drawn in the
+# terminal instead of behind it. The `wallpaper` package puts the same file at
+# the same path on both machines.
+#
+# background-image-opacity is relative: Ghostty composites the image over the
+# background colour and then scales the result by background-opacity, so window
+# transparency here would only dim the image. Turn the image down, not the
+# window. Needs Ghostty 1.2 or newer.
+background-image = ~/.local/share/wallpapers/ocean.png
+background-image-fit = cover
+background-image-position = center
+background-image-opacity = 0.55
 
 # Ghostty pads the grid and, by default, paints the padding with the window
 # background. An opaque colourscheme in Neovim then reads as a thin frame

@@ -15,8 +15,8 @@ fail() {
 
 home="$test_root/home"
 mkdir -p "$home/.local/bin"
-stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$home" macos
-stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$home" macos
+stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$home" macos wallpaper
+stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$home" macos wallpaper
 
 [[ -L "$home/.zprofile" ]] || fail "macOS zprofile was not Stowed"
 [[ -L "$home/.local/bin/dev" ]] || fail "dev launcher was not Stowed"
@@ -44,6 +44,16 @@ grep -q '^window-padding-color = extend$' "$home/.config/ghostty/config" || \
     fail "Ghostty would frame Neovim in the window background colour"
 grep -q '^clipboard-write = allow$' "$home/.config/ghostty/config" || \
     fail "Ghostty would refuse the OSC 52 clipboard path out of the VM"
+
+ghostty_image=$(sed -n 's/^background-image = ~\///p' "$home/.config/ghostty/config")
+[[ -n "$ghostty_image" ]] || fail "Ghostty has no background image"
+[[ -f "$home/$ghostty_image" ]] || \
+    fail "Ghostty's background image is not Stowed at the path it names"
+if grep -qE '^background-(opacity|blur) =' "$home/.config/ghostty/config"; then
+    fail "window transparency would scale the background image back down"
+fi
+grep -q 'wallpapers/ocean.png' "$dotfiles_dir/stow/arch-desktop/.config/sway/config" || \
+    fail "Sway and Ghostty no longer draw the same wallpaper"
 
 export FAKE_LIMA_LOG="$test_root/lima.log"
 export FAKE_LIMA_CREATED="$test_root/lima.created"

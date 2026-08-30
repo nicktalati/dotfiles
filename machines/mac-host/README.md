@@ -39,7 +39,9 @@ terminal mail belong in a Linux VM.
 The Brewfile installs Bitwarden for web passwords, Ghostty and the 0xProto Nerd
 Font it renders the guest with, Lima, and Stow. The bootstrap then Stows the
 `stow/macos` package, which owns `~/.zprofile`, `~/.ssh/config`,
-`~/.config/ghostty/config`, and `~/.local/bin/dev`. It applies no `defaults` settings, does not configure
+`~/.config/ghostty/config`, and `~/.local/bin/dev`, plus `stow/wallpaper`,
+which owns the image Ghostty draws behind the terminal and Sway draws behind
+the Arch desktop. It applies no `defaults` settings, does not configure
 Safari, and installs no native development toolchain.
 
 The SSH configuration uses `AddKeysToAgent` and Apple's `UseKeychain` extension,
@@ -81,8 +83,8 @@ The managed footprint is:
 
 - Homebrew casks `bitwarden`, `ghostty`, and `font-0xproto-nerd-font`, and
   formulas `lima` and `stow`
-- `~/.zprofile`, `~/.ssh/config`, `~/.config/ghostty/config`, and
-  `~/.local/bin/dev` Stow links
+- `~/.zprofile`, `~/.ssh/config`, `~/.config/ghostty/config`,
+  `~/.local/bin/dev`, and `~/.local/share/wallpapers` Stow links
 - this machine's SSH key under `~/.ssh`, generated locally and not owned by
   this repository
 - Lima instance data under its normal application-support directory
@@ -90,7 +92,7 @@ The managed footprint is:
 Remove the configuration links with:
 
 ```sh
-stow --delete --no-folding --dir ~/dotfiles/stow --target "$HOME" macos
+stow --delete --no-folding --dir ~/dotfiles/stow --target "$HOME" macos wallpaper
 ```
 
 `limactl delete dev` deletes the VM and all unpushed VM state. Homebrew packages
