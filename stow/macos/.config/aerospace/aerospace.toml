@@ -1,21 +1,5 @@
-# AeroSpace tiles the Mac's windows. Switching workspaces is the only thing
-# bound here; everything else is AeroSpace's default.
-#
-# The modifier is ctrl. Not alt: AeroSpace's hotkeys are global, and bare alt
-# would swallow tmux's M-0 through M-9 inside Ghostty, which is exactly what
-# macos-option-as-alt exists to deliver. Not cmd: cmd-1 through cmd-9 already
-# select Safari's tabs. ctrl costs the terminal control codes for those digits
-# — Ctrl-6 is Vim's alternate-file jump — and nothing here binds them.
-
 start-at-login = true
 
-# macOS paints its own 1px light border around every window, and with zero
-# gaps it is the only seam left between tiles. JankyBorders cannot remove it,
-# but with the undocumented order=above it draws over it, and an opaque black
-# border against the dark background makes the seam disappear. Ghostty is
-# blacklisted: its background is already transparent black, so the overlay
-# would only add a frame around it. Full path because AeroSpace's exec
-# environment is not the login shell's.
 after-startup-command = [
     'exec-and-forget /opt/homebrew/bin/borders style=square width=0 blacklist="ghostty"'
 ]
@@ -29,13 +13,31 @@ outer.top = 0
 outer.bottom = 0
 
 [mode.main.binding]
-ctrl-1 = 'workspace 1'
-ctrl-2 = 'workspace 2'
-ctrl-3 = 'workspace 3'
-ctrl-4 = 'workspace 4'
-ctrl-5 = 'workspace 5'
-ctrl-6 = 'workspace 6'
-ctrl-7 = 'workspace 7'
-ctrl-8 = 'workspace 8'
-ctrl-9 = 'workspace 9'
-ctrl-0 = 'workspace 10'
+alt-h = 'focus left'
+alt-l = 'focus right'
+alt-q = 'close --quit-if-last-window'
+
+alt-enter = 'exec-and-forget open -na Ghostty'
+alt-b = 'exec-and-forget open -na Safari'
+
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
+
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-0 = 'move-node-to-workspace 10'

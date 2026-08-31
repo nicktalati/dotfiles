@@ -1,6 +1,6 @@
 window-decoration = false
 font-family = 0xProto Nerd Font
-font-size = 14
+font-size = 18
 
 background-opacity = 0
 background = #000000
@@ -32,6 +32,23 @@ window-padding-color = background
 macos-titlebar-style = transparent
 
 macos-option-as-alt = true
+
+keybind = cmd+h=esc:h
+keybind = cmd+j=esc:j
+keybind = cmd+k=esc:k
+keybind = cmd+l=esc:l
+keybind = cmd+s=esc:s
+keybind = cmd+m=esc:m
+keybind = cmd+digit_1=esc:1
+keybind = cmd+digit_2=esc:2
+keybind = cmd+digit_3=esc:3
+keybind = cmd+digit_4=esc:4
+keybind = cmd+digit_5=esc:5
+keybind = cmd+digit_6=esc:6
+keybind = cmd+digit_7=esc:7
+keybind = cmd+digit_8=esc:8
+keybind = cmd+digit_9=esc:9
+keybind = cmd+digit_0=esc:0
 
 mouse-hide-while-typing = true
 

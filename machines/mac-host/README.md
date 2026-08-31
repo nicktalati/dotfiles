@@ -64,11 +64,17 @@ Check for missing declared packages with
 
 ## Tiling
 
-AeroSpace binds one thing, `ctrl-1` through `ctrl-0` for the ten workspaces;
-everything else is its default. `stow/macos/.config/aerospace/aerospace.toml`
-records why the modifier is `ctrl` and not `alt`, which tmux needs, or `cmd`,
-which Safari needs. This is not the Sway configuration ported over. Two things
-are macOS's to grant, not this repository's:
+AeroSpace mirrors the Sway layout with `alt` (option) as the modifier:
+`alt-digits` switch workspaces, `alt-shift-digits` move the focused window,
+`alt-h`/`alt-l` move focus, `alt-q` closes the window (quitting the app with
+its last window, as on Linux), `alt-enter` opens Ghostty, `alt-b` opens
+Safari.
+The modifier is `alt` and not `cmd`, which Safari needs, or `ctrl`, which the
+terminal needs. tmux keeps its `alt` bindings unchanged; inside Ghostty, `cmd`
+plays that role — Ghostty translates `cmd`-combos into the ESC-prefixed
+sequences `alt` would send, since AeroSpace owns the real `alt` keys and `cmd`
+sits where `alt` does on a PC keyboard. Two things are macOS's to grant, not
+this repository's:
 
 1. AeroSpace asks for Accessibility permission on first launch and manages
    nothing until it is granted (System Settings, Privacy & Security).
