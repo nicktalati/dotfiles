@@ -17,7 +17,7 @@ start-at-login = true
 # would only add a frame around it. Full path because AeroSpace's exec
 # environment is not the login shell's.
 after-startup-command = [
-    'exec-and-forget /opt/homebrew/bin/borders active_color=0xff000000 inactive_color=0xff000000 width=2 order=above blacklist="Ghostty"'
+    'exec-and-forget /opt/homebrew/bin/borders active_color=0xff000000 inactive_color=0xff000000 width=2 order=above blacklist="ghostty"'
 ]
 
 [gaps]
