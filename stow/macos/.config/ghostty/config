@@ -1,14 +1,7 @@
-# Ghostty is the Mac host's terminal, and the only host program the Fedora VM's
-# tmux, Neovim, and NeoMutt are seen through. It has two jobs: render the guest
-# faithfully, and pass Alt and the clipboard through to it.
-#
-# Foot's Arch configuration is the reference; this file mirrors it where macOS
-# allows and diverges where it does not.
-
+window-decoration = false
 font-family = 0xProto Nerd Font
 font-size = 14
 
-# Foot's palette, unchanged, so both machines look like the same machine.
 background = #000000
 foreground = #dddddd
 cursor-color = #cccccc
@@ -31,43 +24,20 @@ palette = 13=#fd28ff
 palette = 14=#14ffff
 palette = 15=#ffffff
 
-# Foot runs at alpha 0.3 over the Sway wallpaper. macOS full screen has no
-# desktop behind the window to show through, so the wallpaper is drawn in the
-# terminal instead of behind it. The `wallpaper` package puts the same file at
-# the same path on both machines.
-#
-# background-image-opacity is relative: Ghostty composites the image over the
-# background colour and then scales the result by background-opacity, so window
-# transparency here would only dim the image. Turn the image down, not the
-# window. Needs Ghostty 1.2 or newer.
 background-image = ~/.local/share/wallpapers/ocean.png
 background-image-fit = cover
 background-image-position = center
 background-image-opacity = 0.55
 
-# Ghostty pads the grid and, by default, paints the padding with the window
-# background. An opaque colourscheme in Neovim then reads as a thin frame
-# around the editor; `extend` paints the padding with the adjacent cell's
-# colour instead, and `balance` keeps the leftover partial cell from piling up
-# on one edge.
 window-padding-x = 8
 window-padding-y = 4
 window-padding-balance = true
 window-padding-color = extend
 macos-titlebar-style = transparent
 
-# tmux binds M-h/M-j/M-k/M-l, M-s, M-m, and M-0 through M-9. Without this macOS
-# composes Option into accented characters and none of them arrive.
 macos-option-as-alt = true
 
 mouse-hide-while-typing = true
 
-# Copying out of the guest is tmux's `set-clipboard on`, which is OSC 52, and
-# the only clipboard path out of tmux-in-the-VM. Letting the guest read the
-# host clipboard back is the direction worth a prompt.
 clipboard-write = allow
 clipboard-read = ask
-
-# Foot launches straight into tmux on the Arch host. Here `dev` does that and
-# is one word away, which keeps a native Mac shell when the VM is down; see
-# Ghostty's `command` option to mirror Foot instead.
