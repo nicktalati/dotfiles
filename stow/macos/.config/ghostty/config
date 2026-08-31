@@ -26,9 +26,9 @@ palette = 14=#14ffff
 palette = 15=#ffffff
 
 window-padding-x = 8
-window-padding-y = 4
+window-padding-y = 0
 window-padding-balance = true
-window-padding-color = extend
+window-padding-color = background
 macos-titlebar-style = transparent
 
 macos-option-as-alt = true
