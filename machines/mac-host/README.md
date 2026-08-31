@@ -1,8 +1,8 @@
 # mac-host
 
 This is intentionally a thin macOS target. It owns FileVault, Safari and other
-native graphical applications, Ghostty, and Lima. Development tools and
-terminal mail belong in a Linux VM.
+native graphical applications, Ghostty, AeroSpace, and Lima. Development tools
+and terminal mail belong in a Linux VM.
 
 ## Bootstrap
 
@@ -37,9 +37,10 @@ terminal mail belong in a Linux VM.
    ```
 
 The Brewfile installs Bitwarden for web passwords, Ghostty and the 0xProto Nerd
-Font it renders the guest with, Lima, and Stow. The bootstrap then Stows the
+Font it renders the guest with, AeroSpace, Lima, and Stow. The bootstrap then Stows the
 `stow/macos` package, which owns `~/.zprofile`, `~/.ssh/config`,
-`~/.config/ghostty/config`, and `~/.local/bin/dev`, plus `stow/wallpaper`,
+`~/.config/ghostty/config`, `~/.config/aerospace/aerospace.toml`, and
+`~/.local/bin/dev`, plus `stow/wallpaper`,
 which owns the image Ghostty draws behind the terminal and Sway draws behind
 the Arch desktop. It applies no `defaults` settings, does not configure
 Safari, and installs no native development toolchain.
@@ -61,6 +62,20 @@ copied into the VM.
 Check for missing declared packages with
 `brew bundle check --file ~/dotfiles/machines/mac-host/Brewfile`.
 
+## Tiling
+
+AeroSpace binds one thing, `ctrl-1` through `ctrl-0` for the ten workspaces;
+everything else is its default. `stow/macos/.config/aerospace/aerospace.toml`
+records why the modifier is `ctrl` and not `alt`, which tmux needs, or `cmd`,
+which Safari needs. This is not the Sway configuration ported over. Two things
+are macOS's to grant, not this repository's:
+
+1. AeroSpace asks for Accessibility permission on first launch and manages
+   nothing until it is granted (System Settings, Privacy & Security).
+2. Turn off "Displays have separate Spaces" (System Settings, Desktop & Dock,
+   Mission Control) before using more than one display, then log out and back
+   in. macOS otherwise fights AeroSpace over which windows belong where.
+
 ## Development VM
 
 Create and provision the default Apple Silicon VM:
@@ -81,10 +96,12 @@ attachment opening, Slack, macOS defaults, or backup settings.
 
 The managed footprint is:
 
-- Homebrew casks `bitwarden`, `ghostty`, and `font-0xproto-nerd-font`, and
-  formulas `lima` and `stow`
+- Homebrew casks `bitwarden`, `ghostty`, `font-0xproto-nerd-font`, and
+  `aerospace`, and formulas `lima` and `stow`
+- Homebrew tap `nikitabobko/tap`
 - `~/.zprofile`, `~/.ssh/config`, `~/.config/ghostty/config`,
-  `~/.local/bin/dev`, and `~/.local/share/wallpapers` Stow links
+  `~/.config/aerospace/aerospace.toml`, `~/.local/bin/dev`, and
+  `~/.local/share/wallpapers` Stow links
 - this machine's SSH key under `~/.ssh`, generated locally and not owned by
   this repository
 - Lima instance data under its normal application-support directory

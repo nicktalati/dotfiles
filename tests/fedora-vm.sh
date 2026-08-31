@@ -88,7 +88,20 @@ fi
 
 jq --exit-status '.dbmate.version and .fnm.version and ."lua-language-server".version and .goimapnotify.version and ."session-manager-plugin".version' \
     "$dotfiles_dir/machines/fedora-vm/tools.lock.json" >/dev/null
-for command_name in dbmate fnm goimapnotify lua-language-server; do
+# Neovim names these three; nothing else installs them, and a missing linter is
+# an error on every Markdown buffer while a missing formatter is silent.
+jq --exit-status '.node.version and ."markdownlint-cli".version and .mdformat.version' \
+    "$dotfiles_dir/machines/fedora-vm/tools.lock.json" >/dev/null || \
+    fail "the Markdown toolchain Neovim runs is not pinned"
+for linter_command in $(rg -o --no-filename '"([a-z]+)"' --replace '$1' \
+    "$dotfiles_dir/stow/nvim/.config/nvim/lua/plugins/linting.lua" | sort -u); do
+    case "$linter_command" in
+        markdown|lint) continue ;;
+    esac
+    rg -q "$linter_command" "$dotfiles_dir/machines/fedora-vm/install-tools.sh" || \
+        fail "Neovim lints with $linter_command but the VM never installs it"
+done
+for command_name in dbmate fnm goimapnotify lua-language-server markdownlint mdformat; do
     rg -q "\"$command_name\"|$command_name" "$dotfiles_dir/machines/fedora-vm/install-tools.sh" || \
         fail "Fedora tool installer does not manage $command_name"
 done

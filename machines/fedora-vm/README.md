@@ -52,7 +52,10 @@ tokens remain local to the VM under `~/.local/share/mail/oauth`.
 The package manifest was checked against Fedora's ARM64 release metadata. Tools
 not available from Fedora repositories are declared once in `tools.lock.json`.
 `install-tools.sh` verifies their checksums, installs versioned payloads under
-`~/.local/opt`, and creates stable commands under `~/.local/bin`. The AWS Session
+`~/.local/opt`, and creates stable commands under `~/.local/bin`. Node and the
+Markdown tools Neovim shells out to — `markdownlint` through nvim-lint and
+`mdformat` through conform — are pinned there too, but installed by fnm, npm,
+and uv, which verify their own downloads. The AWS Session
 Manager plugin is installed from AWS's RPM through DNF.
 
 The default VM has six CPUs, 8 GiB of memory, and a 100 GiB sparse disk. Override

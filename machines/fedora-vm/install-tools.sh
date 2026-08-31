@@ -83,6 +83,32 @@ if [[ ! -x "$fnm_dir/fnm" ]]; then
 fi
 ln -sfn "$fnm_dir/fnm" "$bin_dir/fnm"
 
+# Neovim's Markdown tooling is not a release binary: nvim-lint runs
+# markdownlint, an npm package, and conform runs mdformat, a Python one. Node
+# was previously installed by hand, which is why a rebuilt VM linted nothing
+# and silently skipped formatting; pin all three. fnm checks Node's published
+# checksums and uv checks PyPI's, so neither needs an entry here.
+node_version=$(tool_version node)
+if [[ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}/fnm/node-versions/v$node_version" ]]; then
+    "$bin_dir/fnm" install "$node_version"
+fi
+"$bin_dir/fnm" default "$node_version"
+
+markdownlint_version=$(tool_version markdownlint-cli)
+markdownlint_dir="$opt_dir/markdownlint-cli-$markdownlint_version"
+if [[ ! -x "$markdownlint_dir/bin/markdownlint" ]]; then
+    "$bin_dir/fnm" exec --using "$node_version" -- \
+        npm install --silent --global --prefix "$markdownlint_dir" \
+        "markdownlint-cli@$markdownlint_version"
+fi
+ln -sfn "$markdownlint_dir/bin/markdownlint" "$bin_dir/markdownlint"
+
+mdformat_version=$(tool_version mdformat)
+installed_mdformat=$("$bin_dir/mdformat" --version 2>/dev/null | awk '{ print $2 }')
+if [[ "$installed_mdformat" != "$mdformat_version" ]]; then
+    uv tool install --force --quiet "mdformat==$mdformat_version"
+fi
+
 luals_version=$(tool_version lua-language-server)
 luals_asset=$(asset_value lua-language-server name)
 luals_sha256=$(asset_value lua-language-server sha256)

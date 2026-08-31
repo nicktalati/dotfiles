@@ -45,6 +45,26 @@ grep -q '^window-padding-color = extend$' "$home/.config/ghostty/config" || \
 grep -q '^clipboard-write = allow$' "$home/.config/ghostty/config" || \
     fail "Ghostty would refuse the OSC 52 clipboard path out of the VM"
 
+grep -q 'cask "nikitabobko/tap/aerospace"' "$dotfiles_dir/machines/mac-host/Brewfile" || \
+    fail "Mac host does not install the tiling window manager"
+grep -q 'tap "nikitabobko/tap"' "$dotfiles_dir/machines/mac-host/Brewfile" || \
+    fail "the AeroSpace cask's tap is not declared, so brew bundle cannot find it"
+[[ -L "$home/.config/aerospace/aerospace.toml" ]] || \
+    fail "AeroSpace configuration was not Stowed"
+# AeroSpace reports an error and refuses to choose when a config exists in both
+# of its search paths.
+[[ ! -e "$home/.aerospace.toml" ]] || \
+    fail "a second AeroSpace config makes the configured one ambiguous"
+# A bare alt- hotkey is global and would take M-h, M-s, M-m and M-0..9 away
+# from tmux inside the VM, which is the whole reason Ghostty sends Option as
+# Alt in the first place.
+if rg -n '^alt-' "$home/.config/aerospace/aerospace.toml"; then
+    fail "AeroSpace binds bare Alt and would swallow the VM's tmux bindings"
+fi
+python3 -c 'import sys,tomllib;tomllib.load(open(sys.argv[1],"rb"))' \
+    "$home/.config/aerospace/aerospace.toml" || \
+    fail "AeroSpace configuration is not valid TOML"
+
 ghostty_image=$(sed -n 's/^background-image = ~\///p' "$home/.config/ghostty/config")
 [[ -n "$ghostty_image" ]] || fail "Ghostty has no background image"
 [[ -f "$home/$ghostty_image" ]] || \

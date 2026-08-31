@@ -39,8 +39,8 @@ ownership is useful to inspect directly:
 - `backup`: restic snapshots to S3 and the offline USB drive
 - `arch-desktop`: Sway, Foot, and the Arch graphical environment
 - `wallpaper`: the one image Sway, swaylock, and Ghostty all draw
-- `macos`: Homebrew setup, native macOS SSH configuration, Ghostty, and the
-  VM launcher
+- `macos`: Homebrew setup, native macOS SSH configuration, Ghostty, AeroSpace,
+  and the VM launcher
 
 `account-cultivate` and `account-personal` contain the native configuration
 files for those identities. Repeated facts are kept in the formats that consume

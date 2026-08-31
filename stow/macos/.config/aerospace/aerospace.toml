@@ -1,0 +1,22 @@
+# AeroSpace tiles the Mac's windows. Switching workspaces is the only thing
+# bound here; everything else is AeroSpace's default.
+#
+# The modifier is ctrl. Not alt: AeroSpace's hotkeys are global, and bare alt
+# would swallow tmux's M-0 through M-9 inside Ghostty, which is exactly what
+# macos-option-as-alt exists to deliver. Not cmd: cmd-1 through cmd-9 already
+# select Safari's tabs. ctrl costs the terminal control codes for those digits
+# — Ctrl-6 is Vim's alternate-file jump — and nothing here binds them.
+
+start-at-login = true
+
+[mode.main.binding]
+ctrl-1 = 'workspace 1'
+ctrl-2 = 'workspace 2'
+ctrl-3 = 'workspace 3'
+ctrl-4 = 'workspace 4'
+ctrl-5 = 'workspace 5'
+ctrl-6 = 'workspace 6'
+ctrl-7 = 'workspace 7'
+ctrl-8 = 'workspace 8'
+ctrl-9 = 'workspace 9'
+ctrl-0 = 'workspace 10'
