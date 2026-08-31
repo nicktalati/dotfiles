@@ -12,10 +12,12 @@ start-at-login = true
 # macOS paints its own 1px light border around every window, and with zero
 # gaps it is the only seam left between tiles. JankyBorders cannot remove it,
 # but with the undocumented order=above it draws over it, and an opaque black
-# border against the dark background makes the seam disappear. Full path
-# because AeroSpace's exec environment is not the login shell's.
+# border against the dark background makes the seam disappear. Ghostty is
+# blacklisted: its background is already transparent black, so the overlay
+# would only add a frame around it. Full path because AeroSpace's exec
+# environment is not the login shell's.
 after-startup-command = [
-    'exec-and-forget /opt/homebrew/bin/borders active_color=0xff000000 inactive_color=0xff000000 width=2 order=above'
+    'exec-and-forget /opt/homebrew/bin/borders active_color=0xff000000 inactive_color=0xff000000 width=2 order=above blacklist="Ghostty"'
 ]
 
 [gaps]
