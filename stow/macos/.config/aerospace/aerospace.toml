@@ -15,7 +15,7 @@ start-at-login = true
 # border against the dark background makes the seam disappear. Full path
 # because AeroSpace's exec environment is not the login shell's.
 after-startup-command = [
-    'exec-and-forget /opt/homebrew/bin/borders active_color=0xff000000 inactive_color=0xff000000 width=3 order=above'
+    'exec-and-forget /opt/homebrew/bin/borders active_color=0xff000000 inactive_color=0xff000000 width=2 order=above'
 ]
 
 [gaps]
