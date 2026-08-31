@@ -1,3 +1,4 @@
+tap "FelixKratz/formulae"
 tap "nikitabobko/tap"
 
 cask "bitwarden"
@@ -5,5 +6,6 @@ cask "font-0xproto-nerd-font"
 cask "ghostty"
 cask "nikitabobko/tap/aerospace"
 
+brew "FelixKratz/formulae/borders"
 brew "lima"
 brew "stow"
