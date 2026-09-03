@@ -48,7 +48,10 @@ keybind = cmd+digit_6=esc:6
 keybind = cmd+digit_7=esc:7
 keybind = cmd+digit_8=esc:8
 keybind = cmd+digit_9=esc:9
-keybind = cmd+digit_0=esc:0
+# digits 1-9 must be physical (digit_N) to replace the goto_tab defaults, but
+# 0 must be unicode to replace reset_font_size, which is bound to the '0'
+# codepoint; a physical cmd+digit_0 coexists with it and the menu shortcut wins.
+keybind = cmd+0=esc:0
 
 mouse-hide-while-typing = true
 

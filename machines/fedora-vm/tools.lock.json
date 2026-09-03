@@ -55,6 +55,9 @@
   "mdformat": {
     "version": "1.0.0"
   },
+  "mdformat-gfm": {
+    "version": "1.0.0"
+  },
   "node": {
     "version": "24.20.0"
   },

@@ -90,7 +90,7 @@ jq --exit-status '.dbmate.version and .fnm.version and ."lua-language-server".ve
     "$dotfiles_dir/machines/fedora-vm/tools.lock.json" >/dev/null
 # Neovim names these three; nothing else installs them, and a missing linter is
 # an error on every Markdown buffer while a missing formatter is silent.
-jq --exit-status '.node.version and ."markdownlint-cli".version and .mdformat.version' \
+jq --exit-status '.node.version and ."markdownlint-cli".version and .mdformat.version and ."mdformat-gfm".version' \
     "$dotfiles_dir/machines/fedora-vm/tools.lock.json" >/dev/null || \
     fail "the Markdown toolchain Neovim runs is not pinned"
 for linter_command in $(rg -o --no-filename '"([a-z]+)"' --replace '$1' \

@@ -103,10 +103,15 @@ if [[ ! -x "$markdownlint_dir/bin/markdownlint" ]]; then
 fi
 ln -sfn "$markdownlint_dir/bin/markdownlint" "$bin_dir/markdownlint"
 
+# Base mdformat leaves tables untouched; the gfm plugin is what aligns them
+# (and handles strikethrough/task lists). Compare the full --version string so
+# a missing plugin triggers a reinstall, not just a wrong mdformat version.
 mdformat_version=$(tool_version mdformat)
-installed_mdformat=$("$bin_dir/mdformat" --version 2>/dev/null | awk '{ print $2 }')
-if [[ "$installed_mdformat" != "$mdformat_version" ]]; then
-    uv tool install --force --quiet "mdformat==$mdformat_version"
+mdformat_gfm_version=$(tool_version mdformat-gfm)
+installed_mdformat=$("$bin_dir/mdformat" --version 2>/dev/null || true)
+if [[ "$installed_mdformat" != "mdformat $mdformat_version (mdformat-gfm $mdformat_gfm_version)" ]]; then
+    uv tool install --force --quiet "mdformat==$mdformat_version" \
+        --with "mdformat-gfm==$mdformat_gfm_version"
 fi
 
 luals_version=$(tool_version lua-language-server)
