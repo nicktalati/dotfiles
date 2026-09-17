@@ -48,7 +48,7 @@ mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati}/{cur,new,tmp}
 printf '%s\n' fedora-vm > "$xdg_config_home/dotfiles/machine"
 
 stow --restow --no-folding --dir "$stow_dir" --target "$HOME" \
-    shell nvim tmux git mail psql task backup \
+    shell nvim tmux git mail psql task backup headless \
     account-cultivate account-personal
 
 zsh_path=$(command -v zsh)
@@ -99,6 +99,6 @@ immediately with:
 
     systemctl --user start goimapnotify@<account>.service
 
-Put repositories under ~/code/personal or ~/code/cultivate so Git selects the
-corresponding identity.
+Put Cultivate repositories under ~/work and personal repositories under ~/code
+so Git selects the corresponding identity.
 EOF

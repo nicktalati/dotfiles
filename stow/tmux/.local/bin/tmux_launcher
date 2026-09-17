@@ -5,9 +5,8 @@ shopt -s nullglob
 
 readonly dirs=(
     "$HOME"
+    "$HOME/work"
     "$HOME/code"
-    "$HOME/code/personal"
-    "$HOME/code/cultivate"
 )
 
 if ! command -v tmux &>/dev/null; then

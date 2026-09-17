@@ -68,19 +68,15 @@ test_configuration() {
     [[ "$(notmuch config get user.primary_email)" == talati@getcultivate.ai ]] || \
         fail "notmuch primary account is wrong"
 
-    mkdir -p "$HOME/dotfiles" "$HOME/code/legacy-personal" \
-        "$HOME/code/cultivate/example" "$HOME/code/personal/example"
+    mkdir -p "$HOME/dotfiles" "$HOME/work/example" "$HOME/code/example"
     git -C "$HOME/dotfiles" init -q
-    git -C "$HOME/code/legacy-personal" init -q
-    git -C "$HOME/code/cultivate/example" init -q
-    git -C "$HOME/code/personal/example" init -q
+    git -C "$HOME/work/example" init -q
+    git -C "$HOME/code/example" init -q
     [[ "$(git -C "$HOME/dotfiles" config user.email)" == nicktalati@gmail.com ]] || \
         fail "dotfiles repository did not select the personal Git identity"
-    [[ "$(git -C "$HOME/code/legacy-personal" config user.email)" == nicktalati@gmail.com ]] || \
-        fail "legacy personal repository did not select the personal Git identity"
-    [[ "$(git -C "$HOME/code/cultivate/example" config user.email)" == talati@getcultivate.ai ]] || \
+    [[ "$(git -C "$HOME/work/example" config user.email)" == talati@getcultivate.ai ]] || \
         fail "Cultivate repository did not select the Cultivate Git identity"
-    [[ "$(git -C "$HOME/code/personal/example" config user.email)" == nicktalati@gmail.com ]] || \
+    [[ "$(git -C "$HOME/code/example" config user.email)" == nicktalati@gmail.com ]] || \
         fail "personal repository did not select the personal Git identity"
     [[ "$(readlink -f "$HOME/.config/zsh/.zprofile")" == \
         "$dotfiles_dir/stow/shell/.config/zsh/.zprofile" ]] || \
@@ -93,6 +89,10 @@ test_configuration() {
         "$HOME/.config/zsh/.zprofile" &>/dev/null; then
         fail "Wayland host environment leaked into VM zprofile"
     fi
+    [[ -L "$HOME/.config/zsh/profile.d/headless.zsh" ]] || \
+        fail "headless environment fragment was not Stowed"
+    rg -q '^export BROWSER=echo$' "$HOME/.config/zsh/profile.d/headless.zsh" || \
+        fail "VM would open URLs in lynx instead of printing them"
     rg -q "command -v wl-copy" "$HOME/.config/tmux/tmux.conf" || \
         fail "shared tmux config does not detect the available clipboard"
     rg -q 'set -g default-shell /usr/bin/zsh' "$HOME/.config/tmux/tmux.conf" || \

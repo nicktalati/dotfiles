@@ -1,163 +1,160 @@
-# Dotfiles
+# NT's DFs
 
-Dotfiles and machine definitions for thin Arch and macOS hosts plus a shared,
-disposable Fedora development VM.
+Machine configs for Arch/Mac. Each host runs the same Fedora VM.
 
-The repository does not model personal and work as separate tool environments.
-Home and non-secret account configuration are shared. Credentials determine
-which identities are active on a machine.
+## New Mac
 
-See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the boundary rationale.
+Enable FileVault and install Homebrew.
 
-## Repository layout
+Generate an SSH key and put it in the keychain:
 
-```text
-stow/       application and account GNU Stow packages
-machines/   physical-host targets and Linux VM targets
-tests/      focused smoke tests with isolated temporary homes and fake Lima
-```
-
-## Apple Silicon Mac
-
-The Mac remains thin: FileVault, Safari, Bitwarden, Ghostty, other native
-graphical applications, Homebrew, Stow, and Lima live on macOS. Development
-tools, tmux, Neovim, and terminal mail live in the Fedora VM. Ghostty is the
-terminal the guest is seen through, and the one terminal choice the VM knows
-about: it exports `TERM=xterm-ghostty`, which `fedora-vm` compiles into the
-guest's terminfo database.
-
-After enabling FileVault and installing Homebrew, generate this machine's SSH
-key with a passphrase, load it into macOS's native agent, and register the
-public half at <https://github.com/settings/keys> twice — as an authentication
-key and as a signing key. Private keys are machine state: generated here, never
-copied anywhere.
-
-```sh
+```bash
 ssh-keygen -t ed25519
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 cat ~/.ssh/id_ed25519.pub
-git clone git@github.com:nicktalati/dotfiles.git ~/dotfiles
-cd ~/dotfiles
 ```
 
-Then run on macOS:
+Add the public key at
+[https://github.com/settings/keys](https://github.com/settings/keys) twice, once
+as an authentication key and once as a signing key.
 
-```sh
+Clone and bootstrap:
+
+```bash
+git clone git@github.com:nicktalati/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ./machines/mac-host/bootstrap.sh
 ```
 
-The bootstrap installs Ghostty, Lima, and Stow, installs Bitwarden only for web
-passwords, and configures `UseKeychain` for the native SSH agent. Open a new
-terminal and verify the agent with `ssh-add -L`: it must print the key. An
-empty agent is what a failed guest clone and an unsignable commit both look
-like, and `ssh-add --apple-load-keychain` fills it. Then create and enter the
-VM:
+This installs Ghostty, AeroSpace, Lima, Stow, and Bitwarden, and stows the
+`macos` and `wallpaper` packages. Open a new terminal and check that
+`ssh-add -L` prints the key. If it doesn't, run `ssh-add --apple-load-keychain`.
 
-```sh
+Create the VM and install into it:
+
+```bash
 ./machines/fedora-vm/create-lima.sh
 limactl shell dev
-```
-
-Inside the VM, install the shared environment:
-
-```sh
 ~/dotfiles/machines/fedora-vm/install.sh
 ```
 
-Open a new macOS shell and run `dev` to start the VM if necessary and attach to
-its persistent tmux session.
+From then on `dev` starts the VM if needed and attaches to its tmux session.
 
-### Mail enrollment
+AeroSpace asks for Accessibility permission on first launch. Turn off "Displays
+have separate Spaces" (Desktop & Dock → Mission Control) before plugging in a
+second monitor, or macOS fights it over which window goes where.
 
-Each mail account has a writable OAuth-token location:
+## New Arch Machine
 
-```text
-~/.local/share/mail/oauth/cultivate
-~/.local/share/mail/oauth/personal
+Visit [https://archlinux.org/download](https://archlinux.org/download) and
+retrieve the .iso and .iso.sig files.
+
+Run
+
+```bash
+gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig archlinux-version-x86_64.iso
 ```
 
-The token file contains the registration values, refresh token, and mutable
-access state; it is recreatable and deliberately not backed up. Enroll an
-account fresh with:
+Verify the fingerprint at
+[https://archlinux.org/people/developers](https://archlinux.org/people/developers).
 
-```sh
-mail-enroll cultivate
+Plug in an (unused!) usb drive and run
+
+```bash
+cp archlinux-version-x86_64.iso /dev/drive
 ```
 
-The script prompts for the client id and secret (kept in Bitwarden; also
-recoverable from the Google Cloud console), runs Google's consent flow through
-a printed URL, and starts the account's mail services. Open the URL in a
-browser on the host; Lima forwards the localhost redirect into the guest.
+And finish with `sync`.
 
-Alternatively, copy an existing token file from another machine into the same
-path, then start push notifications:
+Plug the drive into the new machine and boot into it (hold
+f12/machine-specific-key during boot).
 
-```sh
-systemctl --user start goimapnotify@cultivate.service
+Identify the main disk and create EFI (512M) and Linux partitions with `fdisk`.
+
+Create filesystems with `mkfs.ext4` (Linux) and `mkfs.fat -F 32` (EFI).
+
+Mount the Linux partition to `/mnt` and the EFI partition to `/mnt/boot`.
+
+Connect to internet with `iwctl` and run:
+
+```bash
+pacstrap -K /mnt base linux linux-firmware grub efibootmgr neovim sudo iwd git # install essentials
+genfstab -U /mnt >> /mnt/etc/fstab # so partitions mount automatically
+arch-chroot /mnt # chroot
+passwd # create password
+grub-install --efi-directory=/boot # install grub
+grub-mkconfig -o /boot/grub/grub.cfg # make grub config
+useradd -m -G wheel talati # create non-root user
+passwd talati # create password
+EDITOR=nvim visudo # uncomment # %wheel ALL=(ALL:ALL) ALL to grant wheel sudo privs
 ```
 
-Every account's mail units are always enabled and condition on the token file,
-so mbsync resumes on its next timer fire either way. There are no launchd mail
-services: NeoMutt, mbsync, and goimapnotify run as systemd user services inside
-the Linux VM.
+Reboot into the new install. Log in as talati, connect to internet and run
 
-## Physical Arch host
-
-The existing desktop is represented by `machines/arch-host` and currently
-enables every account:
-
-```sh
+```bash
+git clone https://github.com/nicktalati/dotfiles $HOME/dotfiles && cd $HOME/dotfiles
 ./machines/arch-host/install.sh
 ```
 
-This is a transitional full-system installer. It installs packages, writes the
-two declared `/etc` files, configures the existing Firefox profiles, enables
-services, and changes the login shell. It deliberately preserves the current
-development, mail, and backup behavior while the Fedora VM is proven on the
-Mac. After the same Fedora VM is validated on Arch, the host will be
-reduced to hardware, desktop, native applications, Lima, and minimal host
-operation.
+Set up backups (below) and reboot.
 
-## Accounts
+Firefox profiles, extensions, and policies are managed by
+`machines/arch-host/firefox/setup.sh` (called by `install.sh`). After install,
+launch each profile and sign into the corresponding Mozilla account to restore
+bookmarks, passwords, etc. via Sync.
 
-The account packages are:
+## Mail
 
-- `account-cultivate`: the Cultivate Git identity and Google Workspace mail
-- `account-personal`: the personal Git identity and Gmail
+Mail runs as systemd user services: mbsync on a timer, goimapnotify for push.
+Every account's units are enabled but only run if a token exists at
+`~/.local/share/mail/oauth/<account>`. To enroll an account:
 
-They contain ordinary application configuration only; SSH keys and OAuth tokens
-are machine state. Put repositories under `~/code/cultivate` or
-`~/code/personal`; Git conditional includes select the corresponding identity.
+```bash
+mail-enroll cultivate
+```
+
+It asks for the client id and secret (in Bitwarden), prints a Google URL, and
+starts syncing once you've clicked through it. Open the URL in a browser on the
+host; Lima forwards the redirect into the VM.
+
+Or copy the token file from another machine and start push by hand:
+
+```bash
+systemctl --user start goimapnotify@cultivate.service
+```
 
 ## Backups
 
-restic snapshots `~/docs`, `~/photos`, `~/reading`, `~/dotfiles`, and the Zsh
-history to S3 daily, and to the offline USB drive with `mount_drive` followed
-by `backup usb`. The service conditions on machine credentials, so enrolling a
-machine is one file created from the Bitwarden "restic backup" item:
+Restic snapshots `~/docs`, `~/photos`, `~/reading`, `~/dotfiles`, and the zsh
+history to S3 daily. The timer does nothing until the credentials exist, so on a
+new machine paste the three lines from the "restic backup" Bitwarden item:
 
-```sh
+```bash
 mkdir -p ~/.config/restic
-nvim ~/.config/restic/env    # the three export lines from Bitwarden
+nvim ~/.config/restic/env
 chmod 600 ~/.config/restic/env
 ```
 
-```sh
+```bash
 export RESTIC_PASSWORD='...'
 export AWS_ACCESS_KEY_ID='...'
 export AWS_SECRET_ACCESS_KEY='...'
 ```
 
-Restore by sourcing that file, then `restic snapshots` and `restic restore`.
+For the USB drive, `mount_drive` then `backup usb`.
 
-## Package maintenance and validation
+To restore:
 
-Use `pkgsync diff` to compare the active machine manifest with explicitly
-installed packages, and `pkgsync sync` to run that machine's package-only
-installer.
+```bash
+source ~/.config/backup/config; source ~/.config/restic/env; export RESTIC_REPOSITORY
+restic snapshots
+restic restore latest --target ~/restore
+```
 
-Run the smoke suite with:
+## Packages and Tests
 
-```sh
+`pkgsync diff` compares the machine's package list with what's actually
+installed. `pkgsync sync` installs the list.
+
+```bash
 ./tests/run.sh
 ```

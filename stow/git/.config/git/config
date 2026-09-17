@@ -16,5 +16,5 @@
 	path = ~/.config/git/accounts/personal
 [includeIf "gitdir:~/code/"]
 	path = ~/.config/git/accounts/personal
-[includeIf "gitdir:~/code/cultivate/"]
+[includeIf "gitdir:~/work/"]
 	path = ~/.config/git/accounts/cultivate
