@@ -156,5 +156,5 @@ restic restore latest --target ~/restore
 installed. `pkgsync sync` installs the list.
 
 ```bash
-./tests/run.sh
+./test.sh
 ```

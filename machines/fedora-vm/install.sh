@@ -13,21 +13,30 @@ die() {
     exit 1
 }
 
-(($# == 0)) || die "install.sh takes no arguments"
+configure_only=false
+case "$#:${1:-}" in
+    0:) ;;
+    1:--configure-only) configure_only=true ;;
+    *) die "usage: install.sh [--configure-only]" ;;
+esac
 [[ "$EUID" -ne 0 ]] || die "do not run this script as root"
 [[ -d "$dotfiles_dir/.git" ]] || die "dotfiles repository not found at $dotfiles_dir"
-[[ -r /etc/os-release ]] || die "cannot identify this operating system"
-# shellcheck source=/dev/null
-source /etc/os-release
-[[ "$ID" == fedora ]] || die "fedora-vm install requires Fedora"
 
-"$machine_dir/install-packages.sh"
-"$machine_dir/install-sasl-xoauth2.sh"
+if ! $configure_only; then
+    [[ -r /etc/os-release ]] || die "cannot identify this operating system"
+    # shellcheck source=/dev/null
+    source /etc/os-release
+    [[ "$ID" == fedora ]] || die "fedora-vm install requires Fedora"
 
-# Ghostty on the Mac host exports TERM=xterm-ghostty, a name ncurses does not
-# define; without the alias every curses program in the guest fails to start.
-if ! infocmp xterm-ghostty &>/dev/null; then
-    sudo tic -x -o /usr/share/terminfo "$machine_dir/xterm-ghostty.terminfo"
+    "$machine_dir/install-packages.sh"
+    "$machine_dir/install-sasl-xoauth2.sh"
+
+    # Ghostty on the Mac host exports TERM=xterm-ghostty, a name ncurses does
+    # not define; without the alias every curses program in the guest fails to
+    # start.
+    if ! infocmp xterm-ghostty &>/dev/null; then
+        sudo tic -x -o /usr/share/terminfo "$machine_dir/xterm-ghostty.terminfo"
+    fi
 fi
 
 command -v stow &>/dev/null || die "stow is required"
@@ -50,6 +59,12 @@ printf '%s\n' fedora-vm > "$xdg_config_home/dotfiles/machine"
 stow --restow --no-folding --dir "$stow_dir" --target "$HOME" \
     shell nvim tmux git mail psql task backup headless \
     account-cultivate account-personal
+
+# --configure-only renders the home into $HOME for the test suite and stops
+# before anything that needs root, systemd, or this particular machine.
+if $configure_only; then
+    exit 0
+fi
 
 zsh_path=$(command -v zsh)
 current_shell=$(getent passwd "$USER" | cut -d: -f7)

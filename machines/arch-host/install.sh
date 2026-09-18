@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -Eeuo pipefail
-exec > >(tee -i "/tmp/install-$(date +%Y%m%d.%H-%M-%S).log") 2>&1
 
 readonly df_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly machine_dir="$df_dir/machines/arch-host"
@@ -56,7 +55,7 @@ done
 
 # checks
 [[ "$EUID" -ne 0 ]] || error "Script must not be run as root."
-grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
+$configure_only || grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
 
 [[ -d "$df_dir" ]] || error "Directory does not exist: $df_dir"
 [[ -d "$stow_dir" ]] || error "Directory does not exist: $stow_dir"
@@ -64,6 +63,7 @@ grep -iqs "ID=arch" "/etc/os-release" || error "System is not Arch."
 ensure_commands stow
 
 if ! $configure_only; then
+    exec > >(tee -i "/tmp/install-$(date +%Y%m%d.%H-%M-%S).log") 2>&1
     ensure_commands pacman sudo
     sudo -v || error "This script requires sudo privileges."
 
