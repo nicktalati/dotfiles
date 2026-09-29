@@ -1,5 +1,6 @@
 named-mailboxes "=== CULTIVATE ===" "+.header-cultivate"
 named-mailboxes "  Inbox" "+cultivate/Inbox"
+named-mailboxes "  audits" "+cultivate/audits"
 named-mailboxes "  product" "+cultivate/product"
 named-mailboxes "  infra" "+cultivate/infra"
 named-mailboxes "  hiring" "+cultivate/hiring"
