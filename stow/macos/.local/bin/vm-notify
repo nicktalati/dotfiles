@@ -11,16 +11,10 @@ readonly instance="${LIMA_INSTANCE:-dev}"
 ssh -n -F "$HOME/.lima/$instance/ssh.config" \
     -o ServerAliveInterval=15 -o ServerAliveCountMax=2 "lima-$instance" \
     journalctl --user --follow --lines=0 --output=cat --identifier=notify-send |
-    while IFS=$'\t' read -r urgency app summary body; do
-        sound=
-        [[ "$urgency" != critical ]] || sound=Basso
+    while IFS=$'\t' read -r title body; do
         osascript \
-            -e 'on run {theTitle, theSubtitle, theBody, theSound}' \
-            -e 'if theSound is "" then' \
-            -e 'display notification theBody with title theTitle subtitle theSubtitle' \
-            -e 'else' \
-            -e 'display notification theBody with title theTitle subtitle theSubtitle sound name theSound' \
-            -e 'end if' \
+            -e 'on run {theTitle, theBody}' \
+            -e 'display notification theBody with title theTitle sound name "Glass"' \
             -e 'end run' \
-            "$summary" "$app" "$body" "$sound" </dev/null
+            "$title" "$body" </dev/null
     done

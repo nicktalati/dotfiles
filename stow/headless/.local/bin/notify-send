@@ -4,22 +4,13 @@
 
 set -Eeuo pipefail
 
-app=
-urgency=normal
-while getopts 'a:u:' opt; do
-    case $opt in
-        a) app=$OPTARG ;;
-        u) urgency=$OPTARG ;;
-        *) exit 2 ;;
-    esac
-done
-shift $((OPTIND - 1))
 [[ "$#" -ge 1 && "$#" -le 2 && -n "$1" ]] || {
-    echo "Usage: notify-send [-a APP] [-u URGENCY] SUMMARY [BODY]" >&2
+    echo "Usage: notify-send SUMMARY [BODY]" >&2
     exit 2
 }
 
-# vm-notify splits on tabs, and only the last field may be empty.
-fields=("$urgency" "${app:-$HOSTNAME}" "$1" "${2:-}")
-fields=("${fields[@]//[$'\t\n']/ }")
-logger -t notify-send -- "$(IFS=$'\t'; printf '%s' "${fields[*]}")"
+# One line, which vm-notify splits on the tab.
+summary=${1//[$'\t\n']/ }
+body=${2:-}
+body=${body//[$'\t\n']/ }
+logger -t notify-send -- "$summary"$'\t'"$body"

@@ -17,5 +17,5 @@ touch "$stamp"
 
 # The unit's log stays out of the notification: when Gmail rejects a token,
 # mbsync logs the XOAUTH2 exchange with the token in it.
-notify-send -u critical -a systemd "$unit failed" \
+notify-send "$unit failed" \
     "$(systemctl --user show --property Description --value "$unit")"

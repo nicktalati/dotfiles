@@ -158,11 +158,11 @@ grep -q '^shell dev -- tmux new-session -A -s dev$' "$root/lima/log" || \
 printf '#!/bin/sh\ncat "$(dirname "$0")/journal"\n' > "$root/stubs/ssh"
 cat > "$root/stubs/osascript" <<'STUB'
 #!/usr/bin/env bash
-printf '%s|' "${@: -4}" >> "$(dirname "$0")/shown"
+printf '%s|' "${@: -2}" >> "$(dirname "$0")/shown"
 STUB
 chmod +x "$root/stubs"/*
 PATH="$root/stubs:$PATH" "$HOME/.local/bin/vm-notify"
-[[ "$(cat "$root/stubs/shown")" == 'mbsync@cultivate failed|systemd|Synchronize mail account cultivate|Basso|' ]] || \
-    fail "a failed unit did not reach the Mac as exactly one critical notification"
+[[ "$(cat "$root/stubs/shown")" == 'mbsync@cultivate failed|Synchronize mail account cultivate|' ]] || \
+    fail "a failed unit did not reach the Mac as exactly one notification"
 
 printf 'all tests passed\n'
