@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Shows the VM's notify-send calls as macOS notifications. The VM only logs
+# them; this pulls the log over Lima's SSH, so the VM never connects to the
+# host, and hands the text to AppleScript as arguments, never as code. launchd
+# restarts it whenever the VM stops or the connection drops.
+
+set -Eeuo pipefail
+
+readonly instance="${LIMA_INSTANCE:-dev}"
+
+ssh -n -F "$HOME/.lima/$instance/ssh.config" \
+    -o ServerAliveInterval=15 -o ServerAliveCountMax=2 "lima-$instance" \
+    journalctl --user --follow --lines=0 --output=cat --identifier=notify-send |
+    while IFS=$'\t' read -r urgency app summary body; do
+        sound=
+        [[ "$urgency" != critical ]] || sound=Basso
+        osascript \
+            -e 'on run {theTitle, theSubtitle, theBody, theSound}' \
+            -e 'if theSound is "" then' \
+            -e 'display notification theBody with title theTitle subtitle theSubtitle' \
+            -e 'else' \
+            -e 'display notification theBody with title theTitle subtitle theSubtitle sound name theSound' \
+            -e 'end if' \
+            -e 'end run' \
+            "$summary" "$app" "$body" "$sound" </dev/null
+    done

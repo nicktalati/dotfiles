@@ -1,6 +1,6 @@
 - exercise mac-host + fedora-vm on a real Apple Silicon Mac
 - test explicit host/guest copies before adding any narrowly scoped shared mount
-- implement constrained macOS notification and open-file bridges after testing
+- exercise the vm-notify bridge on a real Mac; implement the open-file bridge
 - run the same Fedora VM on the physical Arch host
 - thin arch-host only after the Fedora VM is proven on both hosts
 - decide from measurements whether Apple vz rebuilds or QEMU snapshots are preferable

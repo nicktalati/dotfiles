@@ -57,7 +57,7 @@ mkdir -p "$HOME"/mail/.header-{cultivate,nicktalati}/{cur,new,tmp}
 printf '%s\n' fedora-vm > "$xdg_config_home/dotfiles/machine"
 
 stow --restow --no-folding --dir "$stow_dir" --target "$HOME" \
-    shell nvim tmux git mail psql task backup headless \
+    shell nvim tmux git mail psql task backup notify headless \
     account-cultivate account-personal
 
 # --configure-only renders the home into $HOME for the test suite and stops

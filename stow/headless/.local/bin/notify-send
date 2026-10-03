@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# The VM has no notification daemon, so this logs notifications to the journal
+# instead, where the host's vm-notify picks them up.
+
+set -Eeuo pipefail
+
+app=
+urgency=normal
+while getopts 'a:u:' opt; do
+    case $opt in
+        a) app=$OPTARG ;;
+        u) urgency=$OPTARG ;;
+        *) exit 2 ;;
+    esac
+done
+shift $((OPTIND - 1))
+[[ "$#" -ge 1 && "$#" -le 2 && -n "$1" ]] || {
+    echo "Usage: notify-send [-a APP] [-u URGENCY] SUMMARY [BODY]" >&2
+    exit 2
+}
+
+# vm-notify splits on tabs, and only the last field may be empty.
+fields=("$urgency" "${app:-$HOSTNAME}" "$1" "${2:-}")
+fields=("${fields[@]//[$'\t\n']/ }")
+logger -t notify-send -- "$(IFS=$'\t'; printf '%s' "${fields[*]}")"

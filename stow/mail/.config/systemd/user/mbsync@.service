@@ -2,7 +2,10 @@
 Description=Synchronize mail account %i
 ConditionPathExists=%h/.config/isync/accounts/%i.conf
 ConditionPathExists=%h/.local/share/mail/oauth/%i
+OnFailure=notify-failure@%N.service
 
 [Service]
 Type=oneshot
 ExecStart=%h/.local/bin/mail-sync %i
+# mail-sync exits 75 for errors the next run recovers from.
+SuccessExitStatus=75

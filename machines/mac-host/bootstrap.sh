@@ -21,6 +21,34 @@ brew bundle install --no-upgrade --file "$brewfile"
 stow --restow --no-folding --dir "$dotfiles_dir/stow" --target "$HOME" \
     macos wallpaper
 
+# launchd expands neither ~ nor $HOME, so the agent that shows the VM's
+# notifications is written for this home rather than stowed.
+readonly agent=com.nicktalati.vm-notify
+readonly agent_plist="$HOME/Library/LaunchAgents/$agent.plist"
+mkdir -p "${agent_plist%/*}"
+cat > "$agent_plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>$agent</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$HOME/.local/bin/vm-notify</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+</dict>
+</plist>
+EOF
+launchctl bootstrap "gui/$UID" "$agent_plist" 2>/dev/null || \
+    launchctl kickstart -k "gui/$UID/$agent"
+
 fdesetup status | grep -q 'FileVault is On' || \
     printf 'warning: FileVault is not enabled\n' >&2
 

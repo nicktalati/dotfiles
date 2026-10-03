@@ -93,7 +93,7 @@ fi
 
 info "Stowing dotfiles..."
 stow -v -R --no-folding -d "$stow_dir" -t "$HOME" \
-    shell nvim tmux git mail psql task backup arch-desktop wallpaper \
+    shell nvim tmux git mail psql task backup notify arch-desktop wallpaper \
     account-cultivate account-personal
 
 mkdir -p "$xdg_conf/dotfiles"

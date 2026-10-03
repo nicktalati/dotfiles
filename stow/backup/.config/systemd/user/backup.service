@@ -1,6 +1,7 @@
 [Unit]
 Description=Restic snapshot backup
 ConditionPathExists=%h/.config/restic/env
+OnFailure=notify-failure@%N.service
 
 [Service]
 Type=oneshot

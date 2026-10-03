@@ -103,6 +103,32 @@ chmod +x "$root/stubs"/*
 PATH="$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal >/dev/null
 [[ -d "$HOME/mail/nicktalati" ]] || fail "mail-sync did not create the Maildir store"
 
+# Network errors exit 75, which mbsync@.service counts as success; anything
+# else fails the unit.
+mail_sync_status() {
+    printf '#!/bin/sh\necho "%s" >&2\nexit 1\n' "$1" > "$root/stubs/mbsync"
+    local status=0
+    PATH="$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal &>/dev/null || status=$?
+    printf '%s\n' "$status"
+}
+[[ "$(mail_sync_status 'Socket error on imap.gmail.com (1.2.3.4:993): timeout.')" == 75 ]] || \
+    fail "mail-sync failed the unit on a socket timeout"
+[[ "$(mail_sync_status 'Skipping account personal, PassCmd exited with status 1')" == 1 ]] || \
+    fail "mail-sync treated a failing PassCmd as transient"
+
+# notify-failure goes through the headless notify-send to the journal, which
+# vm-notify reads on the Mac (below).
+printf '#!/bin/sh\necho "Synchronize mail account cultivate"\n' > "$root/stubs/systemctl"
+cat > "$root/stubs/logger" <<'STUB'
+#!/bin/sh
+for line; do :; done
+printf '%s\n' "$line" >> "$(dirname "$0")/journal"
+STUB
+chmod +x "$root/stubs"/*
+for _ in 1 2; do
+    PATH="$HOME/.local/bin:$root/stubs:$PATH" "$HOME/.local/bin/notify-failure" mbsync@cultivate
+done
+
 [[ "$("$HOME/.local/bin/pkgsync" path)" == "$dotfiles/machines/fedora-vm/packages.txt" ]] || \
     fail "pkgsync did not select the Fedora manifest"
 
@@ -128,5 +154,15 @@ rm -f "$root/lima/running"
 grep -q '^start dev$' "$root/lima/log" || fail "dev did not start the stopped VM"
 grep -q '^shell dev -- tmux new-session -A -s dev$' "$root/lima/log" || \
     fail "dev did not attach to the tmux session"
+
+printf '#!/bin/sh\ncat "$(dirname "$0")/journal"\n' > "$root/stubs/ssh"
+cat > "$root/stubs/osascript" <<'STUB'
+#!/usr/bin/env bash
+printf '%s|' "${@: -4}" >> "$(dirname "$0")/shown"
+STUB
+chmod +x "$root/stubs"/*
+PATH="$root/stubs:$PATH" "$HOME/.local/bin/vm-notify"
+[[ "$(cat "$root/stubs/shown")" == 'mbsync@cultivate failed|systemd|Synchronize mail account cultivate|Basso|' ]] || \
+    fail "a failed unit did not reach the Mac as exactly one critical notification"
 
 printf 'all tests passed\n'

@@ -1,0 +1,7 @@
+[Unit]
+Description=Notify that %i failed
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/notify-failure %i
+Environment="PATH=%h/.local/bin:/usr/local/bin:/usr/bin"
