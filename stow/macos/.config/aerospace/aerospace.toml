@@ -12,9 +12,22 @@ outer.right = 0
 outer.top = 0
 outer.bottom = 0
 
+# 1 is the leftmost monitor. Unplugged, 2 matches nothing and 6-10 fall back to the Mac.
+[workspace-to-monitor-force-assignment]
+1 = 1
+2 = 1
+3 = 1
+4 = 1
+5 = 1
+6 = 2
+7 = 2
+8 = 2
+9 = 2
+10 = 2
+
 [mode.main.binding]
-alt-h = 'focus left'
-alt-l = 'focus right'
+alt-h = 'focus left --boundaries all-monitors-outer-frame'
+alt-l = 'focus right --boundaries all-monitors-outer-frame'
 alt-q = 'close --quit-if-last-window'
 
 alt-enter = 'exec-and-forget open -na Ghostty'
