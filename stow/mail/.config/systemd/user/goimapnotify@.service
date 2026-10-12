@@ -1,7 +1,7 @@
 [Unit]
 Description=Watch IMAP account %i for mailbox changes
-StartLimitIntervalSec=300
-StartLimitBurst=10
+# Push only makes mail arrive sooner than mbsync@.timer, so never give up on it.
+StartLimitIntervalSec=0
 ConditionPathExists=%h/.local/share/mail/oauth/%i
 
 [Service]
@@ -10,6 +10,10 @@ ExecStart=/usr/bin/env goimapnotify -conf %h/.config/goimapnotify/%i.yaml
 Environment="PATH=/usr/local/bin:/usr/bin:%h/.local/bin"
 Restart=always
 RestartSec=30
+# goimapnotify has wedged without exiting, deferring reconnection for days on a
+# connectivity check that never passed. A restart clears any such state and
+# kills a hung mail-sync holding mbsync's lock, so push is never out for long.
+RuntimeMaxSec=15min
 
 [Install]
 WantedBy=default.target

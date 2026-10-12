@@ -98,32 +98,59 @@ done
 # mbsync creates mailboxes but not the Maildir store that holds them.
 mkdir -p "$root/stubs" "$HOME/.local/share/mail/oauth"
 printf '#!/bin/sh\nexit 0\n' | tee "$root/stubs/mbsync" > "$root/stubs/notmuch"
+cat > "$root/stubs/logger" <<'STUB'
+#!/bin/sh
+for line; do :; done
+printf '%s\n' "$line" >> "$(dirname "$0")/journal"
+STUB
 chmod +x "$root/stubs"/*
 : > "$HOME/.local/share/mail/oauth/personal"
-PATH="$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal >/dev/null
+PATH="$HOME/.local/bin:$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal >/dev/null
 [[ -d "$HOME/mail/nicktalati" ]] || fail "mail-sync did not create the Maildir store"
 
-# Network errors exit 75, which mbsync@.service counts as success; anything
-# else fails the unit.
+# Network errors exit 75, which mbsync@.service counts as success, until they
+# have gone on for half an hour of uptime; anything else fails the unit.
 mail_sync_status() {
     printf '#!/bin/sh\necho "%s" >&2\nexit 1\n' "$1" > "$root/stubs/mbsync"
     local status=0
-    PATH="$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal &>/dev/null || status=$?
+    PATH="$HOME/.local/bin:$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal &>/dev/null || \
+        status=$?
     printf '%s\n' "$status"
 }
-[[ "$(mail_sync_status 'Socket error on imap.gmail.com (1.2.3.4:993): timeout.')" == 75 ]] || \
+mail_sync_succeeds() {
+    printf '#!/bin/sh\nexit 0\n' > "$root/stubs/mbsync"
+    PATH="$HOME/.local/bin:$root/stubs:$PATH" "$HOME/.local/bin/mail-sync" personal >/dev/null || \
+        fail "mail-sync failed when mbsync succeeded"
+}
+timeout_error='Socket error on imap.gmail.com (1.2.3.4:993): timeout.'
+
+# Every sync notifies about new inbox mail once, through the headless
+# notify-send: even a sync that then failed, and a message with no To: header.
+printf 'From: A <a@example.com>\nSubject: Hello\n\nHi\n' \
+    > "$HOME/mail/nicktalati/Inbox/new/1.test:2,"
+notified=$'From: A <a@example.com>\tSubject: Hello'
+[[ "$(mail_sync_status "$timeout_error")" == 75 ]] || \
     fail "mail-sync failed the unit on a socket timeout"
+[[ "$(cat "$root/stubs/journal" 2>/dev/null)" == "$notified" ]] || \
+    fail "a sync that failed did not notify about new inbox mail"
+mail_sync_succeeds
+[[ "$(cat "$root/stubs/journal")" == "$notified" ]] || \
+    fail "mail-sync notified about the same message twice"
+rm "$root/stubs/journal"
+
+printf '%s\n' "$(($(cut -d . -f 1 /proc/uptime) - 1800))" \
+    > "$XDG_STATE_HOME/mail-sync/personal.failing-since"
+[[ "$(mail_sync_status "$timeout_error")" == 1 ]] || \
+    fail "mail-sync kept half an hour of socket timeouts quiet"
+mail_sync_succeeds
+[[ "$(mail_sync_status "$timeout_error")" == 75 ]] || \
+    fail "a successful sync did not end the run of transient errors"
 [[ "$(mail_sync_status 'Skipping account personal, PassCmd exited with status 1')" == 1 ]] || \
     fail "mail-sync treated a failing PassCmd as transient"
 
 # notify-failure goes through the headless notify-send to the journal, which
 # vm-notify reads on the Mac (below).
 printf '#!/bin/sh\necho "Synchronize mail account cultivate"\n' > "$root/stubs/systemctl"
-cat > "$root/stubs/logger" <<'STUB'
-#!/bin/sh
-for line; do :; done
-printf '%s\n' "$line" >> "$(dirname "$0")/journal"
-STUB
 chmod +x "$root/stubs"/*
 for _ in 1 2; do
     PATH="$HOME/.local/bin:$root/stubs:$PATH" "$HOME/.local/bin/notify-failure" mbsync@cultivate

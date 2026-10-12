@@ -8,7 +8,10 @@ set -Eeuo pipefail
 
 readonly instance="${LIMA_INSTANCE:-dev}"
 
-ssh -n -F "$HOME/.lima/$instance/ssh.config" \
+# Lima's ssh.config multiplexes every session over one shared connection,
+# which ignores these keepalives, so a dead link would go unnoticed. This one
+# gets its own connection.
+ssh -n -F "$HOME/.lima/$instance/ssh.config" -o ControlPath=none \
     -o ServerAliveInterval=15 -o ServerAliveCountMax=2 "lima-$instance" \
     journalctl --user --follow --lines=0 --output=cat --identifier=notify-send |
     while IFS=$'\t' read -r title body; do

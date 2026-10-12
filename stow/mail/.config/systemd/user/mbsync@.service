@@ -7,5 +7,10 @@ OnFailure=notify-failure@%N.service
 [Service]
 Type=oneshot
 ExecStart=%h/.local/bin/mail-sync %i
+Environment="PATH=%h/.local/bin:/usr/local/bin:/usr/bin"
 # mail-sync exits 75 for errors the next run recovers from.
 SuccessExitStatus=75
+# A oneshot has no start timeout by default, and the timer starts nothing while
+# a run is still active, so one hung run would stop syncing for good. Runs have
+# taken at most five minutes; the clock stops while the host sleeps.
+TimeoutStartSec=10min

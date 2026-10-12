@@ -1,3 +1,7 @@
+# goimapnotify reconnects only once it can reach these. Its defaults,
+# archlinux.org:80 and ubuntu.com:80, are unreachable on some networks where
+# Gmail is not.
+connectivityHosts: ["imap.gmail.com:993"]
 configurations:
   - host: imap.gmail.com
     port: 993
@@ -12,4 +16,3 @@ configurations:
     boxes:
       - mailbox: "INBOX"
         onNewMail: "mail-sync personal INBOX"
-        onNewMailPost: "notify-mail ~/mail/nicktalati/Inbox"

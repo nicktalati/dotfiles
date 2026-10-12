@@ -16,12 +16,22 @@ new="$mailbox/new"
 mkdir -p "$nm_state_dir"
 touch "$nm_notified"
 
+# The timer's sync and goimapnotify's can finish together, and both would
+# notify about the same message.
+exec 9>>"$nm_notified"
+flock 9
+
+# The first header line named $1 in message $2, or nothing if it has none.
+header() {
+    sed -n "/^\$/q; /^$1: /I{p;q}" "$2"
+}
+
 notify() {
     local file="$1"
     local to from subject
-    to=$(grep -i '^To: ' "$file" | head -n 1 | sed "s/^[Tt]o: //")
-    from=$(grep -i '^From: ' "$file" | head -n 1)
-    subject=$(grep -i '^Subject: ' "$file" | head -n 1)
+    to=$(header To "$file" | sed "s/^[Tt]o: //")
+    from=$(header From "$file")
+    subject=$(header Subject "$file")
     if ! grep -Fxq "$file" "$nm_notified"; then
         echo "$file" >> "$nm_notified"
         if ! command -v notify-send &>/dev/null || ! notify-send "$from" "$subject"; then

@@ -105,6 +105,7 @@ bookmarks, passwords, etc. via Sync.
 ## Mail
 
 Mail runs as systemd user services: mbsync on a timer, goimapnotify for push.
+Both sync through `mail-sync`, which notifies about new inbox mail once.
 Every account's units are enabled but only run if a token exists at
 `~/.local/share/mail/oauth/<account>`. To enroll an account:
 
