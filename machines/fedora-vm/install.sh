@@ -78,6 +78,12 @@ fi
 # after a reboot until the next login.
 sudo loginctl enable-linger "$USER"
 
+# Lima's host agent sets the guest clock to the host's every 10 seconds when
+# they differ by more than 100 ms. Chrony cannot see those steps and reads
+# them as frequency error, so the two fight: chrony ran the clock 0.5% fast
+# and Lima stepped it back ~100 ms every 20 seconds. Leave the clock to Lima.
+sudo systemctl disable --now chronyd.service
+
 # Docker group membership grants non-root access to the Docker socket.
 if ! id -nG "$USER" | tr ' ' '\n' | grep -Fxq docker; then
     sudo usermod -aG docker "$USER"
