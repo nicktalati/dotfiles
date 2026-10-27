@@ -16,3 +16,5 @@ configurations:
     boxes:
       - mailbox: "INBOX"
         onNewMail: "mail-sync cultivate INBOX"
+      - mailbox: "AWS"
+        onNewMail: "mail-sync cultivate AWS"
